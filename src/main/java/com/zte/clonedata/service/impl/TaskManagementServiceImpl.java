@@ -1,0 +1,86 @@
+package com.zte.clonedata.service.impl;
+
+import com.zte.clonedata.dao.TaskManagementMapper;
+import com.zte.clonedata.model.TaskManagement;
+import com.zte.clonedata.model.TaskManagementExample;
+import com.zte.clonedata.model.error.BusinessException;
+import com.zte.clonedata.model.error.EmBusinessError;
+import com.zte.clonedata.service.TaskManagementService;
+import com.zte.clonedata.util.UUIDUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * @Author: Liangxiaomin
+ * @Date Created in 16:26 2019/6/12
+ * @Description:
+ */
+@Service
+public class TaskManagementServiceImpl implements TaskManagementService {
+
+    @Autowired
+    private TaskManagementMapper taskManagementMapper;
+
+    @Override
+    public List<TaskManagement> selectTaskManagementList() {
+        TaskManagementExample example = new TaskManagementExample();
+        TaskManagementExample.Criteria criteria = example.createCriteria();
+        criteria.andTaskStatusEqualTo("1");
+        List<TaskManagement> taskManagements = taskManagementMapper.selectByExample(example);
+        return taskManagements;
+    }
+
+    @Override
+    public List<TaskManagement> selectAll() {
+        return taskManagementMapper.selectByExample(null);
+    }
+
+    @Override
+    public void updateByPrimaryKeySelective(TaskManagement x) {
+        taskManagementMapper.updateByPrimaryKeySelective(x);
+    }
+
+    @Override
+    public TaskManagement selectTaskManagementByTaskId(String taskId) throws BusinessException {
+        if (StringUtils.isBlank(taskId)) {
+            throw new BusinessException(EmBusinessError.JOB_ID_IS_NULL);
+        } else {
+            TaskManagementExample example = new TaskManagementExample();
+            TaskManagementExample.Criteria criteria = example.createCriteria();
+            criteria.andTaskIdEqualTo(taskId);
+            List<TaskManagement> list = taskManagementMapper.selectByExample(example);
+            return list.size()==0?null:list.get(0);
+        }
+    }
+
+    @Override
+    public void insert(TaskManagement taskManagement) {
+        String id = UUIDUtils.get();
+        taskManagement.setTaskStatus("1");
+        taskManagement.setTimeoutSecond((short) 30000);
+        taskManagement.setId(id);
+        taskManagement.setTaskId(id);
+        taskManagementMapper.insertSelective(taskManagement);
+    }
+
+    @Override
+    public void delById(String id) {
+        taskManagementMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public TaskManagement selectTaskManagementByTaskname(String taskName) throws BusinessException {
+        if (StringUtils.isBlank(taskName)) {
+            throw new BusinessException(EmBusinessError.JOB_NAME_IS_NULL);
+        } else {
+            TaskManagementExample example = new TaskManagementExample();
+            TaskManagementExample.Criteria criteria = example.createCriteria();
+            criteria.andTaskNameEqualTo(taskName);
+            List<TaskManagement> list = taskManagementMapper.selectByExample(example);
+            return list.size()==0?null:list.get(0);
+        }
+    }
+}
