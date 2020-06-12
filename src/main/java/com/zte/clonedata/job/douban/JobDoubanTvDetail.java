@@ -19,4 +19,5 @@ import java.util.List;
 @Slf4j
 public class JobDoubanTvDetail extends Thread {
 
+    //TODO 豆瓣电视剧执行类
 }

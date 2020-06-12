@@ -37,7 +37,11 @@ public class DoubanWeb {
     }
     @GetMapping("/doubanTv")
     public ResponseUtils doubanTv() throws InterruptedException {
-        return ResponseUtils.success("执行成功");
+        String execute = jobDoubanTv.execute();
+        if (execute.contains("失败")){
+            return ResponseUtils.fail(execute);
+        }
+        return ResponseUtils.success(execute);
     }
 
 }
