@@ -5,11 +5,23 @@ import com.alibaba.fastjson.JSONObject;
 import com.zte.clonedata.contanst.Contanst;
 import com.zte.clonedata.dao.DoubanMvMapper;
 import com.zte.clonedata.model.DoubanMv;
+import com.zte.clonedata.model.error.BusinessException;
 import com.zte.clonedata.util.HttpUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.select.Elements;
 
+import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * ProjectName: clonedata-com.zte.clonedata.job.douban
@@ -33,106 +45,149 @@ public class JobDoubanMvDetail extends Thread {
     @Override
     public void run() {
         for (DoubanMv mv : list) {
-            getMovice(mv);
-            doubanMvMapper.insertSelective(mv);
+            getMoviceSave(mv);
         }
     }
+
+
     private int c = 0;
-    private void getMovice(DoubanMv doubanMv) throws InterruptedException {
-        String url = "https://douban.uieee.com/v2/movie/subject/".concat(doubanMv.getMovieid());
+
+    private void getMoviceSave(DoubanMv doubanMv) throws InterruptedException {
         try {
-            String result = HttpUtils.getJson(url, Contanst.DOUBAN_HOST2);
-            JSONObject json = JSONObject.parseObject(result);
-            // 导演
-            JSONArray directors = json.getJSONArray("directors");
-            if (directors != null) {
-                for (int i = 0; i < directors.size(); i++) {
-                    JSONObject jsonObject = directors.getJSONObject(i);
-                    doubanMv.setDirector(jsonObject.get("name").toString());
+            String result = HttpUtils.getJson(doubanMv.getUrl(), Contanst.DOUBAN_HOST1);
+            Document doc = Jsoup.parse(result);
+            Elements subject = doc.select("div#info");
+            //导演
+            Elements directs = subject.select("a[rel=\"v:directedBy\"]");
+            String directName = directs.stream().map(o -> o.html().trim()).collect(Collectors.joining("|"));
+            if (StringUtils.isNotEmpty(directName)) {
+                doubanMv.setDirector(String.format("|%s|", directName.trim()));
+            }
+
+            Elements plElement = subject.select("span[class=\"pl\"]");
+            //编剧
+            Optional<Element> adaptorsOpt = plElement.stream().filter(o -> o.html().equals("编剧")).findFirst();
+            if (adaptorsOpt.isPresent()) {
+                Element adaptorEl = adaptorsOpt.get();
+                Elements adaptors = adaptorEl.nextElementSibling().select("a");
+                String adaptorName = adaptors.stream().map(o -> o.html().trim()).collect(Collectors.joining("|"));
+                if (StringUtils.isNotEmpty(adaptorName)) {
+                    doubanMv.setScenarist(String.format("|%s|", adaptorName.trim()));
                 }
             }
 
-            //编剧
-            JSONArray writers = json.getJSONArray("writers");
-            if (writers != null) {
-                for (int i = 0; i < writers.size(); i++) {
-                    JSONObject jsonObject = writers.getJSONObject(i);
-                    doubanMv.setScenarist(jsonObject.get("name").toString());
-                }
-            }
             //主演
-            JSONArray casts = json.getJSONArray("casts");
-            if (casts != null) {
-                for (int i = 0; i < casts.size(); i++) {
-                    JSONObject jsonObject = casts.getJSONObject(i);
-                    doubanMv.setActors(jsonObject.get("name").toString());
+            Optional<Element> leadOpt = plElement.stream().filter(o -> o.html().equals("主演")).findFirst();
+            if (leadOpt.isPresent()) {
+                Element leaderEl = leadOpt.get();
+                Elements leaders = leaderEl.nextElementSibling().select("a[rel=\"v:starring\"]");
+                String leaderName = leaders.stream().map(o -> o.html().trim()).collect(Collectors.joining("|"));
+                if (StringUtils.isNotEmpty(leaderName)) {
+                    doubanMv.setActors(String.format("|%s|", leaderName.trim()));
                 }
             }
+
             //类型
-            JSONArray genres = json.getJSONArray("genres");
-            if (genres != null) {
-                for (int i = 0; i < genres.size(); i++) {
-                    doubanMv.setType(genres.getString(i));
-                }
+            Elements kinds = subject.select("span[property=\"v:genre\"]");
+            String kindName = kinds.stream().map(o -> o.html().trim()).collect(Collectors.joining("|"));
+            if (StringUtils.isNotEmpty(kindName)) {
+                doubanMv.setType(String.format("|%s|", kindName.trim()));
             }
+
             //制片国家/地区
-            JSONArray countries = json.getJSONArray("countries");
-            if (countries != null) {
-                for (int i = 0; i < countries.size(); i++) {
-                    doubanMv.setCountry(countries.getString(i));
+            Optional<Element> areaOpt = plElement.stream().filter(o -> o.html().equals("制片国家/地区:")).findFirst();
+            if (areaOpt.isPresent()) {
+                Element areaEl = areaOpt.get();
+                String areaName = areaEl.nextSibling().outerHtml();
+                if (StringUtils.isNotEmpty(areaName)) {
+                    doubanMv.setCountry(String.format("|%s|", areaName.trim()));
                 }
             }
+
             //语言
-            JSONArray languages = json.getJSONArray("languages");
-            if (languages != null) {
-                for (int i = 0; i < languages.size(); i++) {
-                    doubanMv.setLanguage(languages.getString(i));
+            Optional<Element> languageOpt = plElement.stream().filter(o -> o.html().equals("语言:")).findFirst();
+            if (languageOpt.isPresent()) {
+                Element languageEl = languageOpt.get();
+                String languageName = languageEl.nextSibling().outerHtml();
+                if (StringUtils.isNotEmpty(languageName)) {
+                    doubanMv.setLanguage(String.format("|%s|", languageName.trim()));
                 }
             }
+
             //上映日期
-            JSONArray pubdates = json.getJSONArray("pubdates");
-            if (pubdates != null) {
-                for (int i = 0; i < pubdates.size(); i++) {
-                    doubanMv.setReleasedata(pubdates.getString(i));
-                }
+            Elements releaseTimeEl = subject.select("span[property=\"v:initialReleaseDate\"]");
+            String releaseStr = releaseTimeEl.html();
+            if (StringUtils.isNotEmpty(releaseStr)) {
+                doubanMv.setReleasedata("|".concat(releaseStr.replaceAll("\\n","|")).concat("|"));
             }
+
             //片长
-            JSONArray durations = json.getJSONArray("durations");
-            if (durations != null) {
-                for (int i = 0; i < durations.size(); i++) {
-                    doubanMv.setRuntime(durations.getString(i));
+            Elements runtime = subject.select("span[property=\"v:runtime\"]");
+            String runtimeStr = runtime.html();
+            if (StringUtils.isNotEmpty(runtimeStr)) {
+                doubanMv.setRuntime(String.format("|%s|",runtimeStr));
+            }
+
+            //集数 totalNumber
+        /*Optional<Element> totalNumberOpt = plElement.stream().filter(o -> o.html().equals("集数:")).findFirst();
+        if (totalNumberOpt.isPresent()) {
+            Element totalNumberEl = totalNumberOpt.get();
+            String totalNumber = totalNumberEl.nextSibling().outerHtml();
+            if (StringUtils.isNotEmpty(totalNumber)) {
+                doubanMv.setTotalNumber(Integer.parseInt(totalNumber.trim()));
+            }
+        }
+*/
+
+            //别名
+            Optional<Element> otherNameOpt = plElement.stream().filter(o -> o.html().equals("又名:")).findFirst();
+            if (otherNameOpt.isPresent()) {
+                Element otherNameEl = otherNameOpt.get();
+                String otherName = otherNameEl.nextSibling().outerHtml();
+                if (StringUtils.isNotEmpty(otherName)) {
+                    doubanMv.setAka(otherName.trim());
                 }
             }
+
             //豆瓣评分
-            JSONObject rating = json.getJSONObject("rating");
-            doubanMv.setRatingnum(rating.getBigDecimal("average").toString());
-            //标签
-            JSONArray tags = json.getJSONArray("tags");
-            if (tags != null) {
-                for (int i = 0; i < tags.size(); i++) {
-                    doubanMv.setTags(tags.getString(i));
-                }
+            Elements scores = doc.select("div#interest_sectl").select("strong[property=\"v:average\"]");
+            String scoreStr = scores.html();
+            if (StringUtils.isNotEmpty(scoreStr)) {
+                doubanMv.setRatingnum(scoreStr);
             }
+
             //简介
-            doubanMv.setMoviedesc(json.getString("summary"));
-            //又名
-            JSONArray aka = json.getJSONArray("aka");
-            if (aka != null) {
-                for (int i = 0; i < aka.size(); i++) {
-                    doubanMv.setAka(aka.getString(i));
-                }
+            Elements storyEl = doc.select("span[property=\"v:summary\"]");
+            String story = storyEl.html();
+            if (StringUtils.isNotEmpty(story)) {
+                doubanMv.setMoviedesc(story.trim());
             }
+
             c = 0;
+            doubanMvMapper.insertSelective(doubanMv);
         } catch (Exception e) {
-            log.error("发生错误url >>> {}", url);
-            log.error("获取详单错误 >>> {}", e.getMessage());
+            log.error("发生错误url >>> {}", doubanMv.getUrl());
+            if (e instanceof BusinessException){
+                log.error("获取详单错误 >>> {}", ((BusinessException) e).getCommonError().getErrorMsg());
+                if (((BusinessException) e).getCommonError().getErrorMsg().contains("HttpStatus: 404")) return;
+            }else {
+                log.error("获取详单错误 >>> {}", e.getMessage());
+            }
             if (c++ < 10) {
                 log.error("三秒后再次尝试获取详单  >>>{}<<<", c);
                 Thread.sleep(3000);
-                getMovice(doubanMv);
+                getMoviceSave(doubanMv);
             } else {
                 c = 0;
+                doubanMv = null;
             }
         }
+    }
+
+    public static void main(String[] args) throws BusinessException {
+        DoubanMv doubanMv = new DoubanMv();
+        String url = "https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=%E7%83%AD%E9%97%A8&start=10500";
+        String result = HttpUtils.getJson(url, Contanst.DOUBAN_HOST1);
+        System.out.println(doubanMv.toString());
     }
 }

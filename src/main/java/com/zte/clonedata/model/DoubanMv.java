@@ -1,11 +1,13 @@
 package com.zte.clonedata.model;
 
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 
 @Getter
+@ToString
 public class DoubanMv implements Serializable {
     private String movieid;
     private String moviename;
@@ -50,6 +52,7 @@ public class DoubanMv implements Serializable {
     }
 
     public void setDirector(String director) {
+        if (StringUtils.isEmpty(director)) return;
         if (StringUtils.isEmpty(this.director)){
             this.director = director;
         }else {
@@ -58,6 +61,7 @@ public class DoubanMv implements Serializable {
     }
 
     public void setScenarist(String scenarist) {
+        if (StringUtils.isEmpty(scenarist)) return;
         if (StringUtils.isEmpty(this.scenarist)){
             this.scenarist = scenarist;
         }else {
@@ -66,6 +70,7 @@ public class DoubanMv implements Serializable {
     }
 
     public void setActors(String actors) {
+        if (StringUtils.isEmpty(actors)) return;
         if (StringUtils.isEmpty(this.actors)){
             this.actors = actors;
         }else {
@@ -74,6 +79,7 @@ public class DoubanMv implements Serializable {
     }
 
     public void setType(String type) {
+        if (StringUtils.isEmpty(type)) return;
         if (StringUtils.isEmpty(this.type)){
             this.type = type;
         }else {
@@ -82,6 +88,7 @@ public class DoubanMv implements Serializable {
     }
 
     public void setCountry(String country) {
+        if (StringUtils.isEmpty(country)) return;
         if (StringUtils.isEmpty(this.country)){
             this.country = country;
         }else {
@@ -90,6 +97,7 @@ public class DoubanMv implements Serializable {
     }
 
     public void setLanguage(String language) {
+        if (StringUtils.isEmpty(language)) return;
         if (StringUtils.isEmpty(this.language)){
             this.language = language;
         }else {
@@ -98,6 +106,7 @@ public class DoubanMv implements Serializable {
     }
 
     public void setReleasedata(String releasedata) {
+        if (StringUtils.isEmpty(releasedata)) return;
         if (StringUtils.isEmpty(this.releasedata)){
             this.releasedata = releasedata;
         }else {
@@ -114,6 +123,7 @@ public class DoubanMv implements Serializable {
     }
 
     public void setTags(String tags) {
+        if (StringUtils.isEmpty(tags)) return;
         if (StringUtils.isEmpty(this.tags)){
             this.tags = tags;
         }else {
@@ -130,6 +140,7 @@ public class DoubanMv implements Serializable {
     }
 
     public void setAka(String aka) {
+        if (StringUtils.isEmpty(aka)) return;
         if (StringUtils.isEmpty(this.aka)){
             this.aka = aka;
         }else {

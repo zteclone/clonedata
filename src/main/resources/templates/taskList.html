@@ -156,13 +156,13 @@
                         , type: "get"
                         , async: false
                         , success: function (res) {
-                            if (res.code != 0) {
-                                obj.elem.checked = false;
-                            }
                             layer.msg(res.msg);
+                            init();
                         }
                     });
-                    layer.close(index);
+                },function () {
+                    obj.elem.checked = false;
+                    form.render();
                 });
             }else {
                 layer.confirm('确认关闭定时任务', function (index) {
@@ -171,16 +171,15 @@
                         , type: "get"
                         , async: false
                         , success: function (res) {
-                            if (res.code != 0) {
-                                obj.elem.checked = true;
-                            }
                             layer.msg(res.msg);
+                            init();
                         }
                     });
-                    layer.close(index);
+                },function () {
+                    obj.elem.checked = true;
+                    form.render();
                 });
             }
-
         });
 
         table.on('edit(tab1)',function (obj) {

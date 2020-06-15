@@ -69,6 +69,6 @@ public class CronUtils {
     }
 
     public static void main(String[] args) throws ParseException, BusinessException {
-        System.out.println(isValidExpression("0 0 0/1 * * "));
+        System.out.println(getDate("0 0 1 * * ? *"));
     }
 }

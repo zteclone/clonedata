@@ -9,6 +9,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -41,8 +42,8 @@ public class HttpUtils {
 
     public static String getJson(String url,String host) throws BusinessException {
         //log.info("即将访问: {}, GET",url);
-        CloseableHttpClient client = initHttpClient();//Spring: 连接池
-        //HttpClient client = HttpClients.createDefault();//main: 创建一个
+        //CloseableHttpClient client = initHttpClient();//Spring: 连接池
+        HttpClient client = HttpClients.createDefault();//main: 创建一个
         HttpGet httpGet = null;
         HttpResponse response = null;
         String resultJson = null;
@@ -59,6 +60,8 @@ public class HttpUtils {
                 resultJson = EntityUtils
                         .toString(response.getEntity(), Contanst.CHARSET);
                 return resultJson;
+            }else {
+                throw new BusinessException(EmBusinessError.HTTP_ERROR,"HttpStatus: ".concat(String.valueOf(code)));
             }
         } catch (ClientProtocolException e) {
             throw new BusinessException(EmBusinessError.HTTP_POOL_ERROR);
@@ -78,7 +81,6 @@ public class HttpUtils {
                 throw new BusinessException(EmBusinessError.IO_ERROR);
             }
         }
-        throw new BusinessException(EmBusinessError.NUKNOW_ERROR);
     }
 
     public static void picGetFileSave(String url, OutputStream outputStream) throws BusinessException {

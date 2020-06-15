@@ -82,7 +82,7 @@ public class JobWeb {
         try {
             TaskManagement taskManagement = taskManagementService.selectTaskManagementByTaskId(id);
             List<TaskParam> taskParams = taskParamService.selectTaskParamListByTaskManagement(taskManagement);
-            result = HttpUtils.doGet(taskManagement.getExcuteTarget(), toParamMap(taskParams), Integer.valueOf(taskManagement.getTimeoutSecond()), taskManagement.getExternalCode());
+            result = HttpUtils.doGet(taskManagement.getExcuteTarget(), toParamMap(taskParams), taskManagement.getTimeoutSecond() == null ? null : taskManagement.getTimeoutSecond() * 1000, taskManagement.getExternalCode());
             if (result.get("STATUS").equals("FAIL")){
                 return ResponseUtils.fail("执行失败: 网络连接异常");
             }
