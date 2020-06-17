@@ -43,9 +43,9 @@ public class JobDoubanMv {
     private static Map<String, Integer> startMap = new HashMap<>();
 
     public String execute(String counrty,String year1,String year2) throws InterruptedException {
-        if (counrty.length()>0){
+        /*if (counrty.length()>0){
             return "OK";
-        }
+        }*/
         String key = counrty.concat(year1).concat(year2);
         ExecutorService exe = Executors.newCachedThreadPool();
         log.info("豆瓣开始执行任务   >>>");
