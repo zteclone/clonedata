@@ -148,6 +148,7 @@ public class JobDoubanMv {
                     doubanMv.setFilepath(path);
                     doubanMv.setMovieid(doubanModel.getId());
                     doubanMv.setRatingnum(doubanModel.getRate());
+                    doubanMv.setMoviename(doubanModel.getTitle());
                     doubanMvList.add(doubanMv);
                 } else {
                     if (!mv.getRatingnum().equals(doubanModel.getRate())) {
@@ -216,4 +217,5 @@ class DoubanModel {
     private String url;
     private String cover;
     private String id;
+    private String title;
 }
