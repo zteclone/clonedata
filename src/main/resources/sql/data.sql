@@ -1,1 +1,56 @@
-insert ignore into task_param values ('2','1','1','1');
+-- ----------------------------
+-- task_management
+-- 豆瓣电影
+-- ----------------------------
+INSERT IGNORE  INTO `task_management` VALUES ('33b0e4e99eec4fafa266b69770cf76dc', 'http://localhost:8090/douban/doubanMv?paramType=010201', '', '0 0 0 ? * MON', '33b0e4e99eec4fafa266b69770cf76dc', '豆瓣  电影  中国大陆  2019-2020', '1', 'http-get', '30000', '1');
+INSERT IGNORE  INTO `task_management` VALUES ('441672e3088f4ecb8f6ea6118197d21b', 'http://localhost:8090/douban/doubanMv?paramType=011312', '', '0 0 2 ? * MON', '441672e3088f4ecb8f6ea6118197d21b', '豆瓣  电影  中国大陆  2000-2009', '1', 'http-get', '30000', '5');
+INSERT IGNORE  INTO `task_management` VALUES ('54b03afbb34948bb8bea024827134abc', 'http://localhost:8090/douban/doubanMv?paramType=010806', '', '0 0 1 ? * MON', '54b03afbb34948bb8bea024827134abc', '豆瓣  电影  中国大陆  2013-2015', '1', 'http-get', '30000', '3');
+INSERT IGNORE  INTO `task_management` VALUES ('67222da9e0ef46f19d38f47c1688bd7c', 'http://localhost:8090/douban/doubanMv?paramType=010503', '', '0 30 0 ? * MON', '67222da9e0ef46f19d38f47c1688bd7c', '豆瓣  电影  中国大陆  2016-2018', '1', 'http-get', '30000', '2');
+INSERT IGNORE  INTO `task_management` VALUES ('aerlan2', 'http://localhost:8090/douban/doubanMv?paramType=182201', '', '0 30 18 ? * MON', 'aerlan2', '豆瓣  电影  爱尔兰  1-2020', '1', 'http-get', '30000', '38');
+INSERT IGNORE  INTO `task_management` VALUES ('aodaliyamv2', 'http://localhost:8090/douban/doubanMv?paramType=172201', '', '0 0 19 ? * MON', 'aodaliyamv2', '豆瓣  电影  澳大利亚  1-2020', '1', 'http-get', '30000', '39');
+INSERT IGNORE  INTO `task_management` VALUES ('baximv2', 'http://localhost:8090/douban/doubanMv?paramType=202201', '', '0 30 22 ? * MON', 'baximv2', '豆瓣  电影  巴西  1-2020', '1', 'http-get', '30000', '46');
+INSERT IGNORE  INTO `task_management` VALUES ('c67200fc74a74bfa99b042370177690e', 'http://localhost:8090/douban/doubanMv?paramType=011109', '', '0 30 1 ? * MON', 'c67200fc74a74bfa99b042370177690e', '豆瓣  电影  中国大陆  2010-2012', '1', 'http-get', '30000', '4');
+INSERT IGNORE  INTO `task_management` VALUES ('d5c831a2ea42401a8056d47546f99ba8', 'http://localhost:8090/douban/doubanMv?paramType=011615', '', '0 30 2 ? * MON', 'd5c831a2ea42401a8056d47546f99ba8', '豆瓣  电影  中国大陆  1980-1999', '1', 'http-get', '30000', '6');
+INSERT IGNORE  INTO `task_management` VALUES ('danmaimv2', 'http://localhost:8090/douban/doubanMv?paramType=212201', '', '0 0 1 ? * TUE', 'danmaimv2', '豆瓣  电影  丹麦  1-2020', '1', 'http-get', '30000', '51');
+INSERT IGNORE  INTO `task_management` VALUES ('dgmv1', 'http://localhost:8090/douban/doubanMv?paramType=091101', '', '0 30 21 ? * MON', 'dgmv1', '豆瓣  电影  德国  2010-2020', '1', 'http-get', '30000', '44');
+INSERT IGNORE  INTO `task_management` VALUES ('dgmv2', 'http://localhost:8090/douban/doubanMv?paramType=092212', '', '0 0 22 ? * MON', 'dgmv2', '豆瓣  电影  德国  1-2009', '1', 'http-get', '30000', '45');
+INSERT IGNORE  INTO `task_management` VALUES ('eluosimv2', 'http://localhost:8090/douban/doubanMv?paramType=142201', '', '0 30 1 ? * TUE', 'eluosimv2', '豆瓣  电影  俄罗斯  1-2020', '1', 'http-get', '30000', '50');
+INSERT IGNORE  INTO `task_management` VALUES ('f9540c26f4ed49559e73748198b05685', 'http://localhost:8090/douban/doubanMv?paramType=012219', '', '0 0 3 ? * MON', 'f9540c26f4ed49559e73748198b05685', '豆瓣  电影  中国大陆  1-1979', '1', 'http-get', '30000', '7');
+INSERT IGNORE  INTO `task_management` VALUES ('fgmv1', 'http://localhost:8090/douban/doubanMv?paramType=081101', '', '0 0 20 ? * MON', 'fgmv1', '豆瓣  电影  法国  2010-2020', '1', 'http-get', '30000', '41');
+INSERT IGNORE  INTO `task_management` VALUES ('fgmv2', 'http://localhost:8090/douban/doubanMv?paramType=082212', '', '0 30 20 ? * MON', 'fgmv2', '豆瓣  电影  法国  1-2009', '1', 'http-get', '30000', '42');
+INSERT IGNORE  INTO `task_management` VALUES ('hgmv1', 'http://localhost:8090/douban/doubanMv?paramType=060501', '', '0 30 12 ? * MON', 'hgmv1', '豆瓣  电影  韩国  2019-2020', '1', 'http-get', '30000', '26');
+INSERT IGNORE  INTO `task_management` VALUES ('hgmv2', 'http://localhost:8090/douban/doubanMv?paramType=061106', '', '0 0 14 ? * MON', 'hgmv2', '豆瓣  电影  韩国  2000-2009', '1', 'http-get', '30000', '29');
+INSERT IGNORE  INTO `task_management` VALUES ('hgmv3', 'http://localhost:8090/douban/doubanMv?paramType=061412', '', '0 30 13 ? * MON', 'hgmv3', '豆瓣  电影  韩国  2013-2015', '1', 'http-get', '30000', '28');
+INSERT IGNORE  INTO `task_management` VALUES ('hgmv4', 'http://localhost:8090/douban/doubanMv?paramType=062217', '', '0 0 13 ? * MON', 'hgmv4', '豆瓣  电影  韩国  2016-2018', '1', 'http-get', '30000', '27');
+INSERT IGNORE  INTO `task_management` VALUES ('jianadamv2', 'http://localhost:8090/douban/doubanMv?paramType=162201', '', '0 0 0 ? * TUE', 'jianadamv2', '豆瓣  电影  加拿大  1-2020', '1', 'http-get', '30000', '49');
+INSERT IGNORE  INTO `task_management` VALUES ('m1', 'http://localhost:8090/douban/doubanMv?paramType=020201', '', '0 0 9 ? * MON', 'm1', '豆瓣  电影  美国  2019-2020', '1', 'http-get', '30000', '19');
+INSERT IGNORE  INTO `task_management` VALUES ('m2', 'http://localhost:8090/douban/doubanMv?paramType=021312', '', '0 0 11 ? * MON', 'm2', '豆瓣  电影  美国  2000-2009', '1', 'http-get', '30000', '23');
+INSERT IGNORE  INTO `task_management` VALUES ('m3', 'http://localhost:8090/douban/doubanMv?paramType=020806', '', '0 0 10 ? * MON', 'm3', '豆瓣  电影  美国  2013-2015', '1', 'http-get', '30000', '21');
+INSERT IGNORE  INTO `task_management` VALUES ('m4', 'http://localhost:8090/douban/doubanMv?paramType=020503', '', '0 30 9 ? * MON', 'm4', '豆瓣  电影  美国  2016-2018', '1', 'http-get', '30000', '20');
+INSERT IGNORE  INTO `task_management` VALUES ('m5', 'http://localhost:8090/douban/doubanMv?paramType=021109', '', '0 30 10 ? * MON', 'm5', '豆瓣  电影  美国  2010-2012', '1', 'http-get', '30000', '22');
+INSERT IGNORE  INTO `task_management` VALUES ('m6', 'http://localhost:8090/douban/doubanMv?paramType=021615', '', '0 30 11 ? * MON', 'm6', '豆瓣  电影  美国  1980-1999', '1', 'http-get', '30000', '24');
+INSERT IGNORE  INTO `task_management` VALUES ('m7', 'http://localhost:8090/douban/doubanMv?paramType=022219', '', '0 0 12 ? * MON', 'm7', '豆瓣  电影  美国  1-1979', '1', 'http-get', '30000', '25');
+INSERT IGNORE  INTO `task_management` VALUES ('rbmv1', 'http://localhost:8090/douban/doubanMv?paramType=050501', '', '0 30 15 ? * MON', 'rbmv1', '豆瓣  电影  日本  2019-2020', '1', 'http-get', '30000', '32');
+INSERT IGNORE  INTO `task_management` VALUES ('rbmv2', 'http://localhost:8090/douban/doubanMv?paramType=051106', '', '0 0 17 ? * MON', 'rbmv2', '豆瓣  电影  日本  2000-2009', '1', 'http-get', '30000', '35');
+INSERT IGNORE  INTO `task_management` VALUES ('rbmv3', 'http://localhost:8090/douban/doubanMv?paramType=051412', '', '0 30 16 ? * MON', 'rbmv3', '豆瓣  电影  日本  2013-2015', '1', 'http-get', '30000', '34');
+INSERT IGNORE  INTO `task_management` VALUES ('rbmv4', 'http://localhost:8090/douban/doubanMv?paramType=052217', '', '0 0 16 ? * MON', 'rbmv4', '豆瓣  电影  日本  2016-2018', '1', 'http-get', '30000', '33');
+INSERT IGNORE  INTO `task_management` VALUES ('ruidianmv2', 'http://localhost:8090/douban/doubanMv?paramType=192201', '', '0 0 18 ? * MON', 'ruidianmv2', '豆瓣  电影  瑞典  1-2020', '1', 'http-get', '30000', '37');
+INSERT IGNORE  INTO `task_management` VALUES ('taiguomv2', 'http://localhost:8090/douban/doubanMv?paramType=132201', '', '0 30 19 ? * MON', 'taiguomv2', '豆瓣  电影  泰国  1-2020', '1', 'http-get', '30000', '40');
+INSERT IGNORE  INTO `task_management` VALUES ('xbymv2', 'http://localhost:8090/douban/doubanMv?paramType=112201', '', '0 30 17 ? * MON', 'xbymv2', '豆瓣  电影  西班牙  1-2020', '1', 'http-get', '30000', '36');
+INSERT IGNORE  INTO `task_management` VALUES ('ydlmv2', 'http://localhost:8090/douban/doubanMv?paramType=102201', '', '0 0 21 ? * MON', 'ydlmv2', '豆瓣  电影  意大利  1-2020', '1', 'http-get', '30000', '43');
+INSERT IGNORE  INTO `task_management` VALUES ('ygmv1', 'http://localhost:8090/douban/doubanMv?paramType=071101', '', '0 0 15 ? * MON', 'ygmv1', '豆瓣  电影  英国  2010-2020', '1', 'http-get', '30000', '31');
+INSERT IGNORE  INTO `task_management` VALUES ('ygmv2', 'http://localhost:8090/douban/doubanMv?paramType=072212', '', '0 30 14 ? * MON', 'ygmv2', '豆瓣  电影  英国  1-2009', '1', 'http-get', '30000', '30');
+INSERT IGNORE  INTO `task_management` VALUES ('yilangmv2', 'http://localhost:8090/douban/doubanMv?paramType=152201', '', '0 30 1 ? * TUE', 'yilangmv2', '豆瓣  电影  伊朗  1-2020', '1', 'http-get', '30000', '51');
+INSERT IGNORE  INTO `task_management` VALUES ('yindumv1', 'http://localhost:8090/douban/doubanMv?paramType=121101', '', '0 0 23 ? * MON', 'yindumv1', '豆瓣  电影  印度  2010-2020', '1', 'http-get', '30000', '47');
+INSERT IGNORE  INTO `task_management` VALUES ('yindumv2', 'http://localhost:8090/douban/doubanMv?paramType=122212', '', '0 30 23 ? * MON', 'yindumv2', '豆瓣  电影  印度  1-2009', '1', 'http-get', '30000', '48');
+INSERT IGNORE  INTO `task_management` VALUES ('znhk1', 'http://localhost:8090/douban/doubanMv?paramType=030201', '', '0 30 3 ? * MON', 'znhk1', '豆瓣  电影  中国香港  2019-2020', '1', 'http-get', '30000', '8');
+INSERT IGNORE  INTO `task_management` VALUES ('znhk2', 'http://localhost:8090/douban/doubanMv?paramType=031312', '', '0 30 5 ? * MON', 'znhk2', '豆瓣  电影  中国香港  2000-2009', '1', 'http-get', '30000', '12');
+INSERT IGNORE  INTO `task_management` VALUES ('znhk3', 'http://localhost:8090/douban/doubanMv?paramType=030806', '', '0 30 4 ? * MON', 'znhk3', '豆瓣  电影  中国香港  2013-2015', '1', 'http-get', '30000', '10');
+INSERT IGNORE  INTO `task_management` VALUES ('znhk4', 'http://localhost:8090/douban/doubanMv?paramType=030503', '', '0 0 4 ? * MON', 'znhk4', '豆瓣  电影  中国香港  2016-2018', '1', 'http-get', '30000', '9');
+INSERT IGNORE  INTO `task_management` VALUES ('znhk5', 'http://localhost:8090/douban/doubanMv?paramType=031109', '', '0 0 5 ? * MON', 'znhk5', '豆瓣  电影  中国香港  2010-2012', '1', 'http-get', '30000', '11');
+INSERT IGNORE  INTO `task_management` VALUES ('znhk6', 'http://localhost:8090/douban/doubanMv?paramType=031615', '', '0 0 6 ? * MON', 'znhk6', '豆瓣  电影  中国香港  1980-1999', '1', 'http-get', '30000', '13');
+INSERT IGNORE  INTO `task_management` VALUES ('znhk7', 'http://localhost:8090/douban/doubanMv?paramType=032219', '', '0 30 6 ? * MON', 'znhk7', '豆瓣  电影  中国香港  1-1979', '1', 'http-get', '30000', '14');
+INSERT IGNORE  INTO `task_management` VALUES ('zntw1', 'http://localhost:8090/douban/doubanMv?paramType=040501', '', '0 0 7 ? * MON', 'zntw1', '豆瓣  电影  中国台湾  2019-2020', '1', 'http-get', '30000', '15');
+INSERT IGNORE  INTO `task_management` VALUES ('zntw2', 'http://localhost:8090/douban/doubanMv?paramType=041106', '', '0 30 8 ? * MON', 'zntw2', '豆瓣  电影  中国台湾  2000-2009', '1', 'http-get', '30000', '18');
+INSERT IGNORE  INTO `task_management` VALUES ('zntw3', 'http://localhost:8090/douban/doubanMv?paramType=041412', '', '0 0 8 ? * MON', 'zntw3', '豆瓣  电影  中国台湾  2013-2015', '1', 'http-get', '30000', '17');
+INSERT IGNORE  INTO `task_management` VALUES ('zntw4', 'http://localhost:8090/douban/doubanMv?paramType=042217', '', '0 30 7 ? * MON', 'zntw4', '豆瓣  电影  中国台湾  2016-2018', '1', 'http-get', '30000', '16');

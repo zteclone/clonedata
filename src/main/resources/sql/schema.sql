@@ -1,3 +1,12 @@
+-- 测试环境
+-- 每次删除数据
+DROP TABLE IF EXISTS `clone_douban_tv_detail`;
+DROP TABLE IF EXISTS `clone_douban_mv_detail`;
+DROP TABLE IF EXISTS `clone_mv`;
+DROP TABLE IF EXISTS `clone_tv`;
+DROP TABLE IF EXISTS `task_management`;
+DROP TABLE IF EXISTS `task_param`;
+DROP TABLE IF EXISTS `task_log`;
 
 
 
