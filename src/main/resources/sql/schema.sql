@@ -1,3 +1,7 @@
+
+
+
+
 create table if not exists `clone_douban_tv_detail` (
   `tvid` varchar(32) NOT NULL,
   `tvname` varchar(255) DEFAULT NULL,
@@ -67,6 +71,7 @@ create table if not exists `task_management` (
   `task_status` varchar(255) NOT NULL DEFAULT '' COMMENT '1-正常\r\n2-错误',
   `task_type` varchar(255) NOT NULL DEFAULT '',
   `timeout_second` smallint(6) NOT NULL DEFAULT '0',
+  `cre_dt` varchar(14) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -77,6 +82,7 @@ create table if not exists `task_param` (
   `task_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 create table if not exists `task_log` (
   `id` varchar(32) NOT NULL,

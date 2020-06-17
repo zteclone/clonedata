@@ -43,6 +43,9 @@ public class JobDoubanMv {
     private static Map<String, Integer> startMap = new HashMap<>();
 
     public String execute(String counrty,String year1,String year2) throws InterruptedException {
+        if (counrty.length()>0){
+            return "OK";
+        }
         String key = counrty.concat(year1).concat(year2);
         ExecutorService exe = Executors.newCachedThreadPool();
         log.info("豆瓣开始执行任务   >>>");
@@ -52,6 +55,7 @@ public class JobDoubanMv {
         PicDownUtils picDownUtils = new PicDownUtils();
         boolean isLock = false;
         String executeResult = null;
+        int thisc = 0;
         synchronized (this) {
             Integer start = startMap.get(key) == null ? 0 : startMap.get(key);
             while (true) {
@@ -73,11 +77,17 @@ public class JobDoubanMv {
                     executeResult = "发生错误! 可能原因: ".concat(e.getMessage());
                     break;
                 }
-                if (start == 2000) {
-                    log.info("收集电影信息已达2000,结束此段任务 ... >>> country: {}, year: {}-{}", counrty, year1, year2);
+                if (thisc == 500){
+                    isLock = true;
+                    log.info("此次收集电影信息已达500,暂停此次任务,以保证下时段IP安全 ... >>> country: {}, year: {}-{}", counrty, year1, year2);
+                    break;
+                }
+                if (start == 3000) {
+                    log.info("此段收集电影信息已达3000,结束此段任务 ... >>> country: {}, year: {}-{}", counrty, year1, year2);
                     break;
                 }
                 start = start + 20;
+                thisc = thisc + 20;
                 Thread.sleep(30000);
             }
             if (!isLock) {

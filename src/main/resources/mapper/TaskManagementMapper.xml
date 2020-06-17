@@ -11,6 +11,7 @@
     <result column="task_status" jdbcType="VARCHAR" property="taskStatus" />
     <result column="task_type" jdbcType="VARCHAR" property="taskType" />
     <result column="timeout_second" jdbcType="SMALLINT" property="timeoutSecond" />
+    <result column="cre_dt" jdbcType="VARCHAR" property="creDt" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -72,7 +73,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, excute_target, external_code, task_excute_plan, task_id, task_name, task_status, 
-    task_type, timeout_second
+    task_type, timeout_second, cre_dt
   </sql>
   <select id="selectByExample" parameterType="com.zte.clonedata.model.TaskManagementExample" resultMap="BaseResultMap">
     select
@@ -107,12 +108,12 @@
   <insert id="insert" parameterType="com.zte.clonedata.model.TaskManagement">
     insert into task_management (id, excute_target, external_code, 
       task_excute_plan, task_id, task_name, 
-      task_status, task_type, timeout_second
-      )
+      task_status, task_type, timeout_second, 
+      cre_dt)
     values (#{id,jdbcType=VARCHAR}, #{excuteTarget,jdbcType=VARCHAR}, #{externalCode,jdbcType=VARCHAR}, 
       #{taskExcutePlan,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{taskName,jdbcType=VARCHAR}, 
-      #{taskStatus,jdbcType=VARCHAR}, #{taskType,jdbcType=VARCHAR}, #{timeoutSecond,jdbcType=SMALLINT}
-      )
+      #{taskStatus,jdbcType=VARCHAR}, #{taskType,jdbcType=VARCHAR}, #{timeoutSecond,jdbcType=SMALLINT}, 
+      #{creDt,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zte.clonedata.model.TaskManagement">
     insert into task_management
@@ -144,6 +145,9 @@
       <if test="timeoutSecond != null">
         timeout_second,
       </if>
+      <if test="creDt != null">
+        cre_dt,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -172,6 +176,9 @@
       </if>
       <if test="timeoutSecond != null">
         #{timeoutSecond,jdbcType=SMALLINT},
+      </if>
+      <if test="creDt != null">
+        #{creDt,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -211,6 +218,9 @@
       <if test="record.timeoutSecond != null">
         timeout_second = #{record.timeoutSecond,jdbcType=SMALLINT},
       </if>
+      <if test="record.creDt != null">
+        cre_dt = #{record.creDt,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -226,7 +236,8 @@
       task_name = #{record.taskName,jdbcType=VARCHAR},
       task_status = #{record.taskStatus,jdbcType=VARCHAR},
       task_type = #{record.taskType,jdbcType=VARCHAR},
-      timeout_second = #{record.timeoutSecond,jdbcType=SMALLINT}
+      timeout_second = #{record.timeoutSecond,jdbcType=SMALLINT},
+      cre_dt = #{record.creDt,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -258,6 +269,9 @@
       <if test="timeoutSecond != null">
         timeout_second = #{timeoutSecond,jdbcType=SMALLINT},
       </if>
+      <if test="creDt != null">
+        cre_dt = #{creDt,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -270,7 +284,8 @@
       task_name = #{taskName,jdbcType=VARCHAR},
       task_status = #{taskStatus,jdbcType=VARCHAR},
       task_type = #{taskType,jdbcType=VARCHAR},
-      timeout_second = #{timeoutSecond,jdbcType=SMALLINT}
+      timeout_second = #{timeoutSecond,jdbcType=SMALLINT},
+      cre_dt = #{creDt,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

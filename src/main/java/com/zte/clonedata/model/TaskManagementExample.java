@@ -723,6 +723,76 @@ public class TaskManagementExample {
             addCriterion("timeout_second not between", value1, value2, "timeoutSecond");
             return (Criteria) this;
         }
+
+        public Criteria andCreDtIsNull() {
+            addCriterion("cre_dt is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreDtIsNotNull() {
+            addCriterion("cre_dt is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreDtEqualTo(String value) {
+            addCriterion("cre_dt =", value, "creDt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreDtNotEqualTo(String value) {
+            addCriterion("cre_dt <>", value, "creDt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreDtGreaterThan(String value) {
+            addCriterion("cre_dt >", value, "creDt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreDtGreaterThanOrEqualTo(String value) {
+            addCriterion("cre_dt >=", value, "creDt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreDtLessThan(String value) {
+            addCriterion("cre_dt <", value, "creDt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreDtLessThanOrEqualTo(String value) {
+            addCriterion("cre_dt <=", value, "creDt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreDtLike(String value) {
+            addCriterion("cre_dt like", value, "creDt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreDtNotLike(String value) {
+            addCriterion("cre_dt not like", value, "creDt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreDtIn(List<String> values) {
+            addCriterion("cre_dt in", values, "creDt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreDtNotIn(List<String> values) {
+            addCriterion("cre_dt not in", values, "creDt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreDtBetween(String value1, String value2) {
+            addCriterion("cre_dt between", value1, value2, "creDt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreDtNotBetween(String value1, String value2) {
+            addCriterion("cre_dt not between", value1, value2, "creDt");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

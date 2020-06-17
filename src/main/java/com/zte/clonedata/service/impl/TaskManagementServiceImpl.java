@@ -6,6 +6,7 @@ import com.zte.clonedata.model.TaskManagementExample;
 import com.zte.clonedata.model.error.BusinessException;
 import com.zte.clonedata.model.error.EmBusinessError;
 import com.zte.clonedata.service.TaskManagementService;
+import com.zte.clonedata.util.DateUtils;
 import com.zte.clonedata.util.UUIDUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,9 @@ public class TaskManagementServiceImpl implements TaskManagementService {
 
     @Override
     public List<TaskManagement> selectAll() {
-        return taskManagementMapper.selectByExample(null);
+        TaskManagementExample example = new TaskManagementExample();
+        example.setOrderByClause("cre_dt+0 asc");
+        return taskManagementMapper.selectByExample(example);
     }
 
     @Override
@@ -63,6 +66,7 @@ public class TaskManagementServiceImpl implements TaskManagementService {
         taskManagement.setTimeoutSecond((short) 30000);
         taskManagement.setId(id);
         taskManagement.setTaskId(id);
+        taskManagement.setCreDt(DateUtils.getNowYYYYMMDDHHMMSS());
         taskManagementMapper.insertSelective(taskManagement);
     }
 

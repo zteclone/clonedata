@@ -48,7 +48,7 @@
 
 
     <!-- 指定数据库表 -->
-    <table tableName="task_log" domainObjectName="TaskLog">
+    <table tableName="task_management" domainObjectName="TaskManagement">
            <!--enableCountByExample="false" enableDeleteByExample="false"
            enableSelectByExample="false" enableUpdateByExample="false"
            selectByPrimaryKeyQueryId="false"-->
