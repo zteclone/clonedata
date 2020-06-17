@@ -24,10 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * ProjectName: clonedata-com.zte.clonedata.util
@@ -52,7 +49,7 @@ public class HttpUtils {
             httpGet.setHeader("Host", host);
             httpGet.setHeader(
                     "User-Agent",
-                    "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36");
+                    "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.11 (KHTML, like Gecko) Chrome/20.0.1132.11 TaoBrowser/2.0 Safari/536.11");
             response = client.execute(httpGet);
             int code = response.getStatusLine().getStatusCode();
             if (code == HttpStatus.SC_OK) {
@@ -160,7 +157,9 @@ public class HttpUtils {
             httpGet.setHeader(LegalPersonIdHeader(lid));
             response = httpclient.execute(httpGet);
         } catch (Exception var12) {
-            throw new RuntimeException("调用失败" + var12.getMessage());
+            resultMap.put("STATUS", "FAIL");
+            resultMap.put("MESSAGE", "调用失败, 可能原因: ".concat(var12.getMessage()));
+            return resultMap;
         }
 
         resultString = EntityUtils.toString(response.getEntity(), "UTF-8");
@@ -186,6 +185,20 @@ public class HttpUtils {
             throw new BusinessException(EmBusinessError.HTTP_POOL_ERROR);
         } else {
             return closeableHttpClient;
+        }
+    }
+
+    public static void main(String[] args) throws BusinessException, InterruptedException {
+        while (true) {
+            Random random = new Random();
+            int i = random.nextInt(10000);
+            String json = HttpUtils.getJson("https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=%E7%94%B5%E5%BD%B1&start="+i+"&countries=%E4%B8%AD%E5%9B%BD%E5%A4%A7%E9%99%86&", Contanst.DOUBAN_HOST1);
+            System.out.println(json);
+            if (json.contains("IP")){
+                break;
+            }
+            System.out.println(">>>>");
+            Thread.sleep(2000);
         }
     }
 }

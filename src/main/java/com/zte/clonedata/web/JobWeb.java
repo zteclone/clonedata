@@ -1,6 +1,5 @@
 package com.zte.clonedata.web;
 
-import com.alibaba.druid.sql.visitor.functions.If;
 import com.alibaba.fastjson.JSONObject;
 import com.zte.clonedata.model.TaskManagement;
 import com.zte.clonedata.model.TaskParam;
@@ -37,11 +36,11 @@ public class JobWeb {
     private TaskParamService taskParamService;
 
     /**
-     * 新增
-     * @param taskManagement
+     * 新增任务
+     * @param taskManagement id,name,cron....
      * @return
      */
-    @PostMapping("/add")
+    @PostMapping(path = "/add")
     public ResponseUtils add(@RequestBody TaskManagement taskManagement) {
         try {
             if (!CronUtils.isValidExpression(taskManagement.getTaskExcutePlan())){
@@ -60,7 +59,12 @@ public class JobWeb {
         return ResponseUtils.success("新增任务成功");
     }
 
-    @GetMapping("/del")
+    /**
+     * 删除任务
+     * @param id 任务id
+     * @return
+     */
+    @GetMapping(path = "/del")
     public ResponseUtils del(@RequestParam("id")String id) {
         taskManagementService.delById(id);
         try {
@@ -72,11 +76,11 @@ public class JobWeb {
     }
 
     /**
-     * 执行一次
-     * @param id
+     * 任务执行一次
+     * @param id 任务id
      * @return
      */
-    @GetMapping("/execute")
+    @GetMapping(path = "/execute")
     public ResponseUtils execute(@RequestParam("id")String id) {
         Map<String, String> result = null;
         try {
@@ -93,7 +97,12 @@ public class JobWeb {
         }
     }
 
-    @GetMapping("/start")
+    /**
+     * 装载任务
+     * @param id 任务id
+     * @return
+     */
+    @GetMapping(path = "/start")
     public ResponseUtils start(@RequestParam("id")String id){
         try {
             TaskManagement x = taskManagementService.selectTaskManagementByTaskId(id);
@@ -112,7 +121,12 @@ public class JobWeb {
         return ResponseUtils.success("装载成功");
     }
 
-    @GetMapping("/stop")
+    /**
+     * 卸载任务
+     * @param id 任务id
+     * @return
+     */
+    @GetMapping(path = "/stop")
     public ResponseUtils stop(@RequestParam("id")String id){
         try {
             ScheduleUtils.deleteScheduleJob(id);
@@ -122,7 +136,13 @@ public class JobWeb {
         }
         return ResponseUtils.success("任务卸载成功");
     }
-    @PostMapping("/update")
+
+    /**
+     * 修改任务
+     * @param taskManagement id,name,cron...
+     * @return
+     */
+    @PostMapping(path = "/update")
     public ResponseUtils update(@RequestBody TaskManagement taskManagement){
         try {
             if (!CronUtils.isValidExpression(taskManagement.getTaskExcutePlan())){

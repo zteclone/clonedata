@@ -6,6 +6,7 @@ import com.zte.clonedata.contanst.Contanst;
 import com.zte.clonedata.dao.DoubanMvMapper;
 import com.zte.clonedata.model.DoubanMv;
 import com.zte.clonedata.model.error.BusinessException;
+import com.zte.clonedata.util.DateUtils;
 import com.zte.clonedata.util.HttpUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +35,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class JobDoubanMvDetail extends Thread {
 
+    public static int successCount = 0;
+
     private List<DoubanMv> list;
     private DoubanMvMapper doubanMvMapper;
 
@@ -44,13 +48,16 @@ public class JobDoubanMvDetail extends Thread {
     @SneakyThrows
     @Override
     public void run() {
+        String date = DateUtils.getNowYYYYMMDDHHMMSS();
         for (DoubanMv mv : list) {
+            mv.setpDate(date);
             getMoviceSave(mv);
         }
     }
 
 
     private int c = 0;
+    private int err = 0;
 
     private void getMoviceSave(DoubanMv doubanMv) throws InterruptedException {
         try {
@@ -164,6 +171,9 @@ public class JobDoubanMvDetail extends Thread {
             }
 
             c = 0;
+            synchronized (this){
+                successCount ++;
+            }
             doubanMvMapper.insertSelective(doubanMv);
         } catch (Exception e) {
             log.error("发生错误url >>> {}", doubanMv.getUrl());
@@ -179,15 +189,67 @@ public class JobDoubanMvDetail extends Thread {
                 getMoviceSave(doubanMv);
             } else {
                 c = 0;
+                err++;
                 doubanMv = null;
             }
         }
     }
 
-    public static void main(String[] args) throws BusinessException {
-        DoubanMv doubanMv = new DoubanMv();
-        String url = "https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=%E7%83%AD%E9%97%A8&start=10500";
-        String result = HttpUtils.getJson(url, Contanst.DOUBAN_HOST1);
-        System.out.println(doubanMv.toString());
+    public static void main(String[] args) throws BusinessException, IOException {
+        String url = "https://movie.douban.com/top250?start=";
+        String link = "&filter=";
+        int num = 150;
+        while (num < 250) {
+            String uri = url + num + link;
+            Document document = Jsoup.connect(uri).get();
+            Elements ByTag = document.getElementsByTag("ol");
+            Elements li = ByTag.select("li");
+            for (int i = 0; i < li.size(); i++) {
+
+                String text = li.get(i).select("div.pic").get(0).select("em").get(0).text();
+                String view = "电影排名：" + text;
+                System.out.println("电影排名：" + view);
+                String hrefAddr = li.get(i).select("div.pic").get(0).select("a").attr("href");
+                System.out.println("电影连接：" + hrefAddr);
+
+                //========================*详情页面爬取开始*=========================
+                Document docum = Jsoup.connect(hrefAddr).get();
+                String daoyan = docum.select("div#info").select("span.attrs").get(0).text();
+                System.out.println("导演：" + daoyan);
+                String jieshao = docum.select("div#link-report").select("span[property=v:summary]").get(0).text();
+                System.out.println("剧情介绍：" + jieshao);
+                //========================*详情页面爬取结束*=========================
+                String imgurl = li.get(i).select("a").get(0).select("img").attr("src");
+                String imgalt = li.get(i).select("a").get(0).select("img").attr("alt");
+                System.out.println("电影名称：" + imgalt);
+                System.out.println("图片地址：" + imgurl);
+                Elements hd = li.get(i).select("div.hd");
+                Element title = hd.select("a[href]").get(0);
+                String titleContent = title.text();
+                String titleView = "电影标题：" + titleContent;
+                System.out.println(titleView);
+
+                Element bd = li.get(i).select("div.bd").get(0);
+                Elements pContext = bd.select("p");
+                Element selectFirst = pContext.first();
+                String fristP = selectFirst.text();
+                String repon = "电影演员：" + fristP;
+                System.out.println(repon);
+                Elements star = bd.select("div.star");
+                String score = star.select("span.rating_num").text();
+                String pinfen = "电影评分：" + score;
+                System.out.println(pinfen);
+                String lastSpan = star.select("span").last().text();
+                String count = "评价人数：" + lastSpan;
+                System.out.println(count);
+                Elements quote = bd.select("p.quote");
+                String mothod = quote.select("span.inq").text();
+                String miaoshu = "电影描述：" + mothod + "\n\n";
+                System.out.println(miaoshu);
+                String regEx = "[^0-9]";
+                Pattern p = Pattern.compile(regEx);
+            }
+            num += 25;
+        }
     }
 }

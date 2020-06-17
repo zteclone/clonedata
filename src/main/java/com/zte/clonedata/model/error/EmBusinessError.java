@@ -14,6 +14,8 @@ public enum EmBusinessError {
     //2 网络连接
     HTTP_ERROR(20000,"网络连接异常"),
     HTTP_POOL_ERROR(20001,"初始化http连接池异常"),
+    HTTP_RESULT_NULL(20002,"http返回为空"),
+    HTTP_RESULT_IPLOCK(20003,"http返回IP限制"),
     //3 JOB
     JOB_ID_IS_NULL(30001,"任务id不能为空"),
     JOB_NAME_IS_NULL(30002,"任务名称不能为空"),

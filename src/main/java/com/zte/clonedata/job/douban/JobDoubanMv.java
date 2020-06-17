@@ -4,19 +4,24 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.zte.clonedata.contanst.Contanst;
 import com.zte.clonedata.dao.DoubanMvMapper;
-import com.zte.clonedata.dao.TaskLogMapper;
 import com.zte.clonedata.model.DoubanMv;
 import com.zte.clonedata.model.error.BusinessException;
+import com.zte.clonedata.model.error.EmBusinessError;
 import com.zte.clonedata.util.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * ProjectName: clonedata-com.zte.clonedata.job
@@ -28,79 +33,104 @@ import java.util.concurrent.Executors;
 @Slf4j
 @Component
 public class JobDoubanMv {
-
     @Autowired
     private DoubanMvMapper doubanMvMapper;
-    private volatile int c = 0;
     /**
      * 切割集合并发访问因子
      */
-    private static final int spList = 25;
+    private static final int spList = 20;
+    private int c = 0;
+    private static Map<String, Integer> startMap = new HashMap<>();
 
-    public String execute() throws InterruptedException {
+    public String execute(String counrty,String year1,String year2) throws InterruptedException {
+        String key = counrty.concat(year1).concat(year2);
         ExecutorService exe = Executors.newCachedThreadPool();
         log.info("豆瓣开始执行任务   >>>");
         //检查主目录
         checkBasePath();
         List<DoubanMv> doubanMvList = Lists.newArrayList();
-        int i = 0;
         PicDownUtils picDownUtils = new PicDownUtils();
-        boolean success = true;
-        String executeResult = "";
+        boolean isLock = false;
+        String executeResult = null;
         synchronized (this) {
+            Integer start = startMap.get(key) == null ? 0 : startMap.get(key);
             while (true) {
+                String url = String.format(
+                        "https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=电影&countries=%s&year_range=%s,%s&start=%s",
+                        counrty, year1, year2, start);
                 try {
-                    getDoubanMvList(i, picDownUtils,doubanMvList);
+                    getDoubanMvList(url, picDownUtils, doubanMvList);
+                    log.info("start => {}", start);
                 } catch (BusinessException e) {
-                    success = false;
-                    executeResult = "失败,可能原因: ".concat(e.getCommonError().getErrorMsg());
-                    break;
-                }
-                if (doubanMvList.size() != (i + 1000)) break;
-                i = i + 1000;
-            }
-            if (success){
-                log.info("豆瓣 {} 条数据加载完毕   >>>", doubanMvList.size());
-                Thread t1 = new Thread(picDownUtils);
-                exe.execute(t1);
-                saveMovice(doubanMvList, exe);
-                exe.shutdown();
-                while (true) {
-                    if (exe.isTerminated()) {
+                    if (e.getCommonError().getErrorCode() == 20002) {
                         break;
                     }
-                    Thread.sleep(500);
+                    isLock = true;
+                    executeResult = "发生错误! 可能原因: ".concat(e.getCommonError().getErrorMsg());
+                    break;
+                } catch (Exception e){
+                    isLock = true;
+                    executeResult = "发生错误! 可能原因: ".concat(e.getMessage());
+                    break;
                 }
-                executeResult = "请求成功,更新电影: ".concat(String.valueOf(doubanMvList.size())).concat("条");
+                if (start == 2000) {
+                    log.info("收集电影信息已达2000,结束此段任务 ... >>> country: {}, year: {}-{}", counrty, year1, year2);
+                    break;
+                }
+                start = start + 20;
+                Thread.sleep(30000);
             }
-            log.info(executeResult);
-            return executeResult;
+            if (!isLock) {
+                startMap.put(key, 0);
+            } else {
+                startMap.put(key, start);
+            }
+            log.info("豆瓣 {} 条数据加载完毕,即将爬取这些数据的详情页面   >>>", doubanMvList.size());
+            if (picDownUtils.files.size() != 0) {
+                Thread t1 = new Thread(picDownUtils);
+                exe.execute(t1);
+            }
+            saveMovice(doubanMvList, exe);
+            exe.shutdown();
+            while (true) {
+                if (exe.isTerminated()) {
+                    break;
+                }
+                Thread.sleep(500);
+            }
         }
+        if (executeResult == null) {
+            executeResult = String.format("请求成功,新增电影: %s 条", JobDoubanMvDetail.successCount);
+        } else {
+            executeResult = String.format("请求成功,新增电影: %s 条, 请求过程中%s", JobDoubanMvDetail.successCount, executeResult);
+        }
+        JobDoubanMvDetail.successCount = 0;
+        log.info(executeResult);
+        return executeResult;
     }
 
     private void checkBasePath() {
         File baseFile = new File(Contanst.BASEURL.concat(Contanst.TYPE_DOUBAN));
-        if (!baseFile.exists()){
+        if (!baseFile.exists()) {
             baseFile.mkdirs();
         }
     }
 
-    private void getDoubanMvList(int i, PicDownUtils picDownUtils,List<DoubanMv> doubanMvList) throws InterruptedException, BusinessException {
-        String url = null;
+    private void getDoubanMvList(String url, PicDownUtils picDownUtils, List<DoubanMv> doubanMvList) throws InterruptedException, BusinessException {
         try {
-            url = "https://movie.douban.com/j/search_subjects?type=movie&tag=热门&page_limit="
-                    .concat(String.valueOf(i + 1000))
-                    .concat("&page_start=")
-                    .concat(String.valueOf(i));
             String result = HttpUtils.getJson(url, Contanst.DOUBAN_HOST1);
-            String data = JSONObject.parseObject(result, Map.class).get(Contanst.JSON_KEY_DOUBAN).toString();
-            List<DoubanModel> doubanModelList = JSONObject.parseArray(data, DoubanModel.class);
+            if (result.length() == 11) {
+                throw new BusinessException(EmBusinessError.HTTP_RESULT_NULL);
+            } else if (result.contains("检测到有异常请求从您的IP发出")) {
+                throw new BusinessException(EmBusinessError.HTTP_RESULT_IPLOCK);
+            }
+            List<DoubanModel> doubanModelList = JSONObject.parseArray(result.substring(8, result.length() - 1), DoubanModel.class);
             for (DoubanModel doubanModel : doubanModelList) {
                 String imageurl = doubanModel.getCover();
                 String name = imageurl.substring(imageurl.lastIndexOf("/") + 1);
                 String path = Contanst.BASEURL.concat(Contanst.TYPE_DOUBAN).concat(File.separator).concat(name);
                 DoubanMv mv = doubanMvMapper.selectByPrimaryKey(doubanModel.getId());
-                if (mv == null){
+                if (mv == null) {
                     //不存在
                     DoubanMv doubanMv = new DoubanMv();
                     doubanMv.setUrl(doubanModel.getUrl());
@@ -109,8 +139,8 @@ public class JobDoubanMv {
                     doubanMv.setMovieid(doubanModel.getId());
                     doubanMv.setRatingnum(doubanModel.getRate());
                     doubanMvList.add(doubanMv);
-                }else {
-                    if (!mv.getRatingnum().equals(doubanModel.getRate())){
+                } else {
+                    if (!mv.getRatingnum().equals(doubanModel.getRate())) {
                         //分数不同
                         DoubanMv doubanMv = new DoubanMv();
                         doubanMv.setMovieid(doubanModel.getId());
@@ -132,15 +162,18 @@ public class JobDoubanMv {
                 }
             }
         } catch (BusinessException e) {
+            if (e.getCommonError().getErrorCode() == 20002 || e.getCommonError().getErrorCode() == 20003) {
+                throw e;
+            }
             if (c++ < 10) {
                 log.error("发生错误url >>> {}", url);
-                log.error("三秒后再次尝试连接  >>>{}<<<", c);
-                Thread.sleep(3000);
-                getDoubanMvList(i, picDownUtils,doubanMvList);
+                log.error("30秒后再次尝试连接  >>>{}<<<", c);
+                Thread.sleep(30000);
+                getDoubanMvList(url, picDownUtils, doubanMvList);
             } else {
                 throw e;
             }
-        }finally {
+        } finally {
             c = 0;
         }
     }
@@ -161,9 +194,14 @@ public class JobDoubanMv {
         }
     }
 
+    public static void main(String[] args) {
+
+    }
+
 }
+
 @Data
-class DoubanModel{
+class DoubanModel {
     private String rate;
     private String url;
     private String cover;

@@ -32,7 +32,7 @@ public class PicDownUtils implements Runnable{
     @Override
     public void run() {
         synchronized (this){
-            String nowYYYYMMDD = DateUtils.getNowYYYYMMDD();
+            String nowYYYYMMDD = DateUtils.getNowYYYYMMDDHHMMSS();
             long start = System.currentTimeMillis();
             int size = urls.size();
             log.info("{} 开始执行图片下载,保存 任务   >>>",nowYYYYMMDD);
@@ -53,9 +53,9 @@ public class PicDownUtils implements Runnable{
             DecimalFormat df=new DecimalFormat("0.00");
             log.info("成功: {}, 失败: {}, 成功率: {}",size,err,err==0?"100%":String.valueOf(df.format((double) (size-err) / (double) size *100)).concat("%"));
             log.info("执行图片下载,保存任务结束,用时: {}   >>>",System.currentTimeMillis()-start);
-            //FTP
-            FTPUtils ftpUtils = SpringContextUtil.getBean(FTPUtils.class);
-            ftpUtils.uploadFile(fileList);
+            //FTP TODO 改前缀或后缀  修改JobDoubanMv的查询是否有文件的文件名前缀后缀
+            /*FTPUtils ftpUtils = SpringContextUtil.getBean(FTPUtils.class);
+            ftpUtils.uploadFile(fileList);*/
         }
     }
 

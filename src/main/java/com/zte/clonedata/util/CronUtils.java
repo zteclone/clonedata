@@ -69,6 +69,9 @@ public class CronUtils {
     }
 
     public static void main(String[] args) throws ParseException, BusinessException {
-        System.out.println(getDate("0 0 1 * * ? *"));
+        Date date = new Date(1592294746000L);
+        SimpleDateFormat s = new SimpleDateFormat("yyyy MM dd HH mm ss");
+        System.out.println(s.format(date));
+        System.out.println(new Date().getTime());
     }
 }
