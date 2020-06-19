@@ -10,10 +10,9 @@ import com.zte.clonedata.util.ScheduleUtils;
 import com.zte.clonedata.util.SpringContextUtil;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.pool.PoolStats;
-import org.quartz.JobKey;
+import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,14 +36,16 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class PageWeb {
     @Autowired
     private TaskManagementService taskManagementService;
-    private ThreadPoolTaskExecutor taskExecutor;
     private PoolingHttpClientConnectionManager connManager;
 
 
     @GetMapping("/list")
-    public ResponseUtils list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit) throws Exception {
+    public ResponseUtils list(
+            @RequestParam("page") Integer page,
+            @RequestParam("limit") Integer limit,
+            @RequestParam(value = "taskname",defaultValue = "")String taskname) throws Exception {
         PageHelper.startPage(page,limit);
-        List<TaskManagement> taskManagements = taskManagementService.selectAll();
+        List<TaskManagement> taskManagements = taskManagementService.select(taskname);
         Set<JobKey> jobKeys = ScheduleUtils.getScheduler().getJobKeys(GroupMatcher.anyGroup());
         Set<String> nameList = new HashSet<>();
         for (JobKey jobKey : jobKeys) {
@@ -67,21 +68,12 @@ public class PageWeb {
      *
      * @return
      */
-    @RequestMapping("/TaskPoolDetail")
-    public ResponseUtils TaskPoolDetail() {
-        if (taskExecutor == null) {
-            taskExecutor = SpringContextUtil.getBean("taskExecutor");
-        }
-        ThreadPoolExecutor threadPoolExecutor = taskExecutor.getThreadPoolExecutor();
-        Map<String, Object> result = Maps.newLinkedHashMap();
-        result.put("正在运行", threadPoolExecutor.getActiveCount());
-        result.put("已完成", threadPoolExecutor.getCompletedTaskCount());
-        //result.put("线程池曾经创建过的最大线程数量", threadPoolExecutor.getLargestPoolSize());
-        //result.put("最大同时运行", threadPoolExecutor.getMaximumPoolSize());
-        result.put("当前线程池的线程数量", threadPoolExecutor.getPoolSize());
-        result.put("任务总个数", threadPoolExecutor.getTaskCount());
-        //result.put("空闲时间(秒)", threadPoolExecutor.getKeepAliveTime(TimeUnit.SECONDS));
-        return ResponseUtils.successData(result);
+    @RequestMapping("/quartzPool")
+    public ResponseUtils quartzPool() throws SchedulerException {
+        Set<JobKey> jobKeys = ScheduleUtils.getScheduler().getJobKeys(GroupMatcher.anyGroup());
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("正在运行任务数",jobKeys.size());
+        return ResponseUtils.successData(map);
     }
 
     @RequestMapping("/httpclientPoolDetail")

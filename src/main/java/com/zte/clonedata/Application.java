@@ -80,4 +80,9 @@ public class Application {
         ModelAndView modelAndView = new ModelAndView("addJob.html");
         return modelAndView;
     }
+    @RequestMapping("/admin/quartz")
+    public ModelAndView quartz(){
+        ModelAndView modelAndView = new ModelAndView("quartz.html");
+        return modelAndView;
+    }
 }

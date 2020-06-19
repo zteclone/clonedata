@@ -44,7 +44,7 @@ public class JobDoubanMv {
 
     public String execute(String counrty,String year1,String year2) throws InterruptedException {
         /*if (counrty.length()>0){
-            return "OK";
+            return counrty.concat("-"+year1).concat("-"+year2);
         }*/
         String key = counrty.concat(year1).concat(year2);
         ExecutorService exe = Executors.newCachedThreadPool();
@@ -64,7 +64,7 @@ public class JobDoubanMv {
                         counrty, year1, year2, start);
                 try {
                     getDoubanMvList(url, picDownUtils, doubanMvList);
-                    log.info("start => {}", start);
+                    log.info("key => {}, start => {}",key, start);
                 } catch (BusinessException e) {
                     if (e.getCommonError().getErrorCode() == 20002) {
                         break;
@@ -77,7 +77,7 @@ public class JobDoubanMv {
                     executeResult = "发生错误! 可能原因: ".concat(e.getMessage());
                     break;
                 }
-                if (thisc == 500){
+                if (thisc == 480){
                     isLock = true;
                     log.info("此次收集电影信息已达500,暂停此次任务,以保证下时段IP安全 ... >>> country: {}, year: {}-{}", counrty, year1, year2);
                     break;

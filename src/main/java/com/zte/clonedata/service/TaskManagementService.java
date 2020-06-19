@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface TaskManagementService {
     List<TaskManagement> selectTaskManagementList();
-    List<TaskManagement> selectAll();
+    List<TaskManagement> select(String taskname);
 
     void updateByPrimaryKeySelective(TaskManagement x);
 
@@ -23,4 +23,6 @@ public interface TaskManagementService {
     void delById(String id);
 
     TaskManagement selectTaskManagementByTaskname(String taskName) throws BusinessException;
+
+    void updateExecuteWeek(String week);
 }

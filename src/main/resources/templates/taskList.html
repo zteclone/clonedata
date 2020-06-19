@@ -7,9 +7,15 @@
     <script src="/static/layui/layui.js" charset="utf-8"></script>
 </head>
 <body style="text-align:center;background-color: #F2F2F2;">
-
-<div style="margin-top: 5%">
+<div style="height: 100px;line-height: 100px;">
+    任务名称：
+    <div class="layui-inline">
+        <input class="layui-input" id="taskname" autocomplete="off">
+    </div>
+</div>
+<div>
     <button class="layui-btn" id="add">新增</button>
+    <button class="layui-btn" id="search">搜索</button>
     <button class="layui-btn" id="reload">刷新</button>
     <table class="layui-hide" id="tab1" lay-filter="tab1"></table>
 </div>
@@ -83,7 +89,6 @@
                         , async: false
                         , success: function (res) {
                             layer.alert(res.msg);
-                            init();
                         }
                     });
                     layer.close(index);
@@ -156,10 +161,14 @@
         $('#reload').on('click', function () {
             init();
         });
-        $('#helpBtn').on('click', function () {
-            alert(1);
+        $('#search').on('click', function () {
+            table.reload('tab1', {
+                url: '/page/list'
+                , where: {
+                    taskname: $("#taskname").val()
+                }
+            });
         });
-
         $('#add').on('click', function () {
             layer.open({
                 type: 2,

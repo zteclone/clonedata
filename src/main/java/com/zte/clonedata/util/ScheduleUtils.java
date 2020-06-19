@@ -77,11 +77,13 @@ public class ScheduleUtils {
         scheduler.triggerJob(jobKey);
     }
 
+    //暂停
     public static void pauseJob(String taskId) throws SchedulerException {
         JobKey jobKey = JobKey.jobKey(taskId, JOB_GROUP_NAME);
         scheduler.pauseJob(jobKey);
     }
 
+    //恢复
     public static void resumeJob(String taskId) throws SchedulerException {
         JobKey jobKey = JobKey.jobKey(taskId, JOB_GROUP_NAME);
         scheduler.resumeJob(jobKey);

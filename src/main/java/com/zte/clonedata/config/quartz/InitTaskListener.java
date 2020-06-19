@@ -49,7 +49,7 @@ public class InitTaskListener implements InitializingBean, ServletContextAware {
 
     }
 
-    private void loadJob() {
+    public void loadJob() {
         List<TaskManagement> taskManagementList = this.taskManagementService.selectTaskManagementList();
         taskManagementList.forEach((x) -> {
             try {

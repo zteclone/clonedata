@@ -11,6 +11,7 @@ import com.zte.clonedata.util.UUIDUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,9 +36,13 @@ public class TaskManagementServiceImpl implements TaskManagementService {
     }
 
     @Override
-    public List<TaskManagement> selectAll() {
+    public List<TaskManagement> select(String taskname) {
         TaskManagementExample example = new TaskManagementExample();
         example.setOrderByClause("cre_dt+0 asc");
+        TaskManagementExample.Criteria criteria = example.createCriteria();
+        if (StringUtils.isNotBlank(taskname)){
+            criteria.andTaskNameLike("%"+taskname+"%");
+        }
         return taskManagementMapper.selectByExample(example);
     }
 
@@ -86,5 +91,22 @@ public class TaskManagementServiceImpl implements TaskManagementService {
             List<TaskManagement> list = taskManagementMapper.selectByExample(example);
             return list.size()==0?null:list.get(0);
         }
+    }
+
+    @Override
+    @Transactional()
+    public void updateExecuteWeek(String week) {
+        TaskManagementExample example = new TaskManagementExample();
+        TaskManagementExample.Criteria criteria = example.createCriteria();
+        criteria.andTaskNameLike("豆瓣  电影  %");
+        List<TaskManagement> list = taskManagementMapper.selectByExample(example);
+        list.forEach(x -> {
+            TaskManagement taskManagement = new TaskManagement();
+            taskManagement.setId(x.getId());
+            String taskExcutePlan = x.getTaskExcutePlan();
+            String substring = taskExcutePlan.substring(taskExcutePlan.length() - 3);
+            taskManagement.setTaskExcutePlan(taskExcutePlan.replaceAll(substring,week));
+            taskManagementMapper.updateByPrimaryKeySelective(taskManagement);
+        });
     }
 }

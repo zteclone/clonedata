@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-@Async("taskExecutor")
 public class JobDoubanTv {
 
     //TODO 豆瓣电视剧

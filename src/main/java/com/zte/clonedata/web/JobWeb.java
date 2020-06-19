@@ -1,6 +1,8 @@
 package com.zte.clonedata.web;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
+import com.zte.clonedata.config.quartz.InitTaskListener;
 import com.zte.clonedata.model.TaskManagement;
 import com.zte.clonedata.model.TaskParam;
 import com.zte.clonedata.model.error.BusinessException;
@@ -8,15 +10,15 @@ import com.zte.clonedata.service.TaskManagementService;
 import com.zte.clonedata.service.TaskParamService;
 import com.zte.clonedata.util.*;
 import lombok.extern.slf4j.Slf4j;
+import org.quartz.JobKey;
 import org.quartz.SchedulerException;
+import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * ProjectName: clonedata-com.zte.clonedata.web.dto
@@ -162,6 +164,22 @@ public class JobWeb {
             return ResponseUtils.success("修改失败: ".concat(e.getCommonError().getErrorMsg()));
         }
         return ResponseUtils.success("修改成功");
+    }
+
+    @Autowired
+    private InitTaskListener initTaskListener;
+    @GetMapping("/updateExecuteWeek")
+    public ResponseUtils updateExecuteWeek(@RequestParam(value = "week")int week) throws SchedulerException {
+        if (0 < week && week < 8){
+            taskManagementService.updateExecuteWeek(String.valueOf(week));
+            Set<JobKey> jobKeys = ScheduleUtils.getScheduler().getJobKeys(GroupMatcher.anyGroup());
+            List<JobKey> jobLists = Lists.newArrayList();
+            jobLists.addAll(jobKeys);
+            ScheduleUtils.getScheduler().deleteJobs(jobLists);
+            initTaskListener.loadJob();
+            return ResponseUtils.success("修改成功");
+        }
+        return ResponseUtils.fail("参数错误");
     }
 
     private Map<String, String> toParamMap(List<TaskParam> taskParamList) {
