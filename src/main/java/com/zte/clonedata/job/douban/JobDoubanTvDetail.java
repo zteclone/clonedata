@@ -132,10 +132,16 @@ public class JobDoubanTvDetail extends Thread {
             }
 
             //片长
-            String runtime = subject.get(0).getElementsMatchingOwnText("单集片长").first().nextSibling().toString();
-            if (StringUtils.isNotEmpty(runtime)) {
-                doubanTv.setRuntime(String.format("|%s|", runtime));
+
+            try {
+                String runtime = subject.get(0).getElementsMatchingOwnText("单集片长").first().nextSibling().toString();
+                if (StringUtils.isNotEmpty(runtime)) {
+                    doubanTv.setRuntime(String.format("|%s|", runtime));
+                }
+            }catch (Exception e){
+                doubanTv.setRuntime("");
             }
+
 
             //别名
             Optional<Element> otherNameOpt = plElement.stream().filter(o -> o.html().equals("又名:")).findFirst();
@@ -175,10 +181,17 @@ public class JobDoubanTvDetail extends Thread {
             }
 
             //集数
-            String episodes_count = subject.get(0).getElementsMatchingOwnText("集数").first().nextSibling().toString();
-            if(StringUtils.isNotEmpty(episodes_count)){
-                doubanTv.setEpisodesCount(episodes_count);
+            try {
+                String episodes_count = subject.get(0).getElementsMatchingOwnText("集数").first().nextSibling().toString();
+                if(StringUtils.isNotEmpty(episodes_count)){
+                    doubanTv.setEpisodesCount(episodes_count);
+                }
+            }catch (Exception e){
+                doubanTv.setEpisodesCount("");
             }
+
+
+
 
 
             c = 0;
@@ -210,7 +223,7 @@ public class JobDoubanTvDetail extends Thread {
     public static void main(String[] args) throws InterruptedException {
         JobDoubanTvDetail jobDoubanTvDetail = new JobDoubanTvDetail();
         DoubanTv doubanTv = new DoubanTv();
-        doubanTv.setUrl("https://movie.douban.com/subject/34463197/");
+        doubanTv.setUrl("https://movie.douban.com/subject/30470509/");
         jobDoubanTvDetail.getTvSave(doubanTv);
     }
 
