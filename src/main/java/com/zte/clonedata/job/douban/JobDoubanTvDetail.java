@@ -133,15 +133,14 @@ public class JobDoubanTvDetail extends Thread {
 
             //片长
 
-            try {
+            if(subject.get(0).getElementsMatchingOwnText("单集片长").size() == 0){
+                doubanTv.setRuntime("");
+            }else{
                 String runtime = subject.get(0).getElementsMatchingOwnText("单集片长").first().nextSibling().toString();
                 if (StringUtils.isNotEmpty(runtime)) {
                     doubanTv.setRuntime(String.format("|%s|", runtime));
                 }
-            }catch (Exception e){
-                doubanTv.setRuntime("");
             }
-
 
             //别名
             Optional<Element> otherNameOpt = plElement.stream().filter(o -> o.html().equals("又名:")).findFirst();
@@ -181,17 +180,14 @@ public class JobDoubanTvDetail extends Thread {
             }
 
             //集数
-            try {
+            if(subject.get(0).getElementsMatchingOwnText("集数").size() == 0){
+                doubanTv.setEpisodesCount("");
+            }else{
                 String episodes_count = subject.get(0).getElementsMatchingOwnText("集数").first().nextSibling().toString();
                 if(StringUtils.isNotEmpty(episodes_count)){
                     doubanTv.setEpisodesCount(episodes_count);
                 }
-            }catch (Exception e){
-                doubanTv.setEpisodesCount("");
             }
-
-
-
 
 
             c = 0;
