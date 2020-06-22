@@ -16,6 +16,7 @@
 <div>
     <button class="layui-btn" id="add">新增</button>
     <button class="layui-btn" id="search">搜索</button>
+    <button class="layui-btn" id="clear">清除</button>
     <button class="layui-btn" id="reload">刷新</button>
     <table class="layui-hide" id="tab1" lay-filter="tab1"></table>
 </div>
@@ -161,9 +162,24 @@
         $('#reload').on('click', function () {
             init();
         });
+        $('#clear').on('click', function () {
+            $("#taskname").val('');
+            table.reload('tab1', {
+                url: '/page/list'
+                , page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+                , where: {
+                    taskname: ''
+                }
+            });
+        });
         $('#search').on('click', function () {
             table.reload('tab1', {
                 url: '/page/list'
+                , page: {
+                    curr: 1 //重新从第 1 页开始
+                }
                 , where: {
                     taskname: $("#taskname").val()
                 }

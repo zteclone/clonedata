@@ -1,12 +1,12 @@
 -- 测试环境
 -- 每次删除数据
-DROP TABLE IF EXISTS `clone_douban_tv_detail`;
-DROP TABLE IF EXISTS `clone_douban_mv_detail`;
-DROP TABLE IF EXISTS `clone_mv`;
-DROP TABLE IF EXISTS `clone_tv`;
-DROP TABLE IF EXISTS `task_management`;
-DROP TABLE IF EXISTS `task_param`;
-DROP TABLE IF EXISTS `task_log`;
+-- DROP TABLE IF EXISTS `clone_douban_tv_detail`;
+-- DROP TABLE IF EXISTS `clone_douban_mv_detail`;
+-- DROP TABLE IF EXISTS `clone_mv`;
+-- DROP TABLE IF EXISTS `clone_tv`;
+-- DROP TABLE IF EXISTS `task_management`;
+-- DROP TABLE IF EXISTS `task_param`;
+-- DROP TABLE IF EXISTS `task_log`;
 
 
 
@@ -14,22 +14,22 @@ DROP TABLE IF EXISTS `task_log`;
 create table if not exists `clone_douban_tv_detail` (
   `tvid` varchar(32) NOT NULL,
   `tvname` varchar(255) DEFAULT NULL,
-  `director` varchar(255) DEFAULT '' COMMENT '导演',
-  `scenarist` varchar(255) DEFAULT NULL COMMENT '编剧',
-  `actors` varchar(1000) DEFAULT NULL COMMENT '主演',
+  `director` varchar(3000) DEFAULT '' COMMENT '导演',
+  `scenarist` varchar(3000) DEFAULT NULL COMMENT '编剧',
+  `actors` varchar(3000) DEFAULT NULL COMMENT '主演',
   `type` varchar(255) DEFAULT NULL COMMENT '类型',
-  `country` varchar(255) DEFAULT NULL COMMENT '制片国家/地区',
-  `language` varchar(255) DEFAULT NULL COMMENT '语言',
-  `releasedata` varchar(255) DEFAULT NULL COMMENT '上映日期',
+  `country` varchar(1000) DEFAULT NULL COMMENT '制片国家/地区',
+  `language` varchar(1000) DEFAULT NULL COMMENT '语言',
+  `releasedata` varchar(1000) DEFAULT NULL COMMENT '上映日期',
   `runtime` varchar(255) DEFAULT NULL COMMENT '片长',
   `ratingnum` varchar(255) DEFAULT NULL COMMENT '豆瓣评分',
-  `tags` varchar(255) DEFAULT NULL COMMENT '标签',
+  `tags` varchar(3000) DEFAULT NULL COMMENT '标签',
   `moviedesc` varchar(3000) DEFAULT NULL COMMENT '简介',
   `p_date` varchar(14) DEFAULT NULL COMMENT '日期',
-  `aka` varchar(255) DEFAULT NULL COMMENT '又名',
-  `http_image` varchar(255) DEFAULT NULL,
-  `filepath` varchar(255) DEFAULT NULL,
-  `url` varchar(255) DEFAULT NULL,
+  `aka` varchar(1000) DEFAULT NULL COMMENT '又名',
+  `http_image` varchar(500) DEFAULT NULL,
+  `filepath` varchar(500) DEFAULT NULL,
+  `url` varchar(500) DEFAULT NULL,
   `episodes_count` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`tvid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -37,22 +37,22 @@ create table if not exists `clone_douban_tv_detail` (
 create table if not exists `clone_douban_mv_detail` (
   `movieid` varchar(32) NOT NULL,
   `moviename` varchar(255) DEFAULT NULL,
-  `director` varchar(255) DEFAULT '' COMMENT '导演',
-  `scenarist` varchar(255) DEFAULT NULL COMMENT '编剧',
-  `actors` varchar(1000) DEFAULT NULL COMMENT '主演',
+  `director` varchar(3000) DEFAULT '' COMMENT '导演',
+  `scenarist` varchar(3000) DEFAULT NULL COMMENT '编剧',
+  `actors` varchar(3000) DEFAULT NULL COMMENT '主演',
   `type` varchar(255) DEFAULT NULL COMMENT '类型',
-  `country` varchar(255) DEFAULT NULL COMMENT '制片国家/地区',
-  `language` varchar(255) DEFAULT NULL COMMENT '语言',
-  `releasedata` varchar(255) DEFAULT NULL COMMENT '上映日期',
+  `country` varchar(1000) DEFAULT NULL COMMENT '制片国家/地区',
+  `language` varchar(1000) DEFAULT NULL COMMENT '语言',
+  `releasedata` varchar(1000) DEFAULT NULL COMMENT '上映日期',
   `runtime` varchar(255) DEFAULT NULL COMMENT '片长',
   `ratingnum` varchar(255) DEFAULT NULL COMMENT '豆瓣评分',
-  `tags` varchar(255) DEFAULT NULL COMMENT '标签',
+  `tags` varchar(3000) DEFAULT NULL COMMENT '标签',
   `moviedesc` varchar(3000) DEFAULT NULL COMMENT '简介',
   `p_date` varchar(14) DEFAULT NULL COMMENT '日期',
-  `aka` varchar(255) DEFAULT NULL COMMENT '又名',
-  `http_image` varchar(255) DEFAULT NULL,
-  `filepath` varchar(255) DEFAULT NULL,
-  `url` varchar(255) DEFAULT NULL,
+  `aka` varchar(1000) DEFAULT NULL COMMENT '又名',
+  `http_image` varchar(1000) DEFAULT NULL,
+  `filepath` varchar(1000) DEFAULT NULL,
+  `url` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`movieid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
