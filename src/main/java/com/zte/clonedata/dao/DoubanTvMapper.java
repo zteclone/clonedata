@@ -4,7 +4,9 @@ import com.zte.clonedata.model.DoubanTv;
 import com.zte.clonedata.model.DoubanTvExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface DoubanTvMapper {
     long countByExample(DoubanTvExample example);
 

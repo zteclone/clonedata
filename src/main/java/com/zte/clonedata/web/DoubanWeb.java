@@ -96,8 +96,21 @@ public class DoubanWeb {
     }
 
     @GetMapping("/doubanTv")
-    public ResponseUtils doubanTv() throws InterruptedException {
-        String execute = jobDoubanTv.execute();
+    public ResponseUtils doubanTv(@RequestParam("paramType") String paramType) throws InterruptedException {
+        String ps = "^(\\d{2})(\\d{2})(\\d{2})$";;
+        Pattern p = Pattern.compile(ps);
+        Matcher matcher = p.matcher(paramType);
+        int c, y1, y2;
+        if (
+                !matcher.find()
+                        || (c = Integer.parseInt(matcher.group(1))) > countrysLen
+                        || (y1 = Integer.parseInt(matcher.group(2))) > yearsLen
+                        || (y2 = Integer.parseInt(matcher.group(3))) > yearsLen) {
+            return ResponseUtils.fail(
+                    String.format("参数错误, 参考参数: <br /><br />参数第一位: 0 < x <= %s<br /><br />参数第二,三位: 0 < x <= %s<br /><br />例如: 010101,100101",
+                            countrysLen, yearsLen));
+        }
+        String execute = jobDoubanTv.execute(countrys[c - 1], years[y1 - 1], years[y2 - 1]);
         if (execute.contains("失败")) {
             return ResponseUtils.fail(execute);
         }
