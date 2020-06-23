@@ -57,7 +57,6 @@ public class JobDoubanMvDetail extends Thread {
 
 
     private int c = 0;
-    private int err = 0;
 
     private void getMoviceSave(DoubanMv doubanMv) throws InterruptedException {
         try {
@@ -189,7 +188,6 @@ public class JobDoubanMvDetail extends Thread {
                 getMoviceSave(doubanMv);
             } else {
                 c = 0;
-                err++;
                 doubanMv = null;
             }
         }

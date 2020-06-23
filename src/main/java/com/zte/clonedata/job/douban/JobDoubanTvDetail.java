@@ -59,7 +59,6 @@ public class JobDoubanTvDetail extends Thread {
 
 
     private int c = 0;
-    private int err = 0;
 
 
     private void getTvSave(DoubanTv doubanTv) throws InterruptedException {
@@ -209,7 +208,6 @@ public class JobDoubanTvDetail extends Thread {
                 getTvSave(doubanTv);
             } else {
                 c = 0;
-                err++;
                 doubanTv = null;
             }
         }

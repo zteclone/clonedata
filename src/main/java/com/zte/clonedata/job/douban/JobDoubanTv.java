@@ -111,11 +111,11 @@ public class JobDoubanTv {
             }
         }
         if (executeResult == null) {
-            executeResult = String.format("请求成功,新增电影: %s 条", JobDoubanMvDetail.successCount);
+            executeResult = String.format("请求成功,新增电影: %s 条", JobDoubanTvDetail.successCount);
         } else {
-            executeResult = String.format("请求成功,新增电影: %s 条, 请求过程中%s", JobDoubanMvDetail.successCount, executeResult);
+            executeResult = String.format("请求成功,新增电影: %s 条, 请求过程中%s", JobDoubanTvDetail.successCount, executeResult);
         }
-        JobDoubanMvDetail.successCount = 0;
+        JobDoubanTvDetail.successCount = 0;
         log.info(executeResult);
         return executeResult;
     }

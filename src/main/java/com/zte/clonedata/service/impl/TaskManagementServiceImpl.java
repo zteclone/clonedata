@@ -104,8 +104,7 @@ public class TaskManagementServiceImpl implements TaskManagementService {
             TaskManagement taskManagement = new TaskManagement();
             taskManagement.setId(x.getId());
             String taskExcutePlan = x.getTaskExcutePlan();
-            String substring = taskExcutePlan.substring(taskExcutePlan.length() - 3);
-            taskManagement.setTaskExcutePlan(taskExcutePlan.replaceAll(substring,week));
+            taskManagement.setTaskExcutePlan(taskExcutePlan.substring(0,taskExcutePlan.length() - 1).concat(week));
             taskManagementMapper.updateByPrimaryKeySelective(taskManagement);
         });
     }

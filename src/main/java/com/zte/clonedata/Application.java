@@ -28,6 +28,9 @@ public class Application {
      * druid监控页面 >>>        http://localhost:8090/druid/
      * maven配置 >>>           mybatis-generator:generate
      * 任务Web页面  >>>         http://localhost:8090/admin/taskList
+     *
+     *
+     * http://localhost:8090/jobWeb/updateExecuteWeek?week=7
      */
 
 
