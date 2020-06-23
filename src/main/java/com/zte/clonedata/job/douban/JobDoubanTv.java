@@ -3,9 +3,9 @@ package com.zte.clonedata.job.douban;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.zte.clonedata.contanst.Contanst;
-import com.zte.clonedata.dao.DoubanMvMapper;
 import com.zte.clonedata.dao.DoubanTvMapper;
-import com.zte.clonedata.model.DoubanMv;
+import com.zte.clonedata.job.AbstractJob;
+import com.zte.clonedata.job.model.DoubanModel;
 import com.zte.clonedata.model.DoubanTv;
 import com.zte.clonedata.model.error.BusinessException;
 import com.zte.clonedata.model.error.EmBusinessError;
@@ -34,19 +34,14 @@ import java.util.concurrent.Executors;
 @Slf4j
 @Component
 @Async("taskExecutor")
-public class JobDoubanTv {
-
+public class JobDoubanTv extends AbstractJob {
     @Autowired
     private DoubanTvMapper doubanTvMapper;
-    /**
-     * 切割集合并发访问因子
-     */
-    private static final int spList = 20;
+
     private int c = 0;
     private static Map<String, Integer> startMap = new HashMap<>();
 
-    //TODO 豆瓣电视剧
-    public String execute(String counrty,String year1,String year2)  throws InterruptedException{
+    protected String execute(String counrty,String year1,String year2)  throws InterruptedException{
         String key = counrty.concat(year1).concat(year2);
         ExecutorService exe = Executors.newCachedThreadPool();
         log.info("豆瓣开始执行任务   >>>");
@@ -64,7 +59,7 @@ public class JobDoubanTv {
                         "https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=电视剧&countries=%s&year_range=%s,%s&start=%s",
                         counrty, year1, year2, start);
                 try {
-                    getDoubanTvList(url, picDownUtils, DoubanTvList);
+                    getListByURL(url, picDownUtils, DoubanTvList);
                     log.info("start => {}", start);
                 } catch (BusinessException e) {
                     if (e.getCommonError().getErrorCode() == 20002) {
@@ -101,7 +96,7 @@ public class JobDoubanTv {
                 Thread t1 = new Thread(picDownUtils);
                 exe.execute(t1);
             }
-            saveTv(DoubanTvList, exe);
+            executeDetail(DoubanTvList, exe);
             exe.shutdown();
             while (true) {
                 if (exe.isTerminated()) {
@@ -120,15 +115,7 @@ public class JobDoubanTv {
         return executeResult;
     }
 
-    private void checkBasePath() {
-        File baseFile = new File(Contanst.BASEURL.concat(Contanst.TYPE_DOUBAN));
-        if (!baseFile.exists()) {
-            baseFile.mkdirs();
-        }
-    }
-
-
-    private void getDoubanTvList(String url, PicDownUtils picDownUtils, List<DoubanTv> doubanTvList) throws InterruptedException, BusinessException {
+    protected <T> void getListByURL(String url, PicDownUtils picDownUtils, List<T> doubanTvList) throws InterruptedException, BusinessException {
         try {
             String result = HttpUtils.getJson(url, Contanst.DOUBAN_HOST1);
             if (result.length() == 11) {
@@ -151,7 +138,7 @@ public class JobDoubanTv {
                     doubanTv.setTvid(doubanModel.getId());
                     doubanTv.setRatingnum(doubanModel.getRate());
                     doubanTv.setTvname(doubanModel.getTitle());
-                    doubanTvList.add(doubanTv);
+                    doubanTvList.add((T) doubanTv);
                 } else {
                     if (!tv.getRatingnum().equals(doubanModel.getRate())) {
                         //分数不同
@@ -182,7 +169,7 @@ public class JobDoubanTv {
                 log.error("发生错误url >>> {}", url);
                 log.error("30秒后再次尝试连接  >>>{}<<<", c);
                 Thread.sleep(30000);
-                getDoubanTvList(url, picDownUtils, doubanTvList);
+                getListByURL(url, picDownUtils, doubanTvList);
             } else {
                 throw e;
             }
@@ -191,18 +178,18 @@ public class JobDoubanTv {
         }
     }
 
-    private void saveTv(List<DoubanTv> tvs, ExecutorService exe) {
+    protected <T> void executeDetail(List<T> tvs, ExecutorService exe) {
         int size = tvs.size() / spList;
         int b = tvs.size() % spList;
         log.info("计划创建: {}条任务  >>>", b == 0 ? size : (size + 1));
         log.info("开始执行计划任务项  >>>");
         for (int i = 0; i < size; i++) {
-            List<DoubanTv> m1 = new ArrayList<>(tvs.subList((i * spList), (i + 1) * spList));
-            exe.execute(new JobDoubanTvDetail(m1, doubanTvMapper));
+            List<T> m1 = new ArrayList<>(tvs.subList((i * spList), (i + 1) * spList));
+            exe.execute(new JobDoubanTvDetail((List<DoubanTv>) m1, doubanTvMapper));
         }
         if (b != 0) {
-            List<DoubanTv> m1 = new ArrayList<>(tvs.subList(size * spList, tvs.size()));
-            exe.execute(new JobDoubanTvDetail(m1, doubanTvMapper));
+            List<T> m1 = new ArrayList<>(tvs.subList(size * spList, tvs.size()));
+            exe.execute(new JobDoubanTvDetail((List<DoubanTv>) m1, doubanTvMapper));
         }
     }
 

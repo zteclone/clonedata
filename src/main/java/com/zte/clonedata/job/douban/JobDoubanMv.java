@@ -4,24 +4,20 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.zte.clonedata.contanst.Contanst;
 import com.zte.clonedata.dao.DoubanMvMapper;
+import com.zte.clonedata.job.AbstractJob;
+import com.zte.clonedata.job.model.DoubanModel;
 import com.zte.clonedata.model.DoubanMv;
 import com.zte.clonedata.model.error.BusinessException;
 import com.zte.clonedata.model.error.EmBusinessError;
 import com.zte.clonedata.util.*;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * ProjectName: clonedata-com.zte.clonedata.job
@@ -32,13 +28,10 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 @Component
-public class JobDoubanMv {
+public class JobDoubanMv extends AbstractJob {
     @Autowired
     private DoubanMvMapper doubanMvMapper;
-    /**
-     * 切割集合并发访问因子
-     */
-    private static final int spList = 20;
+
     private int c = 0;
     private static Map<String, Integer> startMap = new HashMap<>();
 
@@ -63,7 +56,7 @@ public class JobDoubanMv {
                         "https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=电影&countries=%s&year_range=%s,%s&start=%s",
                         counrty, year1, year2, start);
                 try {
-                    getDoubanMvList(url, picDownUtils, doubanMvList);
+                    getListByURL(url, picDownUtils, doubanMvList);
                     log.info("key => {}, start => {}",key, start);
                 } catch (BusinessException e) {
                     if (e.getCommonError().getErrorCode() == 20002) {
@@ -100,7 +93,7 @@ public class JobDoubanMv {
                 Thread t1 = new Thread(picDownUtils);
                 exe.execute(t1);
             }
-            saveMovice(doubanMvList, exe);
+            executeDetail(doubanMvList, exe);
             exe.shutdown();
             while (true) {
                 if (exe.isTerminated()) {
@@ -119,14 +112,7 @@ public class JobDoubanMv {
         return executeResult;
     }
 
-    private void checkBasePath() {
-        File baseFile = new File(Contanst.BASEURL.concat(Contanst.TYPE_DOUBAN));
-        if (!baseFile.exists()) {
-            baseFile.mkdirs();
-        }
-    }
-
-    private void getDoubanMvList(String url, PicDownUtils picDownUtils, List<DoubanMv> doubanMvList) throws InterruptedException, BusinessException {
+    protected <T> void getListByURL(String url, PicDownUtils picDownUtils, List<T> doubanMvList) throws InterruptedException, BusinessException {
         try {
             String result = HttpUtils.getJson(url, Contanst.DOUBAN_HOST1);
             if (result.length() == 11) {
@@ -149,7 +135,7 @@ public class JobDoubanMv {
                     doubanMv.setMovieid(doubanModel.getId());
                     doubanMv.setRatingnum(doubanModel.getRate());
                     doubanMv.setMoviename(doubanModel.getTitle());
-                    doubanMvList.add(doubanMv);
+                    doubanMvList.add((T) doubanMv);
                 } else {
                     if (!mv.getRatingnum().equals(doubanModel.getRate())) {
                         //分数不同
@@ -180,7 +166,7 @@ public class JobDoubanMv {
                 log.error("发生错误url >>> {}", url);
                 log.error("30秒后再次尝试连接  >>>{}<<<", c);
                 Thread.sleep(30000);
-                getDoubanMvList(url, picDownUtils, doubanMvList);
+                getListByURL(url, picDownUtils, doubanMvList);
             } else {
                 throw e;
             }
@@ -190,32 +176,19 @@ public class JobDoubanMv {
     }
 
 
-    private void saveMovice(List<DoubanMv> movies, ExecutorService exe) {
+    protected <T> void executeDetail(List<T> movies, ExecutorService exe) {
         int size = movies.size() / spList;
         int b = movies.size() % spList;
         log.info("计划创建: {}条任务  >>>", b == 0 ? size : (size + 1));
         log.info("开始执行计划任务项  >>>");
         for (int i = 0; i < size; i++) {
-            List<DoubanMv> m1 = new ArrayList<>(movies.subList((i * spList), (i + 1) * spList));
-            exe.execute(new JobDoubanMvDetail(m1, doubanMvMapper));
+            List<T> m1 = new ArrayList<>(movies.subList((i * spList), (i + 1) * spList));
+            exe.execute(new JobDoubanMvDetail((List<DoubanMv>) m1, doubanMvMapper));
         }
         if (b != 0) {
-            List<DoubanMv> m1 = new ArrayList<>(movies.subList(size * spList, movies.size()));
-            exe.execute(new JobDoubanMvDetail(m1, doubanMvMapper));
+            List<T> m1 = new ArrayList<>(movies.subList(size * spList, movies.size()));
+            exe.execute(new JobDoubanMvDetail((List<DoubanMv>) m1, doubanMvMapper));
         }
     }
 
-    public static void main(String[] args) {
-
-    }
-
-}
-
-@Data
-class DoubanModel {
-    private String rate;
-    private String url;
-    private String cover;
-    private String id;
-    private String title;
 }
