@@ -18,6 +18,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -199,6 +200,9 @@ public class JobDoubanTvDetail extends Thread {
             if (e instanceof BusinessException) {
                 log.error("获取详单错误 >>> {}", ((BusinessException) e).getCommonError().getErrorMsg());
                 if (((BusinessException) e).getCommonError().getErrorMsg().contains("HttpStatus: 404")) return;
+            }else if (e instanceof SQLException){
+                log.error("存入数据库异常,请检查数据库配置及字段. >>> {}",e.getMessage());
+                return;
             } else {
                 log.error("获取详单错误 >>> {}", e.getMessage());
             }
