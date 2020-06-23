@@ -19,6 +19,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -169,6 +170,12 @@ public class JobDoubanMvDetail extends Thread {
                 doubanMv.setMoviedesc(story.trim());
             }
 
+            String tag = doc.select("div.tags-body").text();
+            if (StringUtils.isNotEmpty(tag)) {
+                String tags = tag.replaceAll(" ", "|");
+                doubanMv.setTags(tags);
+            }
+
             c = 0;
             synchronized (this){
                 successCount ++;
@@ -194,60 +201,12 @@ public class JobDoubanMvDetail extends Thread {
     }
 
     public static void main(String[] args) throws BusinessException, IOException {
-        String url = "https://movie.douban.com/top250?start=";
-        String link = "&filter=";
-        int num = 150;
-        while (num < 250) {
-            String uri = url + num + link;
-            Document document = Jsoup.connect(uri).get();
-            Elements ByTag = document.getElementsByTag("ol");
-            Elements li = ByTag.select("li");
-            for (int i = 0; i < li.size(); i++) {
-
-                String text = li.get(i).select("div.pic").get(0).select("em").get(0).text();
-                String view = "电影排名：" + text;
-                System.out.println("电影排名：" + view);
-                String hrefAddr = li.get(i).select("div.pic").get(0).select("a").attr("href");
-                System.out.println("电影连接：" + hrefAddr);
-
-                //========================*详情页面爬取开始*=========================
-                Document docum = Jsoup.connect(hrefAddr).get();
-                String daoyan = docum.select("div#info").select("span.attrs").get(0).text();
-                System.out.println("导演：" + daoyan);
-                String jieshao = docum.select("div#link-report").select("span[property=v:summary]").get(0).text();
-                System.out.println("剧情介绍：" + jieshao);
-                //========================*详情页面爬取结束*=========================
-                String imgurl = li.get(i).select("a").get(0).select("img").attr("src");
-                String imgalt = li.get(i).select("a").get(0).select("img").attr("alt");
-                System.out.println("电影名称：" + imgalt);
-                System.out.println("图片地址：" + imgurl);
-                Elements hd = li.get(i).select("div.hd");
-                Element title = hd.select("a[href]").get(0);
-                String titleContent = title.text();
-                String titleView = "电影标题：" + titleContent;
-                System.out.println(titleView);
-
-                Element bd = li.get(i).select("div.bd").get(0);
-                Elements pContext = bd.select("p");
-                Element selectFirst = pContext.first();
-                String fristP = selectFirst.text();
-                String repon = "电影演员：" + fristP;
-                System.out.println(repon);
-                Elements star = bd.select("div.star");
-                String score = star.select("span.rating_num").text();
-                String pinfen = "电影评分：" + score;
-                System.out.println(pinfen);
-                String lastSpan = star.select("span").last().text();
-                String count = "评价人数：" + lastSpan;
-                System.out.println(count);
-                Elements quote = bd.select("p.quote");
-                String mothod = quote.select("span.inq").text();
-                String miaoshu = "电影描述：" + mothod + "\n\n";
-                System.out.println(miaoshu);
-                String regEx = "[^0-9]";
-                Pattern p = Pattern.compile(regEx);
-            }
-            num += 25;
-        }
+        String url = "https://movie.douban.com/subject/1438338/";
+        DoubanMv doubanMv = new DoubanMv();
+        doubanMv.setUrl(url);
+        List<DoubanMv> list = new ArrayList<>();
+        list.add(doubanMv);
+        JobDoubanMvDetail jobDoubanMvDetail = new JobDoubanMvDetail(list,null);
+        jobDoubanMvDetail.start();
     }
 }
