@@ -41,7 +41,7 @@ public class JobDoubanTv extends AbstractJob {
     private int c = 0;
     private static Map<String, Integer> startMap = new HashMap<>();
 
-    protected String execute(String counrty,String year1,String year2)  throws InterruptedException{
+    public String execute(String counrty, String year1, String year2)  throws InterruptedException{
         String key = counrty.concat(year1).concat(year2);
         ExecutorService exe = Executors.newCachedThreadPool();
         log.info("豆瓣开始执行任务   >>>");
