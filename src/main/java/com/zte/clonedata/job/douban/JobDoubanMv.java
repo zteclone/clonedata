@@ -85,12 +85,12 @@ public class JobDoubanMv extends AbstractJob {
                     break;
                 }
                 thisc = thisc + 20;
+                start = start + 20;
                 if (thisc == 500){
                     isLock = true;
                     log.info("此次收集电影信息已达500,暂停此次任务,以保证下时段IP安全 ... >>> country: {}, year: {}-{}", counrty, year1, year2);
                     break;
                 }
-                start = start + 20;
                 if (start == 3000) {
                     log.info("此段收集电影信息已达3000,结束此段任务 ... >>> country: {}, year: {}-{}", counrty, year1, year2);
                     break;
