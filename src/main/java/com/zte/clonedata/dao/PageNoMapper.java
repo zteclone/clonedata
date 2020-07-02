@@ -32,4 +32,6 @@ public interface PageNoMapper {
     int updateByPrimaryKey(PageNo record);
 
     String getValueByKeyAndTypeid(PageNo record);
+
+    int updateValueByKeyAndTypeid(PageNo record);
 }

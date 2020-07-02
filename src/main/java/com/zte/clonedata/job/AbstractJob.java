@@ -6,6 +6,7 @@ import com.zte.clonedata.util.PicDownUtils;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -34,18 +35,18 @@ public abstract class AbstractJob {
      *  获取指定URL的集合
      * @param url   访问url
      * @param picDownUtils  图片下载工具类
-     * @param dataList  url爬取数据保存集合
+     * @param dataMap  url爬取数据保存集合
      * @param <T>   根据网站类型的实体类
      */
-    protected abstract <T> void getListByURL(String url, PicDownUtils picDownUtils, List<T> dataList) throws InterruptedException, BusinessException;
+    protected abstract <T> void getListByURL(String url, PicDownUtils picDownUtils, Map<String,T> dataMap) throws InterruptedException, BusinessException;
 
     /**
      *  执行详单访问保存操作
-     * @param dataList    需要访问详单的数据集合
+     * @param dataMap    需要访问详单的数据集合
      * @param exe   多线程执行类
      * @param <T>   根据网站类型的实体类
      */
-    protected abstract <T> void executeDetail(List<T> dataList, ExecutorService exe);
+    protected abstract <T> void executeDetail(Map<String,T> dataMap, ExecutorService exe);
     /**
      * 校验主目录
      */

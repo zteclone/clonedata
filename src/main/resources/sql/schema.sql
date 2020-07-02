@@ -8,23 +8,21 @@
 -- DROP TABLE IF EXISTS `task_param`;
 -- DROP TABLE IF EXISTS `task_log`;
 
-
-
-
+-- 电视剧表
 create table if not exists `clone_douban_tv_detail` (
   `tvid` varchar(32) NOT NULL,
   `tvname` varchar(1000) DEFAULT NULL,
-  `director` varchar(3000) DEFAULT '' COMMENT '导演',
-  `scenarist` varchar(3000) DEFAULT NULL COMMENT '编剧',
-  `actors` varchar(8000) DEFAULT NULL COMMENT '主演',
-  `type` varchar(255) DEFAULT NULL COMMENT '类型',
-  `country` varchar(1000) DEFAULT NULL COMMENT '制片国家/地区',
-  `language` varchar(1000) DEFAULT NULL COMMENT '语言',
-  `releasedata` varchar(1000) DEFAULT NULL COMMENT '上映日期',
+  `director` text COMMENT '导演',
+  `scenarist` text COMMENT '编剧',
+  `actors` text COMMENT '主演',
+  `type` varchar(2000) DEFAULT NULL COMMENT '类型',
+  `country` varchar(2000) DEFAULT NULL COMMENT '制片国家/地区',
+  `language` varchar(2000) DEFAULT NULL COMMENT '语言',
+  `releasedata` varchar(2000) DEFAULT NULL COMMENT '上映日期',
   `runtime` varchar(255) DEFAULT NULL COMMENT '片长',
   `ratingnum` varchar(255) DEFAULT NULL COMMENT '豆瓣评分',
-  `tags` varchar(3000) DEFAULT NULL COMMENT '标签',
-  `moviedesc` varchar(8000) DEFAULT NULL COMMENT '简介',
+  `tags` varchar(2000) DEFAULT NULL COMMENT '标签',
+  `moviedesc` text NULL COMMENT '简介',
   `p_date` varchar(14) DEFAULT NULL COMMENT '日期',
   `aka` varchar(2000) DEFAULT NULL COMMENT '又名',
   `http_image` varchar(500) DEFAULT NULL,
@@ -32,8 +30,9 @@ create table if not exists `clone_douban_tv_detail` (
   `url` varchar(500) DEFAULT NULL,
   `episodes_count` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`tvid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 电影表
 create table if not exists `clone_mv_detail` (
   `movieid` varchar(32) NOT NULL,
   `moviename` varchar(2000) DEFAULT NULL,
@@ -55,14 +54,16 @@ create table if not exists `clone_mv_detail` (
   `url` varchar(255) DEFAULT NULL COMMENT '详情网络地址',
   `mv_typeid` varchar(32) NOT NULL DEFAULT '' COMMENT '电影类别 关联clone_data_type表',
   PRIMARY KEY (`movieid`,`mv_typeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 爬取目标类型表
 create table if not exists `clone_data_type` (
-  `id` varchar(255) NOT NULL,
+  `id` varchar(32) NOT NULL,
   `type_name` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 爬取页数表
 create table if not exists `clone_page_no` (
   `id` varchar(32) NOT NULL,
   `key` varchar(255) NOT NULL DEFAULT '',
@@ -70,10 +71,11 @@ create table if not exists `clone_page_no` (
   `type` varchar(32) NOT NULL DEFAULT '',
   `update_dt` varchar(14) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 定时任务配置表
 create table if not exists `task_management` (
-  `id` varchar(255) NOT NULL,
+  `id` varchar(32) NOT NULL,
   `excute_target` varchar(255) NOT NULL DEFAULT '',
   `external_code` varchar(255) NOT NULL DEFAULT '',
   `task_excute_plan` varchar(255) NOT NULL DEFAULT '',
@@ -84,17 +86,18 @@ create table if not exists `task_management` (
   `timeout_second` smallint(6) NOT NULL DEFAULT '0',
   `cre_dt` varchar(14) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 定时任务参数表
 create table if not exists `task_param` (
-  `id` varchar(255) NOT NULL,
+  `id` varchar(32) NOT NULL,
   `param_name` varchar(255) DEFAULT NULL,
   `param_value` varchar(255) DEFAULT NULL,
   `task_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
+-- 定时任务日志表
 create table if not exists `task_log` (
   `id` varchar(32) NOT NULL,
   `begintime` varchar(14) NOT NULL DEFAULT '',
@@ -104,4 +107,4 @@ create table if not exists `task_log` (
   `execute_result` varchar(1000) NOT NULL DEFAULT '',
   `task_id` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>任务管理</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
+    <script src="/static/layui/layui.js" charset="utf-8"></script>
+</head>
+<body style="text-align:center;background-color: #F2F2F2;">
+<div style="height: 100px;line-height: 100px;">
+    任务名称：
+    <div class="layui-inline">
+        <input class="layui-input" id="taskname" autocomplete="off">
+    </div>
+</div>
+<div>
+    <button class="layui-btn" id="add">新增</button>
+    <button class="layui-btn" id="search">搜索</button>
+    <button class="layui-btn" id="clear">清除</button>
+    <button class="layui-btn" id="reload">刷新</button>
+    <table class="layui-hide" id="tab1" lay-filter="tab1"></table>
+</div>
+
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="execute">执行</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">详情</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/html" id="cvjobRun">
+    <input type="checkbox" name="jobRun" value="{{d.id}}" lay-skin="switch" lay-text="装载中|未装载" lay-filter="jobRunAdd" {{ d.jobRun == 1 ? 'checked' : '' }}>
+</script>
+</body>
+</html>
+<script>
+    layui.use(['table', 'jquery','form'], function () {
+        var $ = layui.jquery
+            , table = layui.table
+            , form = layui.form;
+
+        function init() {
+            table.render({
+                elem: '#tab1'
+                , url: '/page/list'
+                , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                    title: '查看池信息'
+                    ,layEvent: 'LAYTABLE_TIPS'
+                    ,icon: 'layui-icon-console'
+                },{
+                    title: '参数疑问'
+                    ,layEvent: 'HELPBTN'
+                    ,icon: 'layui-icon-tips'
+                }]
+                , title: '数据表'
+                , page: true
+                , cols: [
+                    [
+                        {field: 'id', title: 'id', align: 'center', hide: true}
+                        , {field: 'taskId', title: '任务id', align: 'center', hide: true}
+                        , {field: 'taskName', title: '任务名称', edit: 'text', align: 'center'}
+                        , {field: 'externalCode', title: '请求头', edit: 'text', align: 'center', hide: true}
+                        , {field: 'taskExcutePlan',width: 200, edit: 'text', title: '执行表达式', align: 'center'}
+                        , {field: 'taskStatus',width: 100, title: '状态', align: 'center', templet: function (d) {
+                            if (d.taskStatus == 1){
+                                return "正常";
+                            }else {
+                                return "异常"
+                            }
+                        }}
+                        , {field: 'excuteTarget', title: '请求网址', edit: 'text', align: 'center'}
+                        , {field: 'taskType',width: 100 , title: '请求类型', align: 'center'}
+                        , {field: 'jobRun',width: 200, title: '装载定时任务', align: 'center', templet: '#cvjobRun'}
+                        , {fixed: 'right',width: 200, title: '操作', toolbar: '#barDemo', align: 'center'}
+                    ]
+                ]
+            });
+        }
+
+
+        //监听行工具事件
+        table.on('tool(tab1)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'execute') {
+                layer.confirm('确认运行', function (index) {
+                    var index = layer.load();
+                    $.ajax({
+                        url: "/jobWeb/execute?id=" + data.id
+                        , type: "get"
+                        , async: false
+                        , success: function (res) {
+                            layer.alert(res.msg);
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+            if (obj.event === 'detail') {
+                layer.open({
+                    type: 2,
+                    title: data.taskName,
+                    area: ['900px', '650px'],
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: '/admin/detail?taskId=' + data.taskId
+                });
+            }
+            if (obj.event === 'del') {
+                layer.confirm('确认删除', function (index) {
+                    $.ajax({
+                        url: "/jobWeb/del?id=" + data.id
+                        , type: "get"
+                        , async: false
+                        , success: function (res) {
+                            if (res.code == 0) {
+                                obj.del();
+                            }
+                            layer.msg(res.msg);
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+        //头工具栏事件
+        table.on('toolbar(tab1)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                //自定义头工具栏右侧图标 - 提示
+                case 'LAYTABLE_TIPS':
+                    layer.open({
+                        type: 2,
+                        title: '池监控',
+                        area: ['900px', '450px'],
+                        fixed: false, //不固定
+                        maxmin: true,
+                        content: '/admin/pool'
+                    });
+                    break;
+                case 'HELPBTN':
+                    $.ajax({
+                        url: '/douban/getParam'
+                        , type: 'get'
+                        , success: function (res) {
+                            if (res.code != 0){
+                                layer.alert(res.code);
+                                return;
+                            }
+                            var htmls = '<table width="" border="0">';
+                            var countryList = res.data.countryList;
+                            var yearList = res.data.yearList;
+                            for (var i = 0; i < countryList.length; i++) {
+                                htmls += '<tr><td width="90px" height="27px">'+countryList[i]+'</td><td width="90px">'+yearList[i]+'</td>';
+                            }
+                            htmls += '</table>';
+                            layer.alert(htmls);
+                        }
+                    });
+
+            };
+        });
+        $('#reload').on('click', function () {
+            init();
+        });
+        $('#clear').on('click', function () {
+            $("#taskname").val('');
+            table.reload('tab1', {
+                url: '/page/list'
+                , page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+                , where: {
+                    taskname: ''
+                }
+            });
+        });
+        $('#search').on('click', function () {
+            table.reload('tab1', {
+                url: '/page/list'
+                , page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+                , where: {
+                    taskname: $("#taskname").val()
+                }
+            });
+        });
+        $('#add').on('click', function () {
+            layer.open({
+                type: 2,
+                title: '新增任务',
+                area: ['700px', '550px'],
+                fixed: false, //不固定
+                maxmin: true,
+                content: '/admin/addJob',
+                end : function(){
+                    init();
+                    //return false 开启该代码可禁止点击该按钮关闭
+            }
+            });
+        });
+        //监听性别操作
+        form.on('switch(jobRunAdd)', function(obj){
+            var id = this.value;
+            if (obj.elem.checked){
+                layer.confirm('确认启动定时任务', function (index) {
+                    $.ajax({
+                        url: "/jobWeb/start?id=" + id
+                        , type: "get"
+                        , async: false
+                        , success: function (res) {
+                            layer.msg(res.msg);
+                            init();
+                        }
+                    });
+                },function () {
+                    obj.elem.checked = false;
+                    form.render();
+                });
+            }else {
+                layer.confirm('确认关闭定时任务', function (index) {
+                    $.ajax({
+                        url: "/jobWeb/stop?id=" + id
+                        , type: "get"
+                        , async: false
+                        , success: function (res) {
+                            layer.msg(res.msg);
+                            init();
+                        }
+                    });
+                },function () {
+                    obj.elem.checked = true;
+                    form.render();
+                });
+            }
+        });
+
+        table.on('edit(tab1)',function (obj) {
+            if (obj.data.jobRun == 1){
+                layer.msg('定时任务运行中,无法修改');
+                init();
+                return;
+            }
+            var object = new Object();
+            object.id = obj.data.id;
+            object.excuteTarget = obj.data.excuteTarget;
+            object.taskName = obj.data.taskName;
+            object.taskExcutePlan = obj.data.taskExcutePlan;
+            object.externalCode = obj.data.externalCode;
+            $.ajax({
+                url: "/jobWeb/update"
+                , type: "post"
+                , async: false
+                , dataType: "json"
+                , contentType: "application/json"
+                , data: JSON.stringify(object)
+                , success: function (res) {
+                    layer.msg(res.msg);
+                    init();
+                }
+            });
+        });
+        init();
+    });
+</script>

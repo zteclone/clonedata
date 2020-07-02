@@ -8,7 +8,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/clonedata?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=false
+    url: jdbc:mysql://localhost:13306/clonedata?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=false
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
@@ -36,11 +36,12 @@ spring:
       connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
       # 合并多个DruidDataSource的监控数据
       useGlobalDataSourceStat: true
-    schema:
-      - classpath:sql/schema.sql
-    initialization-mode: always
-    data:
-      - classpath:sql/data.sql
+    #测试环境 动态加载sql文件报错,暂时关闭,手动执行sql
+    #schema:
+    #  - classpath:sql/schema.sql
+    #initialization-mode: always
+    #data:
+    #  - classpath:sql/data.sql
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html

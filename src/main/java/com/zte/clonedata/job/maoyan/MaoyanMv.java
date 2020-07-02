@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -21,19 +22,18 @@ import java.util.concurrent.ExecutorService;
 public class MaoyanMv extends AbstractJob {
 
 
-
     @Override
     protected String execute(String counrty, String year1, String year2) throws InterruptedException {
         return null;
     }
 
     @Override
-    protected <T> void getListByURL(String url, PicDownUtils picDownUtils, List<T> dataList) throws InterruptedException, BusinessException {
+    protected <T> void getListByURL(String url, PicDownUtils picDownUtils, Map<String, T> dataMap) throws InterruptedException, BusinessException {
 
     }
 
     @Override
-    protected <T> void executeDetail(List<T> dataList, ExecutorService exe) {
+    protected <T> void executeDetail(Map<String, T> dataMap, ExecutorService exe) {
 
     }
 }

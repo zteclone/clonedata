@@ -31,9 +31,9 @@ public class PageNoServiceImpl implements PageNoService {
     }
 
     @Override
-    public void update(PageNo pageNo) {
+    public void updateValueByKeyAndTypeid(PageNo pageNo) {
         pageNo.setUpdateDt(DateUtils.getNowYYYYMMDDHHMMSS());
-        pageNoMapper.updateByPrimaryKey(pageNo);
+        pageNoMapper.updateValueByKeyAndTypeid(pageNo);
     }
 
     @Override

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zte.clonedata.dao.TaskManagementMapper">
+  <resultMap id="BaseResultMap" type="com.zte.clonedata.model.TaskManagement">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="excute_target" jdbcType="VARCHAR" property="excuteTarget" />
+    <result column="external_code" jdbcType="VARCHAR" property="externalCode" />
+    <result column="task_excute_plan" jdbcType="VARCHAR" property="taskExcutePlan" />
+    <result column="task_id" jdbcType="VARCHAR" property="taskId" />
+    <result column="task_name" jdbcType="VARCHAR" property="taskName" />
+    <result column="task_status" jdbcType="VARCHAR" property="taskStatus" />
+    <result column="task_type" jdbcType="VARCHAR" property="taskType" />
+    <result column="timeout_second" jdbcType="SMALLINT" property="timeoutSecond" />
+    <result column="cre_dt" jdbcType="VARCHAR" property="creDt" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, excute_target, external_code, task_excute_plan, task_id, task_name, task_status, 
+    task_type, timeout_second, cre_dt
+  </sql>
+  <select id="selectByExample" parameterType="com.zte.clonedata.model.TaskManagementExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from task_management
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from task_management
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from task_management
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zte.clonedata.model.TaskManagementExample">
+    delete from task_management
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zte.clonedata.model.TaskManagement">
+    insert into task_management (id, excute_target, external_code, 
+      task_excute_plan, task_id, task_name, 
+      task_status, task_type, timeout_second, 
+      cre_dt)
+    values (#{id,jdbcType=VARCHAR}, #{excuteTarget,jdbcType=VARCHAR}, #{externalCode,jdbcType=VARCHAR}, 
+      #{taskExcutePlan,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{taskName,jdbcType=VARCHAR}, 
+      #{taskStatus,jdbcType=VARCHAR}, #{taskType,jdbcType=VARCHAR}, #{timeoutSecond,jdbcType=SMALLINT}, 
+      #{creDt,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zte.clonedata.model.TaskManagement">
+    insert into task_management
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="excuteTarget != null">
+        excute_target,
+      </if>
+      <if test="externalCode != null">
+        external_code,
+      </if>
+      <if test="taskExcutePlan != null">
+        task_excute_plan,
+      </if>
+      <if test="taskId != null">
+        task_id,
+      </if>
+      <if test="taskName != null">
+        task_name,
+      </if>
+      <if test="taskStatus != null">
+        task_status,
+      </if>
+      <if test="taskType != null">
+        task_type,
+      </if>
+      <if test="timeoutSecond != null">
+        timeout_second,
+      </if>
+      <if test="creDt != null">
+        cre_dt,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="excuteTarget != null">
+        #{excuteTarget,jdbcType=VARCHAR},
+      </if>
+      <if test="externalCode != null">
+        #{externalCode,jdbcType=VARCHAR},
+      </if>
+      <if test="taskExcutePlan != null">
+        #{taskExcutePlan,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null">
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskName != null">
+        #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskStatus != null">
+        #{taskStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="taskType != null">
+        #{taskType,jdbcType=VARCHAR},
+      </if>
+      <if test="timeoutSecond != null">
+        #{timeoutSecond,jdbcType=SMALLINT},
+      </if>
+      <if test="creDt != null">
+        #{creDt,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zte.clonedata.model.TaskManagementExample" resultType="java.lang.Long">
+    select count(*) from task_management
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update task_management
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.excuteTarget != null">
+        excute_target = #{record.excuteTarget,jdbcType=VARCHAR},
+      </if>
+      <if test="record.externalCode != null">
+        external_code = #{record.externalCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taskExcutePlan != null">
+        task_excute_plan = #{record.taskExcutePlan,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taskId != null">
+        task_id = #{record.taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taskName != null">
+        task_name = #{record.taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taskStatus != null">
+        task_status = #{record.taskStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taskType != null">
+        task_type = #{record.taskType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.timeoutSecond != null">
+        timeout_second = #{record.timeoutSecond,jdbcType=SMALLINT},
+      </if>
+      <if test="record.creDt != null">
+        cre_dt = #{record.creDt,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update task_management
+    set id = #{record.id,jdbcType=VARCHAR},
+      excute_target = #{record.excuteTarget,jdbcType=VARCHAR},
+      external_code = #{record.externalCode,jdbcType=VARCHAR},
+      task_excute_plan = #{record.taskExcutePlan,jdbcType=VARCHAR},
+      task_id = #{record.taskId,jdbcType=VARCHAR},
+      task_name = #{record.taskName,jdbcType=VARCHAR},
+      task_status = #{record.taskStatus,jdbcType=VARCHAR},
+      task_type = #{record.taskType,jdbcType=VARCHAR},
+      timeout_second = #{record.timeoutSecond,jdbcType=SMALLINT},
+      cre_dt = #{record.creDt,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zte.clonedata.model.TaskManagement">
+    update task_management
+    <set>
+      <if test="excuteTarget != null">
+        excute_target = #{excuteTarget,jdbcType=VARCHAR},
+      </if>
+      <if test="externalCode != null">
+        external_code = #{externalCode,jdbcType=VARCHAR},
+      </if>
+      <if test="taskExcutePlan != null">
+        task_excute_plan = #{taskExcutePlan,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null">
+        task_id = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskName != null">
+        task_name = #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskStatus != null">
+        task_status = #{taskStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="taskType != null">
+        task_type = #{taskType,jdbcType=VARCHAR},
+      </if>
+      <if test="timeoutSecond != null">
+        timeout_second = #{timeoutSecond,jdbcType=SMALLINT},
+      </if>
+      <if test="creDt != null">
+        cre_dt = #{creDt,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zte.clonedata.model.TaskManagement">
+    update task_management
+    set excute_target = #{excuteTarget,jdbcType=VARCHAR},
+      external_code = #{externalCode,jdbcType=VARCHAR},
+      task_excute_plan = #{taskExcutePlan,jdbcType=VARCHAR},
+      task_id = #{taskId,jdbcType=VARCHAR},
+      task_name = #{taskName,jdbcType=VARCHAR},
+      task_status = #{taskStatus,jdbcType=VARCHAR},
+      task_type = #{taskType,jdbcType=VARCHAR},
+      timeout_second = #{timeoutSecond,jdbcType=SMALLINT},
+      cre_dt = #{creDt,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

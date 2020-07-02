@@ -13,7 +13,7 @@ public interface PageNoService {
 
     void insert(PageNo pageNo);
 
-    void update(PageNo pageNo);
+    void updateValueByKeyAndTypeid(PageNo pageNo);
 
     String getValueByKeyAndTypeid(PageNo pageNo);
 

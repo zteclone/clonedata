@@ -219,4 +219,15 @@
       and 
           `type` = #{type,jdbcType=VARCHAR}
   </select>
+
+  <update id="updateValueByKeyAndTypeid" parameterType="com.zte.clonedata.model.PageNo">
+    update
+        clone_page_no
+    set
+        `value` = #{value,jdbcType=VARCHAR}
+    where
+          `key`= #{key,jdbcType=VARCHAR}
+      and
+          `type` = #{type,jdbcType=VARCHAR}
+  </update>
 </mapper>

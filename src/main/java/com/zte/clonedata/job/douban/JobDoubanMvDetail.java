@@ -47,7 +47,11 @@ public class JobDoubanMvDetail extends Thread {
         String date = DateUtils.getNowYYYYMMDDHHMMSS();
         for (Mv mv : list) {
             mv.setpDate(date);
-            getMoviceSave(mv);
+            try {
+                getMoviceSave(mv);
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
         }
     }
 

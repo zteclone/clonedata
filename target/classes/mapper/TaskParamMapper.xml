@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zte.clonedata.dao.TvMapper">
-  <resultMap id="BaseResultMap" type="com.zte.clonedata.model.Tv">
+<mapper namespace="com.zte.clonedata.dao.TaskParamMapper">
+  <resultMap id="BaseResultMap" type="com.zte.clonedata.model.TaskParam">
     <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="tvid" jdbcType="VARCHAR" property="tvid" />
-    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="param_name" jdbcType="VARCHAR" property="paramName" />
+    <result column="param_value" jdbcType="VARCHAR" property="paramValue" />
+    <result column="task_id" jdbcType="VARCHAR" property="taskId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -65,15 +66,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, tvid, type
+    id, param_name, param_value, task_id
   </sql>
-  <select id="selectByExample" parameterType="com.zte.clonedata.model.TvExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.zte.clonedata.model.TaskParamExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from clone_tv
+    from task_param
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -84,67 +85,76 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from clone_tv
+    from task_param
     where id = #{id,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from clone_tv
+    delete from task_param
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <delete id="deleteByExample" parameterType="com.zte.clonedata.model.TvExample">
-    delete from clone_tv
+  <delete id="deleteByExample" parameterType="com.zte.clonedata.model.TaskParamExample">
+    delete from task_param
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.zte.clonedata.model.Tv">
-    insert into clone_tv (id, tvid, type
-      )
-    values (#{id,jdbcType=VARCHAR}, #{tvid,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}
-      )
+  <insert id="insert" parameterType="com.zte.clonedata.model.TaskParam">
+    insert into task_param (id, param_name, param_value, 
+      task_id)
+    values (#{id,jdbcType=VARCHAR}, #{paramName,jdbcType=VARCHAR}, #{paramValue,jdbcType=VARCHAR}, 
+      #{taskId,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.zte.clonedata.model.Tv">
-    insert into clone_tv
+  <insert id="insertSelective" parameterType="com.zte.clonedata.model.TaskParam">
+    insert into task_param
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
-      <if test="tvid != null">
-        tvid,
+      <if test="paramName != null">
+        param_name,
       </if>
-      <if test="type != null">
-        type,
+      <if test="paramValue != null">
+        param_value,
+      </if>
+      <if test="taskId != null">
+        task_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=VARCHAR},
       </if>
-      <if test="tvid != null">
-        #{tvid,jdbcType=VARCHAR},
+      <if test="paramName != null">
+        #{paramName,jdbcType=VARCHAR},
       </if>
-      <if test="type != null">
-        #{type,jdbcType=INTEGER},
+      <if test="paramValue != null">
+        #{paramValue,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null">
+        #{taskId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.zte.clonedata.model.TvExample" resultType="java.lang.Long">
-    select count(*) from clone_tv
+  <select id="countByExample" parameterType="com.zte.clonedata.model.TaskParamExample" resultType="java.lang.Long">
+    select count(*) from task_param
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update clone_tv
+    update task_param
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=VARCHAR},
       </if>
-      <if test="record.tvid != null">
-        tvid = #{record.tvid,jdbcType=VARCHAR},
+      <if test="record.paramName != null">
+        param_name = #{record.paramName,jdbcType=VARCHAR},
       </if>
-      <if test="record.type != null">
-        type = #{record.type,jdbcType=INTEGER},
+      <if test="record.paramValue != null">
+        param_value = #{record.paramValue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taskId != null">
+        task_id = #{record.taskId,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -152,30 +162,35 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update clone_tv
+    update task_param
     set id = #{record.id,jdbcType=VARCHAR},
-      tvid = #{record.tvid,jdbcType=VARCHAR},
-      type = #{record.type,jdbcType=INTEGER}
+      param_name = #{record.paramName,jdbcType=VARCHAR},
+      param_value = #{record.paramValue,jdbcType=VARCHAR},
+      task_id = #{record.taskId,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zte.clonedata.model.Tv">
-    update clone_tv
+  <update id="updateByPrimaryKeySelective" parameterType="com.zte.clonedata.model.TaskParam">
+    update task_param
     <set>
-      <if test="tvid != null">
-        tvid = #{tvid,jdbcType=VARCHAR},
+      <if test="paramName != null">
+        param_name = #{paramName,jdbcType=VARCHAR},
       </if>
-      <if test="type != null">
-        type = #{type,jdbcType=INTEGER},
+      <if test="paramValue != null">
+        param_value = #{paramValue,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null">
+        task_id = #{taskId,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zte.clonedata.model.Tv">
-    update clone_tv
-    set tvid = #{tvid,jdbcType=VARCHAR},
-      type = #{type,jdbcType=INTEGER}
+  <update id="updateByPrimaryKey" parameterType="com.zte.clonedata.model.TaskParam">
+    update task_param
+    set param_name = #{paramName,jdbcType=VARCHAR},
+      param_value = #{paramValue,jdbcType=VARCHAR},
+      task_id = #{taskId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>
