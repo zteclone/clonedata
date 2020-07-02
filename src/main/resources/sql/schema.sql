@@ -8,6 +8,7 @@
 -- DROP TABLE IF EXISTS `task_param`;
 -- DROP TABLE IF EXISTS `task_log`;
 
+
 -- 电视剧表
 create table if not exists `clone_douban_tv_detail` (
   `tvid` varchar(32) NOT NULL,
