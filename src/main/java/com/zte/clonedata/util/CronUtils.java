@@ -26,7 +26,7 @@ public class CronUtils {
     }
 
     public static String getCron(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("ss mm HH dd MM ? yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat(CRON_DATE_FORMAT);
         String formatTimeStr = "";
         if (date != null) {
             formatTimeStr = sdf.format(date);
@@ -39,7 +39,7 @@ public class CronUtils {
         if (cron == null) {
             return null;
         } else {
-            SimpleDateFormat sdf = new SimpleDateFormat("ss mm HH dd MM ? yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat(CRON_DATE_FORMAT);
             Date date = null;
 
             try {

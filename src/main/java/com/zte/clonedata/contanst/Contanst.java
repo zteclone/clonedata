@@ -21,9 +21,9 @@ public class Contanst {
     /**
      * 豆瓣
      */
+    public static final String DOUBAN = "豆瓣";
     public static final String TYPE_DOUBAN = "douban";
     public static final String DOUBAN_HOST1 = "movie.douban.com";
-    public static final String DOUBAN_HOST2 = "douban.uieee.com";
     public static final String[] countrys = {
             "中国大陆","美国","中国香港",
             "中国台湾","日本", "韩国",

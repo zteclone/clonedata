@@ -1,9 +1,9 @@
 -- 测试环境
 -- 每次删除数据
 -- DROP TABLE IF EXISTS `clone_douban_tv_detail`;
--- DROP TABLE IF EXISTS `clone_douban_mv_detail`;
--- DROP TABLE IF EXISTS `clone_mv`;
--- DROP TABLE IF EXISTS `clone_tv`;
+-- DROP TABLE IF EXISTS `clone_mv_detail`;
+-- DROP TABLE IF EXISTS `clone_data_type`;
+-- DROP TABLE IF EXISTS `clone_page_no`;
 -- DROP TABLE IF EXISTS `task_management`;
 -- DROP TABLE IF EXISTS `task_param`;
 -- DROP TABLE IF EXISTS `task_log`;
@@ -34,7 +34,7 @@ create table if not exists `clone_douban_tv_detail` (
   PRIMARY KEY (`tvid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table if not exists `clone_douban_mv_detail` (
+create table if not exists `clone_mv_detail` (
   `movieid` varchar(32) NOT NULL,
   `moviename` varchar(2000) DEFAULT NULL,
   `director` text COMMENT '导演',
@@ -47,26 +47,28 @@ create table if not exists `clone_douban_mv_detail` (
   `runtime` varchar(300) DEFAULT NULL COMMENT '片长',
   `ratingnum` varchar(100) DEFAULT NULL COMMENT '豆瓣评分',
   `tags` varchar(2000) DEFAULT NULL COMMENT '标签',
-  `moviedesc` varchar(3000) DEFAULT NULL COMMENT '简介',
+  `moviedesc` text COMMENT '简介',
   `p_date` varchar(14) DEFAULT NULL COMMENT '日期',
   `aka` varchar(1000) DEFAULT NULL COMMENT '又名',
-  `http_image` varchar(255) DEFAULT NULL,
-  `filepath` varchar(255) DEFAULT NULL,
-  `url` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`movieid`)
+  `http_image` varchar(255) DEFAULT NULL COMMENT '封面网络地址',
+  `filepath` varchar(255) DEFAULT NULL COMMENT '封面本地地址',
+  `url` varchar(255) DEFAULT NULL COMMENT '详情网络地址',
+  `mv_typeid` varchar(32) NOT NULL DEFAULT '' COMMENT '电影类别 关联clone_data_type表',
+  PRIMARY KEY (`movieid`,`mv_typeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table if not exists `clone_mv` (
-  `id` varchar(32) NOT NULL,
-  `movieid` varchar(32) NOT NULL,
-  `type` int(1) NOT NULL COMMENT '1-豆瓣',
+create table if not exists `clone_data_type` (
+  `id` varchar(255) NOT NULL,
+  `type_name` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table if not exists `clone_tv` (
+create table if not exists `clone_page_no` (
   `id` varchar(32) NOT NULL,
-  `tvid` varchar(32) NOT NULL,
-  `type` int(1) NOT NULL COMMENT '1-豆瓣',
+  `key` varchar(255) NOT NULL DEFAULT '',
+  `value` varchar(255) NOT NULL DEFAULT '',
+  `type` varchar(32) NOT NULL DEFAULT '',
+  `update_dt` varchar(14) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

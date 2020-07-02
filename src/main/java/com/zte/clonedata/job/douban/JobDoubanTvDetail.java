@@ -1,11 +1,7 @@
 package com.zte.clonedata.job.douban;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.zte.clonedata.contanst.Contanst;
-import com.zte.clonedata.dao.DoubanMvMapper;
 import com.zte.clonedata.dao.DoubanTvMapper;
-import com.zte.clonedata.model.DoubanMv;
 import com.zte.clonedata.model.DoubanTv;
 import com.zte.clonedata.model.error.BusinessException;
 import com.zte.clonedata.util.DateUtils;
@@ -19,7 +15,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

@@ -1,10 +1,8 @@
 package com.zte.clonedata.job.douban;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.zte.clonedata.contanst.Contanst;
-import com.zte.clonedata.dao.DoubanMvMapper;
-import com.zte.clonedata.model.DoubanMv;
+import com.zte.clonedata.dao.MvMapper;
+import com.zte.clonedata.model.Mv;
 import com.zte.clonedata.model.error.BusinessException;
 import com.zte.clonedata.util.DateUtils;
 import com.zte.clonedata.util.HttpUtils;
@@ -14,18 +12,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -40,11 +33,11 @@ public class JobDoubanMvDetail extends Thread {
 
     public static int successCount = 0;
 
-    private List<DoubanMv> list;
-    private DoubanMvMapper doubanMvMapper;
+    private List<Mv> list;
+    private MvMapper mvMapper;
 
-    public JobDoubanMvDetail(List<DoubanMv> list, DoubanMvMapper doubanMvMapper) {
-        this.doubanMvMapper = doubanMvMapper;
+    public JobDoubanMvDetail(List<Mv> list, MvMapper mvMapper) {
+        this.mvMapper = mvMapper;
         this.list = list;
     }
 
@@ -52,7 +45,7 @@ public class JobDoubanMvDetail extends Thread {
     @Override
     public void run() {
         String date = DateUtils.getNowYYYYMMDDHHMMSS();
-        for (DoubanMv mv : list) {
+        for (Mv mv : list) {
             mv.setpDate(date);
             getMoviceSave(mv);
         }
@@ -61,7 +54,7 @@ public class JobDoubanMvDetail extends Thread {
 
     private int c = 0;
 
-    private void getMoviceSave(DoubanMv doubanMv) throws InterruptedException {
+    private void getMoviceSave(Mv doubanMv) throws InterruptedException {
         try {
             String result = HttpUtils.getJson(doubanMv.getUrl(), Contanst.DOUBAN_HOST1);
             Document doc = Jsoup.parse(result);
@@ -182,7 +175,7 @@ public class JobDoubanMvDetail extends Thread {
             synchronized (this){
                 successCount ++;
             }
-            doubanMvMapper.insertSelective(doubanMv);
+            mvMapper.insertSelective(doubanMv);
         } catch (Exception e) {
             log.error("发生错误url >>> {}", doubanMv.getUrl());
             if (e instanceof BusinessException){
@@ -207,9 +200,9 @@ public class JobDoubanMvDetail extends Thread {
 
     public static void main(String[] args) throws BusinessException, IOException {
         String url = "https://movie.douban.com/subject/1438338/";
-        DoubanMv doubanMv = new DoubanMv();
+        Mv doubanMv = new Mv();
         doubanMv.setUrl(url);
-        List<DoubanMv> list = new ArrayList<>();
+        List<Mv> list = new ArrayList<>();
         list.add(doubanMv);
         JobDoubanMvDetail jobDoubanMvDetail = new JobDoubanMvDetail(list,null);
         jobDoubanMvDetail.start();

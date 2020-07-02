@@ -3,6 +3,8 @@ package com.zte.clonedata.web;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
+import com.zte.clonedata.dao.DoubanTvMapper;
+import com.zte.clonedata.dao.MvMapper;
 import com.zte.clonedata.model.TaskManagement;
 import com.zte.clonedata.service.TaskManagementService;
 import com.zte.clonedata.util.ResponseUtils;
@@ -13,16 +15,9 @@ import org.apache.http.pool.PoolStats;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.*;
 
 /**
  * ProjectName: clonedata-com.zte.clonedata.web
@@ -37,6 +32,10 @@ public class PageWeb {
     @Autowired
     private TaskManagementService taskManagementService;
     private PoolingHttpClientConnectionManager connManager;
+    @Autowired
+    private MvMapper mvMapper;
+    @Autowired
+    private DoubanTvMapper doubanTvMapper;
 
 
     @GetMapping("/list")
@@ -87,6 +86,16 @@ public class PageWeb {
         map.put("空闲的线程数", String.valueOf(poolStats.getAvailable()));
         map.put("租用的线程数", String.valueOf(poolStats.getLeased()));
         map.put("即将启动的线程数", String.valueOf(poolStats.getPending()));
+        return ResponseUtils.successData(map);
+    }
+
+    @RequestMapping(value = "dataCount",method = RequestMethod.GET)
+    public ResponseUtils dataCount(){
+        Map<String, Long> map = Maps.newHashMap();
+        long mvc = mvMapper.countByExample(null);
+        long tvc = doubanTvMapper.countByExample(null);
+        map.put("电影总数",mvc);
+        map.put("电视剧总数",tvc);
         return ResponseUtils.successData(map);
     }
 

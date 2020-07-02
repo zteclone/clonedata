@@ -13,15 +13,25 @@ import java.util.Date;
 public class DateUtils {
     private DateUtils(){}
 
-    private static SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
-    private static SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMddHHmmss");
+    public static ThreadLocal<SimpleDateFormat> sdf1 = new ThreadLocal<SimpleDateFormat>() {
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat("yyyy-MM-dd");
+        }
+    };
+    public static ThreadLocal<SimpleDateFormat> sdf2 = new ThreadLocal<SimpleDateFormat>() {
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat("yyyyMMddHHmmss");
+        }
+    };
 
     public static String getNowYYYYMMDD(){
-        return sdf1.format(new Date());
+        return sdf1.get().format(new Date());
     }
 
     public static String getNowYYYYMMDDHHMMSS(){
-        return sdf2.format(new Date());
+        return sdf2.get().format(new Date());
     }
 
 }

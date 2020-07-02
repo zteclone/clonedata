@@ -3,17 +3,23 @@ package com.zte.clonedata.job.douban;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.zte.clonedata.contanst.Contanst;
-import com.zte.clonedata.dao.DoubanMvMapper;
+import com.zte.clonedata.contanst.RunningContanst;
+import com.zte.clonedata.dao.MvMapper;
 import com.zte.clonedata.job.AbstractJob;
 import com.zte.clonedata.job.model.DoubanModel;
-import com.zte.clonedata.model.DoubanMv;
+import com.zte.clonedata.model.Mv;
+import com.zte.clonedata.model.PageNo;
 import com.zte.clonedata.model.error.BusinessException;
 import com.zte.clonedata.model.error.EmBusinessError;
+import com.zte.clonedata.service.DataTypeService;
+import com.zte.clonedata.service.PageNoService;
 import com.zte.clonedata.util.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -30,27 +36,33 @@ import java.util.concurrent.Executors;
 @Component
 public class JobDoubanMv extends AbstractJob {
     @Autowired
-    private DoubanMvMapper doubanMvMapper;
+    private MvMapper mvMapper;
+    @Autowired
+    private PageNoService pageNoService;
 
     private int c = 0;
-    private static Map<String, Integer> startMap = new HashMap<>();
 
     public String execute(String counrty,String year1,String year2) throws InterruptedException {
-        /*if (counrty.length()>0){
-            return counrty.concat("-"+year1).concat("-"+year2);
-        }*/
-        String key = counrty.concat(year1).concat(year2);
         ExecutorService exe = Executors.newCachedThreadPool();
         log.info("豆瓣开始执行任务   >>>");
         //检查主目录
         checkBasePath();
-        List<DoubanMv> doubanMvList = Lists.newArrayList();
+        List<Mv> doubanMvList = Lists.newArrayList();
         PicDownUtils picDownUtils = new PicDownUtils();
         boolean isLock = false;
         String executeResult = null;
         int thisc = 0;
+        String key = counrty.concat(year1).concat(year2);
         synchronized (this) {
-            Integer start = startMap.get(key) == null ? 0 : startMap.get(key);
+            //查询该任务的起始页数
+            PageNo pageNo = new PageNo(key, RunningContanst.TYPE_DOUBAN_ID);
+            String value = pageNoService.getValueByKeyAndTypeid(pageNo);
+            int start = 0;
+            if (StringUtils.isBlank(value)){
+                pageNoService.insert(pageNo);
+            }else {
+                start = Integer.parseInt(value);
+            }
             while (true) {
                 String url = String.format(
                         "https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=电影&countries=%s&year_range=%s,%s&start=%s",
@@ -83,11 +95,9 @@ public class JobDoubanMv extends AbstractJob {
                 thisc = thisc + 20;
                 Thread.sleep(30000);
             }
-            if (!isLock) {
-                startMap.put(key, 0);
-            } else {
-                startMap.put(key, start);
-            }
+            //修改页数
+            updatePageNo(isLock,start,pageNo);
+
             log.info("豆瓣 {} 条数据加载完毕,即将爬取这些数据的详情页面   >>>", doubanMvList.size());
             if (picDownUtils.files.size() != 0) {
                 Thread t1 = new Thread(picDownUtils);
@@ -112,6 +122,15 @@ public class JobDoubanMv extends AbstractJob {
         return executeResult;
     }
 
+    private void updatePageNo(boolean isLock, Integer start, PageNo pageNo) {
+        if (isLock){
+            pageNo.setValue(String.valueOf(start));
+        }else {
+            pageNo.setValue("0");
+        }
+        pageNoService.update(pageNo);
+    }
+
     protected <T> void getListByURL(String url, PicDownUtils picDownUtils, List<T> doubanMvList) throws InterruptedException, BusinessException {
         try {
             String result = HttpUtils.getJson(url, Contanst.DOUBAN_HOST1);
@@ -125,24 +144,24 @@ public class JobDoubanMv extends AbstractJob {
                 String imageurl = doubanModel.getCover();
                 String name = imageurl.substring(imageurl.lastIndexOf("/") + 1);
                 String path = Contanst.BASEURL.concat(Contanst.TYPE_DOUBAN).concat(File.separator).concat(name);
-                DoubanMv mv = doubanMvMapper.selectByPrimaryKey(doubanModel.getId());
+                Mv m = new Mv();
+                m.setMovieid(doubanModel.getId());
+                m.setMvTypeid(RunningContanst.TYPE_DOUBAN_ID);
+                Mv mv = mvMapper.selectByPrimaryKey(m);
                 if (mv == null) {
                     //不存在
-                    DoubanMv doubanMv = new DoubanMv();
-                    doubanMv.setUrl(doubanModel.getUrl());
-                    doubanMv.setHttpImage(imageurl);
-                    doubanMv.setFilepath(path);
-                    doubanMv.setMovieid(doubanModel.getId());
-                    doubanMv.setRatingnum(doubanModel.getRate());
-                    doubanMv.setMoviename(doubanModel.getTitle());
-                    doubanMvList.add((T) doubanMv);
+                    m.setUrl(doubanModel.getUrl());
+                    m.setHttpImage(imageurl);
+                    m.setFilepath(path);
+                    m.setMovieid(doubanModel.getId());
+                    m.setRatingnum(doubanModel.getRate());
+                    m.setMoviename(doubanModel.getTitle());
+                    doubanMvList.add((T) m);
                 } else {
                     if (!mv.getRatingnum().equals(doubanModel.getRate())) {
                         //分数不同
-                        DoubanMv doubanMv = new DoubanMv();
-                        doubanMv.setMovieid(doubanModel.getId());
-                        doubanMv.setRatingnum(doubanModel.getRate());
-                        doubanMvMapper.updateByPrimaryKeySelective(doubanMv);
+                        m.setRatingnum(doubanModel.getRate());
+                        mvMapper.updateByPrimaryKeySelective(m);
                     }
                 }
 
@@ -183,11 +202,11 @@ public class JobDoubanMv extends AbstractJob {
         log.info("开始执行计划任务项  >>>");
         for (int i = 0; i < size; i++) {
             List<T> m1 = new ArrayList<>(movies.subList((i * spList), (i + 1) * spList));
-            exe.execute(new JobDoubanMvDetail((List<DoubanMv>) m1, doubanMvMapper));
+            exe.execute(new JobDoubanMvDetail((List<Mv>) m1, mvMapper));
         }
         if (b != 0) {
             List<T> m1 = new ArrayList<>(movies.subList(size * spList, movies.size()));
-            exe.execute(new JobDoubanMvDetail((List<DoubanMv>) m1, doubanMvMapper));
+            exe.execute(new JobDoubanMvDetail((List<Mv>) m1, mvMapper));
         }
     }
 

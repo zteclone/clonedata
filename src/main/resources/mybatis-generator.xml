@@ -48,7 +48,7 @@
 
 
     <!-- 指定数据库表 -->
-    <table tableName="task_management" domainObjectName="TaskManagement">
+    <table tableName="clone_mv_detail" domainObjectName="Mvvvv">
            <!--enableCountByExample="false" enableDeleteByExample="false"
            enableSelectByExample="false" enableUpdateByExample="false"
            selectByPrimaryKeyQueryId="false"-->
