@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
+    <script src="/static/layui/layui.js" charset="utf-8"></script>
+</head>
+<body style="text-align:center;background-color: #F2F2F2;">
+<div style="height: 100px;line-height: 100px;">
+    名称：
+    <div class="layui-inline">
+        <input class="layui-input" id="moviename" autocomplete="off">
+    </div>
+</div>
+<div>
+    <button class="layui-btn" id="search">搜索</button>
+    <button class="layui-btn" id="clear">清除</button>
+    <table class="layui-hide" id="tab1" lay-filter="tab1"></table>
+</div>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">详情</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script>
+    layui.use(['upload', 'table'], function () {
+        var $ = layui.jquery
+            , table = layui.table;
+
+        function init(){
+            table.render({
+                elem: '#tab1'
+                , url: '/mv/list'
+                , title: '电影表'
+                , cols: [
+                    [
+                        {field: 'movieid', title: 'ID', align: 'center', hide: true}
+                        , {field: 'mvTypeid', title: 'typeid', align: 'center', hide: true}
+                        , {field: 'moviename', title: '名称', align: 'center'}
+                        , {field: 'director', title: '导演', align: 'center'}
+                        , {field: 'scenarist', title: '编剧', align: 'center'}
+                        , {field: 'actors', title: '主演', align: 'center'}
+                        , {field: 'type', title: '类型', align: 'center'}
+                        , {field: 'ratingnum', title: '评分', align: 'center'}
+                        , {fixed: 'right',width: 200, title: '操作', toolbar: '#barDemo', align: 'center'}
+                    ]
+                ]
+                , page: true
+            });
+        }
+
+        $('#search').on('click', function () {
+            table.reload('tab1', {
+                url: '/mv/list'
+                , page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+                , where: {
+                    moviename: $("#moviename").val()
+                }
+            });
+        });
+        $('#clear').on('click', function () {
+            $("#moviename").val('');
+            table.reload('tab1', {
+                url: '/mv/list'
+                , page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+                , where: {
+                    moviename: ''
+                }
+            });
+        });
+        init();
+    });
+
+</script>
+
+</body>
+</html>

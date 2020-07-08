@@ -1,11 +1,13 @@
 package com.zte.clonedata.model;
 
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 
 @Getter
+@ToString
 public class Mv implements Serializable {
     /**
      * 主键: id

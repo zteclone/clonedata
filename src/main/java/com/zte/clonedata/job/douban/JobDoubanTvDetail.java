@@ -60,7 +60,7 @@ public class JobDoubanTvDetail extends Thread {
 
     private void getTvSave(DoubanTv doubanTv) throws InterruptedException {
         try {
-            String result = HttpUtils.getJson(doubanTv.getUrl(), Contanst.DOUBAN_HOST1);
+            String result = HttpUtils.getJson(doubanTv.getUrl(), Contanst.DOUBAN_HOST1,"");
             Document doc = Jsoup.parse(result);
             Elements subject = doc.select("div#info");
             //导演

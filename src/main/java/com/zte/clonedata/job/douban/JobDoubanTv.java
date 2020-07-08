@@ -44,12 +44,12 @@ public class JobDoubanTv extends AbstractJob {
     private int c = 0;
     private static Map<String, Integer> startMap = new HashMap<>();
 
-    public String execute(String counrty, String year1, String year2)  throws InterruptedException{
+    public String execute(String counrty, String year1, String year2) throws InterruptedException {
         String key = counrty.concat(year1).concat(year2);
         ExecutorService exe = Executors.newCachedThreadPool();
         log.info("豆瓣开始执行任务   >>>");
         //检查主目录
-        checkBasePath();
+        checkBasePath(Contanst.BASEURL.concat(Contanst.TYPE_DOUBAN));
         Map<String, Mv> doubanTvMap = Maps.newHashMap();
         PicDownUtils picDownUtils = new PicDownUtils();
         boolean isLock = false;
@@ -76,12 +76,12 @@ public class JobDoubanTv extends AbstractJob {
                     executeResult = "发生错误! 可能原因: ".concat(e.getMessage());
                     break;
                 }
-                if (thisc == 500){
+                if (thisc >= 500){
                     isLock = true;
                     log.info("此次收集电影信息已达500,暂停此次任务,以保证下时段IP安全 ... >>> country: {}, year: {}-{}", counrty, year1, year2);
                     break;
                 }
-                if (start == 3000) {
+                if (start >= 3000) {
                     log.info("此段收集电影信息已达3000,结束此段任务 ... >>> country: {}, year: {}-{}", counrty, year1, year2);
                     break;
                 }
@@ -118,9 +118,9 @@ public class JobDoubanTv extends AbstractJob {
         return executeResult;
     }
 
-    protected <T> void getListByURL(String url, PicDownUtils picDownUtils, Map<String,T> dataMap) throws InterruptedException, BusinessException {
+    protected <T> void getListByURL(String url, PicDownUtils picDownUtils, Map<String, T> dataMap) throws InterruptedException, BusinessException {
         try {
-            String result = HttpUtils.getJson(url, Contanst.DOUBAN_HOST1);
+            String result = HttpUtils.getJson(url, Contanst.DOUBAN_HOST1,"");
             if (result.length() == 11) {
                 throw new BusinessException(EmBusinessError.HTTP_RESULT_NULL);
             } else if (result.contains("检测到有异常请求从您的IP发出")) {
@@ -181,7 +181,7 @@ public class JobDoubanTv extends AbstractJob {
         }
     }
 
-    protected <T> void executeDetail(Map<String,T> dataMap, ExecutorService exe) {
+    protected <T> void executeDetail(Map<String, T> dataMap, ExecutorService exe) {
         int size = dataMap.size() / spList;
         int b = dataMap.size() % spList;
         log.info("计划创建: {}条任务  >>>", b == 0 ? size : (size + 1));

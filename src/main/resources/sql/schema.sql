@@ -7,6 +7,7 @@
 -- DROP TABLE IF EXISTS `task_management`;
 -- DROP TABLE IF EXISTS `task_param`;
 -- DROP TABLE IF EXISTS `task_log`;
+-- DROP TABLE IF EXISTS `clone_dict`;
 
 
 -- 电视剧表
@@ -62,6 +63,14 @@ create table if not exists `clone_data_type` (
   `id` varchar(32) NOT NULL,
   `type_name` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists `clone_dict` (
+   `id` varchar(32) NOT NULL,
+   `dict_key` varchar(255) NOT NULL DEFAULT '',
+   `dict_value` text NOT NULL,
+   `dict_description` varchar(1000) NOT NULL DEFAULT '',
+    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 爬取页数表

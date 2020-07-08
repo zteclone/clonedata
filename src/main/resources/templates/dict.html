@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
+    <script src="/static/layui/layui.js" charset="utf-8"></script>
+</head>
+<body style="text-align:center;background-color: #F2F2F2;">
+<div style="height: 100px;line-height: 100px;">
+    参数名称：
+    <div class="layui-inline">
+        <input class="layui-input" id="dictKey" autocomplete="off">
+    </div>
+</div>
+<div>
+    <button class="layui-btn" id="search">搜索</button>
+    <button class="layui-btn" id="clear">清除</button>
+    <table class="layui-hide" id="tab1" lay-filter="tab1"></table>
+</div>
+<script>
+    layui.use(['upload', 'table'], function () {
+        var $ = layui.jquery
+            , table = layui.table;
+
+        function init(){
+            table.render({
+                elem: '#tab1'
+                , url: '/dict/list'
+                , title: '字典表'
+                , cols: [
+                    [
+                        {field: 'id', title: 'ID', align: 'center', hide: true}
+                        , {field: 'dictKey', title: '参数名称', align: 'center'}
+                        , {field: 'dictValue', title: '参数值', edit: 'text', align: 'center'}
+                        , {field: 'dictDescription', title: '描述', edit: 'text', align: 'center'}
+                    ]
+                ]
+                , page: true
+            });
+        }
+
+
+
+        table.on('edit(tab1)',function (obj) {
+            var str = {
+                "id" : obj.data.id
+                ,"dictValue" : obj.data.dictValue
+                ,"dictDescription" : obj.data.dictDescription
+                ,"dictKey" : obj.data.dictKey
+            };
+            $.ajax({
+                url: "/dict/update"
+                , type: "post"
+                , async: false
+                , dataType: "json"
+                , contentType: "application/json"
+                , data: JSON.stringify(str)
+                , success: function (res) {
+                    layer.msg(res.msg);
+                    if (res.code != 0){
+                        init();
+                    }
+                }
+            });
+        });
+        $('#search').on('click', function () {
+            table.reload('tab1', {
+                url: '/dict/list'
+                , page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+                , where: {
+                    dictKey: $("#dictKey").val()
+                }
+            });
+        });
+        $('#clear').on('click', function () {
+            $("#dictKey").val('');
+            table.reload('tab1', {
+                url: '/dict/list'
+                , page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+                , where: {
+                    dictKey: ''
+                }
+            });
+        });
+        init();
+    });
+
+</script>
+
+</body>
+</html>

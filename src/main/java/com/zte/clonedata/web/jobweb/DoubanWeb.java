@@ -1,4 +1,4 @@
-package com.zte.clonedata.web;
+package com.zte.clonedata.web.jobweb;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -47,14 +47,14 @@ public class DoubanWeb {
         int c, y1, y2;
         if (
                 !matcher.find()
-                        || (c = Integer.parseInt(matcher.group(1))) > countrysLen
+                        || (c = Integer.parseInt(matcher.group(1))) > DOUBAN_COUNTRYS_LEN
                         || (y1 = Integer.parseInt(matcher.group(2))) > yearsLen
                         || (y2 = Integer.parseInt(matcher.group(3))) > yearsLen) {
             return ResponseUtils.fail(
                     String.format("参数错误, 参考参数: <br /><br />参数第一位: 0 < x <= %s<br /><br />参数第二,三位: 0 < x <= %s<br /><br />例如: 010101,100101",
-                            countrysLen, yearsLen));
+                            DOUBAN_COUNTRYS_LEN, yearsLen));
         }
-        String execute = jobDoubanMv.execute(countrys[c - 1], years[y1 - 1], years[y2 - 1]);
+        String execute = jobDoubanMv.execute(DOUBAN_COUNTRYS[c - 1], years[y1 - 1], years[y2 - 1]);
         if (execute.contains("失败")) {
             return ResponseUtils.fail(execute);
         }
@@ -64,11 +64,11 @@ public class DoubanWeb {
     public ResponseUtils getParam(){
         List<String> countryList = Lists.newLinkedList();
         List<String> yearList = Lists.newLinkedList();
-        for (int i = 0; i < countrysLen; i++) {
+        for (int i = 0; i < DOUBAN_COUNTRYS_LEN; i++) {
             if (i<9){
-                countryList.add("0".concat(String.valueOf(i+1)).concat("-").concat(countrys[i]));
+                countryList.add("0".concat(String.valueOf(i+1)).concat("-").concat(DOUBAN_COUNTRYS[i]));
             }else {
-                countryList.add(String.valueOf(i+1).concat("-").concat(countrys[i]));
+                countryList.add(String.valueOf(i+1).concat("-").concat(DOUBAN_COUNTRYS[i]));
             }
         }
         for (int i = 0; i < yearsLen; i++) {
@@ -78,13 +78,13 @@ public class DoubanWeb {
                 yearList.add(String.valueOf(i+1).concat("-").concat(years[i]));
             }
         }
-        if (countrysLen != yearsLen){
-            if (countrysLen>yearsLen){
-                for (int i = 0; i < countrysLen - yearsLen; i++) {
+        if (DOUBAN_COUNTRYS_LEN != yearsLen){
+            if (DOUBAN_COUNTRYS_LEN>yearsLen){
+                for (int i = 0; i < DOUBAN_COUNTRYS_LEN - yearsLen; i++) {
                     yearList.add("");
                 }
             }else {
-                for (int i = 0; i < yearsLen - countrysLen; i++) {
+                for (int i = 0; i < yearsLen - DOUBAN_COUNTRYS_LEN; i++) {
                     countryList.add("");
                 }
             }
@@ -103,14 +103,14 @@ public class DoubanWeb {
         int c, y1, y2;
         if (
                 !matcher.find()
-                        || (c = Integer.parseInt(matcher.group(1))) > countrysLen
+                        || (c = Integer.parseInt(matcher.group(1))) > DOUBAN_COUNTRYS_LEN
                         || (y1 = Integer.parseInt(matcher.group(2))) > yearsLen
                         || (y2 = Integer.parseInt(matcher.group(3))) > yearsLen) {
             return ResponseUtils.fail(
                     String.format("参数错误, 参考参数: <br /><br />参数第一位: 0 < x <= %s<br /><br />参数第二,三位: 0 < x <= %s<br /><br />例如: 010101,100101",
-                            countrysLen, yearsLen));
+                            DOUBAN_COUNTRYS_LEN, yearsLen));
         }
-        String execute = jobDoubanTv.execute(countrys[c - 1], years[y1 - 1], years[y2 - 1]);
+        String execute = jobDoubanTv.execute(DOUBAN_COUNTRYS[c - 1], years[y1 - 1], years[y2 - 1]);
         if (execute.contains("失败")) {
             return ResponseUtils.fail(execute);
         }

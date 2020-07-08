@@ -27,7 +27,7 @@ public class DataTypeServiceImpl implements DataTypeService {
         String id = dataTypeMapper.getIdByTypeName(typeName);
         if (StringUtils.isBlank(id)){
             id = UUIDUtils.get();
-            dataTypeMapper.insert(new DataType(id, Contanst.DOUBAN));
+            dataTypeMapper.insert(new DataType(id, typeName));
         }
         return id;
     }

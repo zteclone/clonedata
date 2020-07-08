@@ -20,6 +20,10 @@ public class RunningContanst {
      * 豆瓣 id
      */
     public static String TYPE_DOUBAN_ID;
+    /**
+     * 豆瓣 id
+     */
+    public static String TYPE_MAOYAN_ID;
 
 
 
@@ -29,6 +33,7 @@ public class RunningContanst {
     @PostConstruct
     public void init(){
         TYPE_DOUBAN_ID = dataTypeService.getId(Contanst.DOUBAN);
+        TYPE_MAOYAN_ID = dataTypeService.getId(Contanst.MAOYAN);
     }
 
 

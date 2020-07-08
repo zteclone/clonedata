@@ -3,6 +3,8 @@ package com.zte.clonedata.dao;
 import com.zte.clonedata.model.PageNo;
 import com.zte.clonedata.model.PageNoExample;
 import java.util.List;
+
+import com.zte.clonedata.web.dto.PageNoDTO;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -34,4 +36,7 @@ public interface PageNoMapper {
     String getValueByKeyAndTypeid(PageNo record);
 
     int updateValueByKeyAndTypeid(PageNo record);
+    int updateValueByIdAndTypeid(PageNo record);
+
+    List<PageNoDTO> selectList(PageNoDTO pageNoDTO);
 }

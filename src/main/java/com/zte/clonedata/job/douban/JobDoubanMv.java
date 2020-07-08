@@ -37,41 +37,34 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class JobDoubanMv extends AbstractJob {
-    @Autowired
-    private MvMapper mvMapper;
-    @Autowired
-    private PageNoService pageNoService;
 
     private int c = 0;
 
-    public String execute(String counrty,String year1,String year2) throws InterruptedException {
+    public String execute(String counrty, String year1, String year2) throws InterruptedException {
         ExecutorService exe = Executors.newCachedThreadPool();
         log.info("豆瓣开始执行任务   >>>");
         //检查主目录
-        checkBasePath();
-        Map<String,Mv> doubanMvMap = Maps.newHashMap();
+        checkBasePath(Contanst.BASEURL.concat(Contanst.TYPE_DOUBAN));
+        Map<String, Mv> doubanMvMap = Maps.newHashMap();
         PicDownUtils picDownUtils = new PicDownUtils();
         boolean isLock = false;
         String executeResult = null;
         int thisc = 0;
-        String key = counrty.concat(year1).concat(year2);
+        String key = "豆瓣电影 - ".concat(counrty).concat(year1).concat(year2);
         synchronized (this) {
             //查询该任务的起始页数
             PageNo pageNo = new PageNo(key, RunningContanst.TYPE_DOUBAN_ID);
             String value = pageNoService.getValueByKeyAndTypeid(pageNo);
-            int start = 0;
-            if (StringUtils.isBlank(value)){
-                pageNoService.insert(pageNo);
-            }else {
-                start = Integer.parseInt(value);
-            }
+
+            int start = Integer.parseInt(value);
+
             while (true) {
                 String url = String.format(
                         "https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=电影&countries=%s&year_range=%s,%s&start=%s",
                         counrty, year1, year2, start);
                 try {
                     getListByURL(url, picDownUtils, doubanMvMap);
-                    log.info("key => {}, start => {}",key, start);
+                    log.info("key => {}, start => {}", key, start);
                 } catch (BusinessException e) {
                     if (e.getCommonError().getErrorCode() == 20002) {
                         break;
@@ -79,26 +72,26 @@ public class JobDoubanMv extends AbstractJob {
                     isLock = true;
                     executeResult = "发生错误! 可能原因: ".concat(e.getCommonError().getErrorMsg());
                     break;
-                } catch (Exception e){
+                } catch (Exception e) {
                     isLock = true;
                     executeResult = "发生错误! 可能原因: ".concat(e.getMessage());
                     break;
                 }
                 thisc = thisc + 20;
                 start = start + 20;
-                if (thisc == 500){
+                if (thisc >= 500) {
                     isLock = true;
                     log.info("此次收集电影信息已达500,暂停此次任务,以保证下时段IP安全 ... >>> country: {}, year: {}-{}", counrty, year1, year2);
                     break;
                 }
-                if (start == 3000) {
+                if (start >= 3000) {
                     log.info("此段收集电影信息已达3000,结束此段任务 ... >>> country: {}, year: {}-{}", counrty, year1, year2);
                     break;
                 }
                 Thread.sleep(30000);
             }
             //修改页数
-            updatePageNo(isLock,start,pageNo);
+            updatePageNo(isLock, start, pageNo);
 
             log.info("豆瓣 {} 条数据加载完毕,即将爬取这些数据的详情页面   >>>", doubanMvMap.size());
             if (picDownUtils.files.size() != 0) {
@@ -125,17 +118,17 @@ public class JobDoubanMv extends AbstractJob {
     }
 
     private void updatePageNo(boolean isLock, Integer start, PageNo pageNo) {
-        if (isLock){
+        if (isLock) {
             pageNo.setValue(String.valueOf(start));
-        }else {
+        } else {
             pageNo.setValue("0");
         }
         pageNoService.updateValueByKeyAndTypeid(pageNo);
     }
 
-    protected <T> void getListByURL(String url, PicDownUtils picDownUtils, Map<String,T> doubanMvMap) throws InterruptedException, BusinessException {
+    protected <T> void getListByURL(String url, PicDownUtils picDownUtils, Map<String, T> doubanMvMap) throws InterruptedException, BusinessException {
         try {
-            String result = HttpUtils.getJson(url, Contanst.DOUBAN_HOST1);
+            String result = HttpUtils.getJson(url, Contanst.DOUBAN_HOST1,"");
             if (result.length() == 11) {
                 throw new BusinessException(EmBusinessError.HTTP_RESULT_NULL);
             } else if (result.contains("检测到有异常请求从您的IP发出")) {
@@ -197,7 +190,7 @@ public class JobDoubanMv extends AbstractJob {
     }
 
 
-    protected <T> void executeDetail(Map<String,T> movies, ExecutorService exe) {
+    protected <T> void executeDetail(Map<String, T> movies, ExecutorService exe) {
         int size = movies.size() / spList;
         int b = movies.size() % spList;
         log.info("计划创建: {}条任务  >>>", b == 0 ? size : (size + 1));

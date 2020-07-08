@@ -1,8 +1,11 @@
 package com.zte.clonedata.job;
 
 import com.zte.clonedata.contanst.Contanst;
+import com.zte.clonedata.dao.MvMapper;
 import com.zte.clonedata.model.error.BusinessException;
+import com.zte.clonedata.service.PageNoService;
 import com.zte.clonedata.util.PicDownUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.util.List;
@@ -17,7 +20,10 @@ import java.util.concurrent.ExecutorService;
  * @Description:
  */
 public abstract class AbstractJob {
-
+    @Autowired
+    protected MvMapper mvMapper;
+    @Autowired
+    protected PageNoService pageNoService;
     /**
      * 切割集合并发访问因子
      */
@@ -50,9 +56,9 @@ public abstract class AbstractJob {
     /**
      * 校验主目录
      */
-    protected void checkBasePath() {
+    protected void checkBasePath(String path) {
         //豆瓣
-        File baseFile = new File(Contanst.BASEURL.concat(Contanst.TYPE_DOUBAN));
+        File baseFile = new File(path);
         if (!baseFile.exists()) baseFile.mkdirs();
 
     }

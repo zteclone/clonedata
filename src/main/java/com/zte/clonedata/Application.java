@@ -61,7 +61,11 @@ public class Application {
         taskLogMapper.updateByExampleSelective(taskLog,example);
     }
 
-
+    @RequestMapping("")
+    public ModelAndView index(){
+        ModelAndView modelAndView = new ModelAndView("index.html");
+        return modelAndView;
+    }
     @RequestMapping("/admin/taskList")
     public ModelAndView taskList(){
         ModelAndView modelAndView = new ModelAndView("taskList.html");
@@ -86,6 +90,31 @@ public class Application {
     @RequestMapping("/admin/quartz")
     public ModelAndView quartz(){
         ModelAndView modelAndView = new ModelAndView("quartz.html");
+        return modelAndView;
+    }
+    @RequestMapping("/admin/mv")
+    public ModelAndView mv(){
+        ModelAndView modelAndView = new ModelAndView("mv.html");
+        return modelAndView;
+    }
+    @RequestMapping("/admin/tv")
+    public ModelAndView tv(){
+        ModelAndView modelAndView = new ModelAndView("tv.html");
+        return modelAndView;
+    }
+    @RequestMapping("/admin/dict")
+    public ModelAndView dict(){
+        ModelAndView modelAndView = new ModelAndView("dict.html");
+        return modelAndView;
+    }
+    @RequestMapping("/admin/pageNo")
+    public ModelAndView pageNo(){
+        ModelAndView modelAndView = new ModelAndView("pageNo.html");
+        return modelAndView;
+    }
+    @RequestMapping("/admin/inithtml")
+    public ModelAndView inithtml(){
+        ModelAndView modelAndView = new ModelAndView("inithtml.html");
         return modelAndView;
     }
 }

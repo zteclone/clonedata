@@ -8,6 +8,9 @@
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="update_dt" jdbcType="VARCHAR" property="updateDt" />
   </resultMap>
+  <resultMap id="DTOResultMap" type="com.zte.clonedata.web.dto.PageNoDTO" extends="BaseResultMap">
+    <result column="type_name" jdbcType="VARCHAR" property="typeName" />
+  </resultMap>
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -224,10 +227,36 @@
     update
         clone_page_no
     set
-        `value` = #{value,jdbcType=VARCHAR}
+        `value` = #{value,jdbcType=VARCHAR},update_dt = #{updateDt,jdbcType=VARCHAR}
     where
           `key`= #{key,jdbcType=VARCHAR}
       and
           `type` = #{type,jdbcType=VARCHAR}
   </update>
+
+  <update id="updateValueByIdAndTypeid" parameterType="com.zte.clonedata.model.PageNo">
+    update
+      clone_page_no
+    set
+      `value` = #{value,jdbcType=VARCHAR},update_dt = #{updateDt,jdbcType=VARCHAR}
+    where
+      id = #{id,jdbcType=VARCHAR}
+      and
+      `type` = #{type,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectList" resultMap="DTOResultMap" parameterType="com.zte.clonedata.web.dto.PageNoDTO">
+    select
+           t1.id,t1.`key`,t1.`value`,t1.`type`,t2.type_name,t1.update_dt
+    from
+         clone_page_no t1
+    left join clone_data_type t2 on t2.id = t1.`type`
+    <where>
+      <if test="key != null">
+        t1.key like concat('%',#{key,jdbcType=VARCHAR},'%')
+      </if>
+    </where>
+
+    order by t1.update_dt desc
+  </select>
 </mapper>
