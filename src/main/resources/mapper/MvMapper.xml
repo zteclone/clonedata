@@ -22,6 +22,11 @@
     <result column="actors" jdbcType="LONGVARCHAR" property="actors" />
     <result column="moviedesc" jdbcType="LONGVARCHAR" property="moviedesc" />
   </resultMap>
+
+  <resultMap id="TypeNameResultMap" type="com.zte.clonedata.web.dto.MvDTO" extends="BaseResultMap">
+    <result column="type_name" jdbcType="VARCHAR" property="mvTypeName" />
+  </resultMap>
+
   <sql id="Base_Column_List">
         movieid, mv_typeid, moviename,
         type, country, language,
@@ -425,4 +430,16 @@
     where movieid = #{movieid,jdbcType=VARCHAR}
       and mv_typeid = #{mvTypeid,jdbcType=VARCHAR}
   </update>
+
+
+  <select id="selectTypenameByMovieidAndMvtypeid" parameterType="com.zte.clonedata.model.Mv" resultMap="TypeNameResultMap">
+
+    select
+           <include refid="Base_Column_List" />,t.type_name
+    from clone_mv_detail mv
+    left join clone_data_type t on t.id = mv.mv_typeid
+    where movieid = #{movieid,jdbcType=VARCHAR}
+    and mv_typeid = #{mvTypeid,jdbcType=VARCHAR}
+
+  </select>
 </mapper>

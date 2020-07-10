@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.w3.org/1999/xhtml http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
+    <script src="/static/layui/layui.js" charset="utf-8"></script>
+    <style>
+        th{
+            text-align: right;
+            width: 15%;
+            padding: 13px 0;
+            background-color: #ececec;
+            font-size:15px;
+        }
+        td {
+            background-color: #f0f0f0;
+            font-size:14px;
+        }
+    </style>
+</head>
+<body style="background-color: #F2F2F2;">
+
+<div style="margin-top: 5px;margin-left: 5px">
+    <div style="width: 30%;height: 65%;float:left;">
+        <img id="url" src="" style="width: 100%;height: 100%;">
+    </div>
+    <div style="width: 69%;height: 65% ;float:right;">
+        <table border="0">
+            <tr>
+                <th>电影id：</th>
+                <td>[[${mv.movieid}]]</td>
+                <th>时长：</th>
+                <td>[[${mv.runtime}]]</td>
+            </tr>
+            <tr>
+                <th>来源：</th>
+                <td>[[${mv.mvTypeName}]]</td>
+                <th>评分：</th>
+                <td>[[${mv.ratingnum}]]</td>
+            </tr>
+            <tr>
+                <th>电影名称：</th>
+                <td>[[${mv.moviename}]]</td>
+                <th>又名：</th>
+                <td>[[${mv.aka}]]</td>
+            </tr>
+            <tr>
+                <th>导演：</th>
+                <td colspan="3">[[${mv.director}]]</td>
+            </tr>
+            <tr>
+                <th>编剧：</th>
+                <td colspan="3">[[${mv.scenarist}]]</td>
+            </tr>
+            <tr>
+                <th>主演：</th>
+                <td colspan="3">[[${mv.actors}]]</td>
+            </tr>
+            <tr>
+                <th>类型：</th>
+                <td>[[${mv.type}]]</td>
+                <th>国家：</th>
+                <td>[[${mv.country}]]</td>
+            </tr>
+            <tr>
+                <th>语言：</th>
+                <td>[[${mv.language}]]</td>
+                <th>发行时间：</th>
+                <td>[[${mv.releasedata}]]</td>
+            </tr>
+            <tr>
+                <th>标签：</th>
+                <td colspan="3">[[${mv.releasedata}]]</td>
+            </tr>
+        </table>
+    </div>
+    <table border="0" style="width: 100%;margin-top: 5px">
+        <tr>
+            <th>描述：</th>
+            <td colspan="3">[[${mv.moviedesc}]]</td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>
+<script type="text/javascript" th:inline="javascript">
+
+    layui.use(['table', 'jquery'], function () {
+        var $ = layui.jquery;
+        var movieid = [[${mv.movieid}]];
+        var mvTypeid = [[${mv.mvTypeid}]];
+
+        function init() {
+            $('#url').attr('src','/page/images?movieid=' + [[${mv.movieid}]] +'&mvTypeid='+[[${mv.mvTypeid}]]);
+        }
+        init();
+    });
+
+</script>

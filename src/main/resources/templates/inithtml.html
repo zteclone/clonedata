@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
+    <script src="/static/layui/layui.js" charset="utf-8"></script>
+</head>
+<body style="text-align:center;background-color: #F2F2F2;">
+
+<div>
+    <h1 style="padding: 70px 0 20px;">
+        <div class="layui-inline" style="text-align: right">
+            <div class="layui-input-inline">
+                <input type="text" style="width: 100px;font-size : 13px;" name="month" id="month" lay-verify="date" placeholder="yyyy-MM" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </h1>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main"
+         style="margin-left: 3%;float: left;height: 400px;width: 60%; user-select: none; position: relative; background: transparent none repeat scroll 0% 0%;"
+         _echarts_instance_="ec_1590050264784">
+        <div style="position: relative; overflow: hidden; width: 1382px; height: 400px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;">
+            <canvas style="position: absolute; left: 0px; top: 0px; width: 1382px; height: 400px; user-select: none; padding: 0px; margin: 0px; border-width: 0px;"
+                    width="1727" height="500" data-zr-dom-id="zr_0"></canvas>
+        </div>
+        <div style="position: absolute; display: none; border-style: solid; white-space: nowrap; z-index: 9999999; transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s, top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s; background-color: rgba(50, 50, 50, 0.7); border-width: 0px; border-color: rgb(51, 51, 51); border-radius: 4px; color: rgb(255, 255, 255); font: 14px / 21px Microsoft YaHei; padding: 5px; left: 1218px; top: 330px;">
+            android4<br><span
+                style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:#2f4554;"></span>Dec:
+            13
+        </div>
+    </div>
+
+
+    <div id="main2"
+         style="float: left;height: 400px;width: 36%; user-select: none; position: relative; background: transparent none repeat scroll 0% 0%;"
+         _echarts_instance_="ec_1590050264784">
+        <div style="position: relative; overflow: hidden; width: 1382px; height: 400px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;">
+            <canvas style="position: absolute; left: 0px; top: 0px; width: 1382px; height: 400px; user-select: none; padding: 0px; margin: 0px; border-width: 0px;"
+                    width="1727" height="500" data-zr-dom-id="zr_0"></canvas>
+        </div>
+        <div style="position: absolute; display: none; border-style: solid; white-space: nowrap; z-index: 9999999; transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s, top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s; background-color: rgba(50, 50, 50, 0.7); border-width: 0px; border-color: rgb(51, 51, 51); border-radius: 4px; color: rgb(255, 255, 255); font: 14px / 21px Microsoft YaHei; padding: 5px; left: 1218px; top: 330px;">
+            android4<br><span
+                style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:#2f4554;"></span>Dec:
+            13
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+<script src="/static/echarts/echarts-all-3.js"></script>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts图表
+    var myChart = echarts.init(document.getElementById('main'));
+    var myChart2 = echarts.init(document.getElementById('main2'));
+    var date = new Date();
+    var dateyear = date .getFullYear() +''; //获取完整的年份
+    var datemonth = (date .getMonth()+1) + ''; //获取当前月份
+    if (datemonth.length == 1){
+        datemonth = '0'+datemonth;
+    }
+
+
+    layui.use(['laydate', 'form', 'jquery'], function () {
+
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+        $("#month").val(dateyear+'-'+datemonth);
+
+        laydate.render({
+            elem: '#month'
+            , type: 'month'
+            , done: function (value, date) {
+                init(value.replace("-",""));
+            }
+        });
+
+        function init(m) {
+            $.ajax({
+                url: "/bill/initQuery?month="+m
+                , type: "get"
+                , async: false
+                , success: function (res) {
+                    if (res.code == 0) {
+                        // 为echarts对象加载数据
+                        myChart.setOption(JSON.parse(res.data));
+                    } else {
+                        layer.msg(res.msg);
+                    }
+                }
+            });
+
+
+            $.ajax({
+                url: "/bill/initQueryPie?month="+m
+                , type: "get"
+                , async: false
+                , success: function (res) {
+                    if (res.code == 0) {
+                        // 为echarts对象加载数据
+                        myChart2.setOption(JSON.parse(res.data));
+                    } else {
+                        layer.msg(res.msg);
+                    }
+                }
+            });
+        }
+
+        init('');
+    })
+</script>

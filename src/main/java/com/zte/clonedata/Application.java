@@ -1,9 +1,14 @@
 package com.zte.clonedata;
 
+import com.zte.clonedata.dao.DoubanTvMapper;
+import com.zte.clonedata.dao.MvMapper;
 import com.zte.clonedata.dao.TaskLogMapper;
+import com.zte.clonedata.model.DoubanTv;
+import com.zte.clonedata.model.Mv;
 import com.zte.clonedata.model.TaskLog;
 import com.zte.clonedata.model.TaskLogExample;
 import com.zte.clonedata.util.*;
+import com.zte.clonedata.web.dto.MvDTO;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -42,6 +47,10 @@ public class Application {
     private FTPUtils ftpUtils;
     @Autowired
     private TaskLogMapper taskLogMapper;
+    @Autowired
+    private MvMapper mvMapper;
+    @Autowired
+    private DoubanTvMapper doubanTvMapper;
     @PostConstruct
     public void init() throws InterruptedException {
         ftpUtils.connect();
@@ -115,6 +124,21 @@ public class Application {
     @RequestMapping("/admin/inithtml")
     public ModelAndView inithtml(){
         ModelAndView modelAndView = new ModelAndView("inithtml.html");
+        return modelAndView;
+    }
+    @RequestMapping("/admin/mvDetail")
+    public ModelAndView mvDetail(@RequestParam(value = "movieid",defaultValue = "") String movieid
+            ,@RequestParam(value = "mvTypeid",defaultValue = "")String mvTypeid){
+        ModelAndView modelAndView = new ModelAndView("mvDetail.html");
+        MvDTO mvDTO = mvMapper.selectTypenameByMovieidAndMvtypeid(new Mv(movieid, mvTypeid));
+        modelAndView.addObject("mv",mvDTO);
+        return modelAndView;
+    }
+    @RequestMapping("/admin/tvDetail")
+    public ModelAndView tvDetail(@RequestParam(value = "tvid",defaultValue = "") String tvid){
+        ModelAndView modelAndView = new ModelAndView("tvDetail.html");
+        DoubanTv doubanTv = doubanTvMapper.selectByPrimaryKey(tvid);
+        modelAndView.addObject("tv",doubanTv);
         return modelAndView;
     }
 }

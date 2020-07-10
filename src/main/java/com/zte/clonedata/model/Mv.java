@@ -35,6 +35,12 @@ public class Mv implements Serializable {
     private String filepath;
     private String url;
 
+    public Mv(){}
+    public Mv(String movieid,String mvTypeid){
+        this.movieid = movieid;
+        this.mvTypeid = mvTypeid;
+    }
+
     private static final long serialVersionUID = 1L;
     public void setHttpImage(String httpImage) {
         this.httpImage = httpImage;

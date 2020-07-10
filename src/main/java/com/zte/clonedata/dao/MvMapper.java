@@ -4,6 +4,8 @@ import com.zte.clonedata.model.Mv;
 import com.zte.clonedata.model.MvExample;
 
 import java.util.List;
+
+import com.zte.clonedata.web.dto.MvDTO;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -31,4 +33,6 @@ public interface MvMapper {
     int updateByPrimaryKeySelective(Mv mv);
 
     int updateByPrimaryKey(Mv record);
+
+    MvDTO selectTypenameByMovieidAndMvtypeid(Mv mv);
 }

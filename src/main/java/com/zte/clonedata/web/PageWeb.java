@@ -5,11 +5,15 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.zte.clonedata.dao.DoubanTvMapper;
 import com.zte.clonedata.dao.MvMapper;
+import com.zte.clonedata.model.DoubanTv;
+import com.zte.clonedata.model.Mv;
 import com.zte.clonedata.model.TaskManagement;
 import com.zte.clonedata.service.TaskManagementService;
 import com.zte.clonedata.util.ResponseUtils;
 import com.zte.clonedata.util.ScheduleUtils;
 import com.zte.clonedata.util.SpringContextUtil;
+import com.zte.clonedata.web.dto.MvDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.pool.PoolStats;
 import org.quartz.*;
@@ -17,6 +21,11 @@ import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -28,6 +37,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/page")
+@Slf4j
 public class PageWeb {
     @Autowired
     private TaskManagementService taskManagementService;
@@ -99,4 +109,52 @@ public class PageWeb {
         return ResponseUtils.successData(map);
     }
 
+    @GetMapping("/images")
+    public void images(@RequestParam("movieid")String movieid,
+                       @RequestParam("mvTypeid")String mvTypeid,
+                       HttpServletResponse response){
+        MvDTO mvDTO = mvMapper.selectTypenameByMovieidAndMvtypeid(new Mv(movieid, mvTypeid));
+        this.responseImages(mvDTO.getFilepath(),response);
+    }
+
+    @GetMapping("/imagesTv")
+    public void imagesTv(@RequestParam("tvid")String tvid,
+                       HttpServletResponse response){
+        DoubanTv doubanTv = doubanTvMapper.selectByPrimaryKey(tvid);
+        this.responseImages(doubanTv.getFilepath(),response);
+    }
+    private void responseImages(String filepath,HttpServletResponse response){
+        FileInputStream fis = null;
+        ServletOutputStream out = null;
+        try {
+            File file = new File(filepath);
+            fis = new FileInputStream(file);
+            long size = file.length();
+            byte[] temp = new byte[(int) size];
+            fis.read(temp, 0, (int) size);
+            fis.close();
+            byte[] data = temp;
+            out = response.getOutputStream();
+            response.setContentType("image/png");
+            out.write(data);
+            out.flush();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }finally {
+            if (fis != null){
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                }
+            }
+            if (out != null){
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                }
+            }
+        }
+    }
 }

@@ -42,4 +42,5 @@ public class MvWeb {
         PageInfo<Mv> pages = new PageInfo<>(dictList);
         return ResponseUtils.success((int) pages.getTotal(), dictList);
     }
+
 }
