@@ -16,6 +16,7 @@ public class TaskManagement implements Serializable {
     private String taskType;//任务类型
     private Short timeoutSecond;//请求类型
     private int jobRun;//是否正在运行
+    private String nextExecuteDate;
     private String creDt;
 
     private static final long serialVersionUID = 1L;

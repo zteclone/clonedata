@@ -2,6 +2,7 @@ package com.zte.clonedata.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.zte.clonedata.contanst.SleepContanst;
 import com.zte.clonedata.dao.DictMapper;
 import com.zte.clonedata.model.Dict;
 import com.zte.clonedata.service.DictService;
@@ -24,6 +25,8 @@ public class DictServiceImpl implements DictService {
 
     @Autowired
     private DictMapper dictMapper;
+    @Autowired
+    private SleepContanst sleepContanst;
 
     @Override
     public String selectByKey(String key) {
@@ -32,6 +35,15 @@ public class DictServiceImpl implements DictService {
             return value;
         }
         return "";
+    }
+
+    @Override
+    public int selectIntByKey(String key) {
+        String value = dictMapper.selectByKey(key);
+        if (StringUtils.isNotBlank(value)){
+            return Integer.parseInt(value);
+        }
+        return 0;
     }
 
     @Override
@@ -65,5 +77,8 @@ public class DictServiceImpl implements DictService {
     @Override
     public void update(Dict dict) {
         dictMapper.updateByPrimaryKeySelective(dict);
+        if (dict.getDictKey().startsWith("SLEEP_")){
+            sleepContanst.init();
+        }
     }
 }

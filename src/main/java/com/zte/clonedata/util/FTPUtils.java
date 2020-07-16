@@ -10,6 +10,8 @@ import java.io.*;
 import java.util.List;
 import java.util.Properties;
 
+import static com.zte.clonedata.contanst.SleepContanst.SLEEP_FTP_SPAN_TIME;
+
 /**
  * ProjectName: clonedata-com.zte.clonedata.util
  *
@@ -108,7 +110,7 @@ public class FTPUtils {
                 inputStream = new FileInputStream(file);
                 String filename = file.getName();
                 sftp.put(inputStream, filename);
-                Thread.sleep(200);
+                Thread.sleep(SLEEP_FTP_SPAN_TIME);
             } catch (SftpException e) {
                 log.error("sftp异常-->", e);
             } catch (FileNotFoundException e) {

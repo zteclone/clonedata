@@ -68,8 +68,9 @@
                                 return "异常"
                             }
                         }}
-                        , {field: 'excuteTarget', title: '请求网址', edit: 'text', align: 'center'}
-                        , {field: 'taskType',width: 100 , title: '请求类型', align: 'center'}
+                        , {field: 'nextExecuteDate', title: '下次执行时间', align: 'center'}
+                        , {field: 'excuteTarget', title: '请求网址', edit: 'text', align: 'center', hide: true}
+                        , {field: 'taskType',width: 100 , title: '请求类型', align: 'center', hide: true}
                         , {field: 'jobRun',width: 200, title: '装载定时任务', align: 'center', templet: '#cvjobRun'}
                         , {fixed: 'right',width: 200, title: '操作', toolbar: '#barDemo', align: 'center'}
                     ]

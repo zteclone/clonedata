@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.zte.clonedata.contanst.Contanst;
 import com.zte.clonedata.contanst.RunningContanst;
+import com.zte.clonedata.contanst.SleepContanst;
 import com.zte.clonedata.job.AbstractJob;
+import com.zte.clonedata.job.model.HttpType;
 import com.zte.clonedata.model.Mv;
 import com.zte.clonedata.model.PageNo;
 import com.zte.clonedata.model.error.BusinessException;
@@ -101,7 +103,7 @@ public class JobMaoyanMv extends AbstractJob {
                     log.info("此段收集电影信息已达3000,结束此段任务 ... >>> country: {}, year: {}-{}", counrty, year1, year2);
                     break;
                 }
-                Thread.sleep(30000);
+                Thread.sleep(SleepContanst.SLEEP_INDEX_SPAN_TIME);
             }
             //修改页数
             updatePageNo(isLock, start, pageNo);
@@ -117,7 +119,7 @@ public class JobMaoyanMv extends AbstractJob {
                 if (exe.isTerminated()) {
                     break;
                 }
-                Thread.sleep(500);
+                Thread.sleep(SleepContanst.SLEEP_RUN_SPAN_TIME);
             }
         }
         if (executeResult == null) {
@@ -141,7 +143,7 @@ public class JobMaoyanMv extends AbstractJob {
 
     protected <T> void getListByURL(String url, PicDownUtils picDownUtils, Map<String, T> maoyanMvMap) throws InterruptedException, BusinessException {
         try {
-            String result = HttpUtils.getJson(url, Contanst.MAOYAN_HOST1,"maoyan");
+            String result = HttpUtils.getJson(url, Contanst.MAOYAN_HOST1, HttpType.MAOYAN);
             Document parse = Jsoup.parse(result);
             Elements select = parse.select("div[class=\"movies-list\"]");
             if (select.size()!= 0){
@@ -208,8 +210,8 @@ public class JobMaoyanMv extends AbstractJob {
             }
             if (c++ < 10) {
                 log.error("发生错误url >>> {}", url);
-                log.error("30秒后再次尝试连接  >>>{}<<<", c);
-                Thread.sleep(30000);
+                log.error("{} 后再次尝试连接，次数:  >>>{}<<<",SleepContanst.SLEEP_INDEX_ERROR_SPAN_TIME, c);
+                Thread.sleep(SleepContanst.SLEEP_INDEX_ERROR_SPAN_TIME);
                 getListByURL(url, picDownUtils, maoyanMvMap);
             } else {
                 throw e;

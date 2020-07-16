@@ -1,17 +1,18 @@
+create database if not exists `clonedata`;
 -- 测试环境
 -- 每次删除数据
--- DROP TABLE IF EXISTS `clone_douban_tv_detail`;
--- DROP TABLE IF EXISTS `clone_mv_detail`;
--- DROP TABLE IF EXISTS `clone_data_type`;
--- DROP TABLE IF EXISTS `clone_page_no`;
--- DROP TABLE IF EXISTS `task_management`;
--- DROP TABLE IF EXISTS `task_param`;
--- DROP TABLE IF EXISTS `task_log`;
--- DROP TABLE IF EXISTS `clone_dict`;
+-- DROP TABLE IF EXISTS `clonedata`.`clone_douban_tv_detail`;
+-- DROP TABLE IF EXISTS `clonedata`.`clone_mv_detail`;
+-- DROP TABLE IF EXISTS `clonedata`.`clone_data_type`;
+-- DROP TABLE IF EXISTS `clonedata`.`clone_page_no`;
+-- DROP TABLE IF EXISTS `clonedata`.`task_management`;
+-- DROP TABLE IF EXISTS `clonedata`.`task_param`;
+-- DROP TABLE IF EXISTS `clonedata`.`task_log`;
+-- DROP TABLE IF EXISTS `clonedata`.`clone_dict`;
 
 
 -- 电视剧表
-create table if not exists `clone_douban_tv_detail` (
+create table if not exists `clonedata`.`clone_douban_tv_detail` (
   `tvid` varchar(32) NOT NULL,
   `tvname` varchar(1000) DEFAULT NULL,
   `director` text COMMENT '导演',
@@ -35,7 +36,7 @@ create table if not exists `clone_douban_tv_detail` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 电影表
-create table if not exists `clone_mv_detail` (
+create table if not exists `clonedata`.`clone_mv_detail` (
   `movieid` varchar(32) NOT NULL,
   `moviename` varchar(2000) DEFAULT NULL,
   `director` text COMMENT '导演',
@@ -59,13 +60,13 @@ create table if not exists `clone_mv_detail` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 爬取目标类型表
-create table if not exists `clone_data_type` (
+create table if not exists `clonedata`.`clone_data_type` (
   `id` varchar(32) NOT NULL,
   `type_name` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE if not exists `clone_dict` (
+CREATE TABLE if not exists `clonedata`.`clone_dict` (
    `id` varchar(32) NOT NULL,
    `dict_key` varchar(255) NOT NULL DEFAULT '',
    `dict_value` text NOT NULL,
@@ -74,7 +75,7 @@ CREATE TABLE if not exists `clone_dict` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 爬取页数表
-create table if not exists `clone_page_no` (
+create table if not exists `clonedata`.`clone_page_no` (
   `id` varchar(32) NOT NULL,
   `key` varchar(255) NOT NULL DEFAULT '',
   `value` varchar(255) NOT NULL DEFAULT '',
@@ -84,7 +85,7 @@ create table if not exists `clone_page_no` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 定时任务配置表
-create table if not exists `task_management` (
+create table if not exists `clonedata`.`task_management` (
   `id` varchar(32) NOT NULL,
   `excute_target` varchar(255) NOT NULL DEFAULT '',
   `external_code` varchar(255) NOT NULL DEFAULT '',
@@ -99,7 +100,7 @@ create table if not exists `task_management` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 定时任务参数表
-create table if not exists `task_param` (
+create table if not exists `clonedata`.`task_param` (
   `id` varchar(32) NOT NULL,
   `param_name` varchar(255) DEFAULT NULL,
   `param_value` varchar(255) DEFAULT NULL,
@@ -108,7 +109,7 @@ create table if not exists `task_param` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 定时任务日志表
-create table if not exists `task_log` (
+create table if not exists `clonedata`.`task_log` (
   `id` varchar(32) NOT NULL,
   `begintime` varchar(14) NOT NULL DEFAULT '',
   `endtime` varchar(14) NOT NULL DEFAULT '',

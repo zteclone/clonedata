@@ -5,9 +5,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.zte.clonedata.contanst.Contanst;
 import com.zte.clonedata.contanst.RunningContanst;
+import com.zte.clonedata.contanst.SleepContanst;
 import com.zte.clonedata.dao.MvMapper;
 import com.zte.clonedata.job.AbstractJob;
 import com.zte.clonedata.job.model.DoubanModel;
+import com.zte.clonedata.job.model.HttpType;
 import com.zte.clonedata.model.Mv;
 import com.zte.clonedata.model.PageNo;
 import com.zte.clonedata.model.error.BusinessException;
@@ -88,7 +90,7 @@ public class JobDoubanMv extends AbstractJob {
                     log.info("此段收集电影信息已达3000,结束此段任务 ... >>> country: {}, year: {}-{}", counrty, year1, year2);
                     break;
                 }
-                Thread.sleep(30000);
+                Thread.sleep(SleepContanst.SLEEP_INDEX_SPAN_TIME);
             }
             //修改页数
             updatePageNo(isLock, start, pageNo);
@@ -104,7 +106,7 @@ public class JobDoubanMv extends AbstractJob {
                 if (exe.isTerminated()) {
                     break;
                 }
-                Thread.sleep(500);
+                Thread.sleep(SleepContanst.SLEEP_RUN_SPAN_TIME);
             }
         }
         if (executeResult == null) {
@@ -128,7 +130,8 @@ public class JobDoubanMv extends AbstractJob {
 
     protected <T> void getListByURL(String url, PicDownUtils picDownUtils, Map<String, T> doubanMvMap) throws InterruptedException, BusinessException {
         try {
-            String result = HttpUtils.getJson(url, Contanst.DOUBAN_HOST1,"");
+            String result = HttpUtils.getJson(url, Contanst.DOUBAN_HOST1, HttpType.DOUBAN);
+            //log.warn("返回值为: {}",result);
             if (result.length() == 11) {
                 throw new BusinessException(EmBusinessError.HTTP_RESULT_NULL);
             } else if (result.contains("检测到有异常请求从您的IP发出")) {
@@ -178,8 +181,8 @@ public class JobDoubanMv extends AbstractJob {
             }
             if (c++ < 10) {
                 log.error("发生错误url >>> {}", url);
-                log.error("30秒后再次尝试连接  >>>{}<<<", c);
-                Thread.sleep(30000);
+                log.error("{} 后再次尝试连接，次数:  >>>{}<<<",SleepContanst.SLEEP_INDEX_ERROR_SPAN_TIME, c);
+                Thread.sleep(SleepContanst.SLEEP_INDEX_ERROR_SPAN_TIME);
                 getListByURL(url, picDownUtils, doubanMvMap);
             } else {
                 throw e;

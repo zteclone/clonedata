@@ -9,9 +9,7 @@ import com.zte.clonedata.model.DoubanTv;
 import com.zte.clonedata.model.Mv;
 import com.zte.clonedata.model.TaskManagement;
 import com.zte.clonedata.service.TaskManagementService;
-import com.zte.clonedata.util.ResponseUtils;
-import com.zte.clonedata.util.ScheduleUtils;
-import com.zte.clonedata.util.SpringContextUtil;
+import com.zte.clonedata.util.*;
 import com.zte.clonedata.web.dto.MvDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -63,9 +61,12 @@ public class PageWeb {
         taskManagements.stream().forEach(x ->{
             if (nameList.contains(x.getTaskId())){
                 x.setJobRun(1);
+                x.setNextExecuteDate(DateUtils.getString(CronUtils.getNextExecution(x.getTaskExcutePlan())));
             }else {
                 x.setJobRun(0);
             }
+
+
         });
         PageInfo<TaskManagement> pages = new PageInfo<>(taskManagements);
         return ResponseUtils.success((int) pages.getTotal(), taskManagements);

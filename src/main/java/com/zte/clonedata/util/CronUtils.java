@@ -4,6 +4,7 @@ import com.zte.clonedata.model.error.BusinessException;
 import com.zte.clonedata.model.error.EmBusinessError;
 import org.apache.commons.lang3.StringUtils;
 import org.quartz.Calendar;
+import org.quartz.CronExpression;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +66,21 @@ public class CronUtils {
         } catch (Exception var3) {
             log.error(var3.getMessage());
             return false;
+        }
+    }
+
+    /**
+     * 返回下一个执行时间根据给定的Cron表达式
+     *
+     * @param cronExpression Cron表达式
+     * @return Date 下次Cron表达式执行时间
+     */
+    public static Date getNextExecution(String cronExpression) {
+        try {
+            CronExpression cron = new CronExpression(cronExpression);
+            return cron.getNextValidTimeAfter(new Date(System.currentTimeMillis()));
+        } catch (ParseException e) {
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 

@@ -1,6 +1,7 @@
 package com.zte.clonedata.util;
 
 import com.zte.clonedata.contanst.Contanst;
+import com.zte.clonedata.contanst.SleepContanst;
 import com.zte.clonedata.model.error.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -68,8 +69,8 @@ public class PicDownUtils implements Runnable{
         }catch (BusinessException e){
             log.error(e.getMessage());
             if (c++ < 10){
-                log.error("三秒后再次尝试连接  >>>{}<<<",c);
-                Thread.sleep(3000);
+                log.error("{} 后再次尝试获取详单，次数:  >>>{}<<<", SleepContanst.SLEEP_DETAIL_ERROR_SPAN_TIME, c);
+                Thread.sleep(SleepContanst.SLEEP_DETAIL_ERROR_SPAN_TIME);
                 return downSaveReturnFile(url,file);
             }else{
                 err++;

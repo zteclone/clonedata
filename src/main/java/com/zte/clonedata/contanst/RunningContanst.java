@@ -2,7 +2,7 @@ package com.zte.clonedata.contanst;
 
 import com.zte.clonedata.service.DataTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 
@@ -13,7 +13,7 @@ import javax.annotation.PostConstruct;
  * @Date: Creating in 16:28 2020/6/16
  * @Description:
  */
-@Component
+@Configuration
 public class RunningContanst {
 
     /**

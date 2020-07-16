@@ -1,7 +1,10 @@
 package com.zte.clonedata.job.maoyan;
 
 import com.zte.clonedata.contanst.Contanst;
+import com.zte.clonedata.contanst.SleepContanst;
 import com.zte.clonedata.dao.MvMapper;
+import com.zte.clonedata.job.AbstractJob;
+import com.zte.clonedata.job.model.HttpType;
 import com.zte.clonedata.model.Mv;
 import com.zte.clonedata.model.error.BusinessException;
 import com.zte.clonedata.util.DateUtils;
@@ -60,7 +63,7 @@ public class JobMaoyanMvDetail extends Thread {
 
     private void getMoviceSave(Mv maoyanMv) throws InterruptedException {
         try {
-            String result = HttpUtils.getJson(maoyanMv.getUrl(), Contanst.MAOYAN_HOST1,"maoyan");
+            String result = HttpUtils.getJson(maoyanMv.getUrl(), Contanst.MAOYAN_HOST1, HttpType.MAOYAN_DETAIL);
             Document doc = Jsoup.parse(result);
             Elements select = doc.select("div[class=\"celebrity-group\"]");
             for (Element element : select) {
@@ -97,11 +100,12 @@ public class JobMaoyanMvDetail extends Thread {
                 successCount ++;
             }
             mvMapper.insertSelective(maoyanMv);
+            Thread.sleep(SleepContanst.SLEEP_DETAIL_SPAN_TIME);
         } catch (Exception e) {
             log.error("发生错误url >>> {}", maoyanMv.getUrl());
             if (e instanceof BusinessException){
                 log.error("获取详单错误 >>> {}", ((BusinessException) e).getCommonError().getErrorMsg());
-                if (((BusinessException) e).getCommonError().getErrorMsg().contains("HttpStatus: 404")) return;
+                if (((BusinessException) e).getCommonError().getErrorMsg().contains("HttpStatus: 4")) return;
             }else if (e instanceof DataIntegrityViolationException){
                 log.error("存入数据库异常,请检查数据库配置及字段. >>> {}",e.getMessage());
                 return;
@@ -109,8 +113,8 @@ public class JobMaoyanMvDetail extends Thread {
                 log.error("获取详单错误 >>> {}", e.getMessage());
             }
             if (c++ < 10) {
-                log.error("三秒后再次尝试获取详单  >>>{}<<<", c);
-                Thread.sleep(3000);
+                log.error("{} 后再次尝试获取详单，次数:  >>>{}<<<",SleepContanst.SLEEP_DETAIL_ERROR_SPAN_TIME, c);
+                Thread.sleep(SleepContanst.SLEEP_DETAIL_ERROR_SPAN_TIME);
                 getMoviceSave(maoyanMv);
             } else {
                 c = 0;

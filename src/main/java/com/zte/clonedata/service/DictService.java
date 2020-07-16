@@ -16,6 +16,8 @@ public interface DictService {
 
     String selectByKey(String key);
 
+    int selectIntByKey(String key);
+
     JSONObject selectJSONByKey(String key);
 
     void insert(String key,String value,String desc);

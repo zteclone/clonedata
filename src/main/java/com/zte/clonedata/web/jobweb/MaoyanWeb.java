@@ -40,7 +40,8 @@ public class MaoyanWeb {
         if (!matcher.find()) {
             return ResponseUtils.fail("参数错误 - 位数");
         }
-        String execute = "请求失败, 原因: 该功能正在开发中";//jobMaoyanMv.execute(matcher.group(1), matcher.group(2), null);
+        String execute = "请求失败, 原因: 该功能正在开发中";
+        execute = jobMaoyanMv.execute(matcher.group(1), matcher.group(2), null);
         if (execute.contains("失败")) {
             return ResponseUtils.fail(execute);
         }
