@@ -17,12 +17,12 @@ import javax.annotation.PostConstruct;
  * TODO 数据库配置
  */
 @Configuration
-public class SleepContanst {
+public class ChangeRunningContanst {
 
     /**
      * 爬取主页间隔
      */
-    public static int SLEEP_INDEX_SPAN_TIME = 90 * 1000;
+    public static int SLEEP_INDEX_SPAN_TIME = 60000;
     /**
      * 主页错误间隔
      */
@@ -31,25 +31,40 @@ public class SleepContanst {
     /**
      * 爬取详情页间隔
      */
-    public static int SLEEP_DETAIL_SPAN_TIME = 5 * 1000;
+    public static int SLEEP_DETAIL_SPAN_TIME = 3 * 1000;
     /**
      * 详情页错误间隔
      */
-    public static int SLEEP_DETAIL_ERROR_SPAN_TIME = 5 * 1000;
-
-    /**
-     * 线程间隔
-     */
-    public static int SLEEP_RUN_SPAN_TIME = 2 * 1000;
+    public static int SLEEP_DETAIL_ERROR_SPAN_TIME = 3 * 1000;
 
     /**
      * FTP 间隔
      */
-    public static int SLEEP_FTP_SPAN_TIME = 1000;
+    public static int SLEEP_FTP_SPAN_TIME = 2000;
+    /**
+     * 主爬取任务重试次数
+     */
+    public static int RETRY_MAIN_COUNT = 5;
+    /**
+     * 详单重试次数
+     */
+    public static int RETRY_DETAIL_COUNT = 5;
     @Autowired
     private DictService dictService;
     @PostConstruct
     public void init(){
+        sleep();
+        retry();
+    }
+
+    public void retry() {
+        int retry_main_count = dictService.selectIntByKey("RETRY_MAIN_COUNT");
+        if (retry_main_count!= 0) RETRY_MAIN_COUNT = retry_main_count;
+        int retry_detail_count = dictService.selectIntByKey("RETRY_DETAIL_COUNT");
+        if (retry_detail_count!= 0) RETRY_DETAIL_COUNT = retry_detail_count;
+    }
+
+    public void sleep() {
         int index_span_time = dictService.selectIntByKey("SLEEP_INDEX_SPAN_TIME");
         if (index_span_time!= 0) SLEEP_INDEX_SPAN_TIME = index_span_time * 1000;
         int index_error_span_time = dictService.selectIntByKey("SLEEP_INDEX_ERROR_SPAN_TIME");
@@ -58,8 +73,6 @@ public class SleepContanst {
         if (detail_span_time!= 0) SLEEP_DETAIL_SPAN_TIME = detail_span_time * 1000;
         int detail_error_span_time = dictService.selectIntByKey("SLEEP_DETAIL_ERROR_SPAN_TIME");
         if (detail_error_span_time!= 0) SLEEP_DETAIL_ERROR_SPAN_TIME = detail_error_span_time * 1000;
-        int run_span_time = dictService.selectIntByKey("SLEEP_RUN_SPAN_TIME");
-        if (run_span_time!= 0) SLEEP_RUN_SPAN_TIME = run_span_time * 1000;
         int ftp_span_time = dictService.selectIntByKey("SLEEP_FTP_SPAN_TIME");
         if (ftp_span_time!= 0) SLEEP_FTP_SPAN_TIME = ftp_span_time * 1000;
     }

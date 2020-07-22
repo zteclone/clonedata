@@ -48,7 +48,7 @@
 
 
     <!-- 指定数据库表 -->
-    <table tableName="clone_mv_detail" domainObjectName="Mvvvv">
+    <table tableName="clone_ip_proxy" domainObjectName="IpProxy">
            <!--enableCountByExample="false" enableDeleteByExample="false"
            enableSelectByExample="false" enableUpdateByExample="false"
            selectByPrimaryKeyQueryId="false"-->

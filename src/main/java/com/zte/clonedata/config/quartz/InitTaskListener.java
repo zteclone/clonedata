@@ -6,6 +6,7 @@ import com.zte.clonedata.service.TaskLogService;
 import com.zte.clonedata.service.TaskManagementService;
 import com.zte.clonedata.util.CronUtils;
 import com.zte.clonedata.util.ScheduleUtils;
+import lombok.SneakyThrows;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,7 @@ public class InitTaskListener implements InitializingBean, ServletContextAware {
      *
      * @param servletContext
      */
+    @SneakyThrows
     @Override
     public void setServletContext(ServletContext servletContext) {
         logger.info(">>> 系统启动完成");
@@ -49,7 +51,7 @@ public class InitTaskListener implements InitializingBean, ServletContextAware {
 
     }
 
-    public void loadJob() {
+    public void loadJob() throws SchedulerException {
         List<TaskManagement> taskManagementList = this.taskManagementService.selectTaskManagementList();
         taskManagementList.forEach((x) -> {
             try {
@@ -73,5 +75,9 @@ public class InitTaskListener implements InitializingBean, ServletContextAware {
             }
 
         });
+        /**
+         * 每30秒检查一次ip错误次数多的ip
+         */
+        ScheduleUtils.addScheduleJob(IpPortCheckJob.class,"ipPortCheck","cron_task_system_group","0 0/5 * * * ?");
     }
 }

@@ -10,7 +10,7 @@ import java.io.*;
 import java.util.List;
 import java.util.Properties;
 
-import static com.zte.clonedata.contanst.SleepContanst.SLEEP_FTP_SPAN_TIME;
+import static com.zte.clonedata.contanst.ChangeRunningContanst.SLEEP_FTP_SPAN_TIME;
 
 /**
  * ProjectName: clonedata-com.zte.clonedata.util

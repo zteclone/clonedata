@@ -6,8 +6,8 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
-    <script src="/static/layui/layui.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="/clonedata/static/layui/css/layui.css" media="all">
+    <script src="/clonedata/static/layui/layui.js" charset="utf-8"></script>
 </head>
 <body style="text-align:center;background-color: #F2F2F2;">
 <div style="height: 100px;line-height: 100px;">
@@ -19,6 +19,7 @@
 <div>
     <button class="layui-btn" id="search">搜索</button>
     <button class="layui-btn" id="clear">清除</button>
+    <button class="layui-btn" id="export">导出</button>
     <table class="layui-hide" id="tab1" lay-filter="tab1"></table>
 </div>
 <script type="text/html" id="barDemo">
@@ -32,7 +33,7 @@
         function init(){
             table.render({
                 elem: '#tab1'
-                , url: '/tv/list'
+                , url: '../tv/list'
                 , title: '电影表'
                 , cols: [
                     [
@@ -53,7 +54,7 @@
 
         $('#search').on('click', function () {
             table.reload('tab1', {
-                url: '/tv/list'
+                url: '../tv/list'
                 , page: {
                     curr: 1 //重新从第 1 页开始
                 }
@@ -65,13 +66,19 @@
         $('#clear').on('click', function () {
             $("#tvname").val('');
             table.reload('tab1', {
-                url: '/tv/list'
+                url: '../tv/list'
                 , page: {
                     curr: 1 //重新从第 1 页开始
                 }
                 , where: {
                     tvname: ''
                 }
+            });
+        });
+        $('#export').on('click', function () {
+            layer.confirm('确认导出全部？', function (index) {
+                window.location.href = '../tv/export';
+                layer.close(index);
             });
         });
         //监听行工具事件
@@ -84,7 +91,7 @@
                     area: ['900px', '650px'],
                     fixed: false, //不固定
                     maxmin: true,
-                    content: '/admin/tvDetail?tvid=' + data.tvid
+                    content: '../admin/tvDetail?tvid=' + data.tvid
                 });
             }
         });

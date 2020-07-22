@@ -1,5 +1,7 @@
 package com.zte.clonedata.model;
 
+import com.alibaba.excel.annotation.ExcelIgnore;
+import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.Getter;
 import org.springframework.util.StringUtils;
 
@@ -7,24 +9,43 @@ import java.io.Serializable;
 
 @Getter
 public class DoubanTv implements Serializable {
+    @ExcelProperty(value = "编号",index = 0)
     private String tvid;
+    @ExcelProperty(value = "名称",index = 1)
     private String tvname;
+    @ExcelProperty(value = "导演",index = 4)
     private String director;
+    @ExcelProperty(value = "编剧",index = 5)
     private String scenarist;
+    @ExcelProperty(value = "演员",index = 3)
     private String actors;
+    @ExcelProperty(value = "类型",index = 6)
     private String type;
+    @ExcelProperty(value = "国家",index = 7)
     private String country;
+    @ExcelProperty(value = "语言",index = 8)
     private String language;
+    @ExcelProperty(value = "上映时间",index = 9)
     private String releasedata;
+    @ExcelProperty(value = "时长",index = 10)
     private String runtime;
+    @ExcelProperty(value = "评分",index = 11)
     private String ratingnum;
+    @ExcelProperty(value = "标签",index = 12)
     private String tags;
+    @ExcelProperty(value = "描述",index = 2)
     private String moviedesc;
+    @ExcelIgnore
     private String pDate;
+    @ExcelProperty(value = "别名",index = 13)
     private String aka;
+    @ExcelProperty(value = "封面地址",index = 14)
     private String httpImage;
+    @ExcelProperty(value = "封面本机地址",index = 15)
     private String filepath;
+    @ExcelProperty(value = "详情页地址",index = 16)
     private String url;
+    @ExcelProperty(value = "集数",index = 17)
     private String episodesCount;
     private static final long serialVersionUID = 1L;
 

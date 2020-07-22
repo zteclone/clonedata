@@ -1,9 +1,14 @@
 package com.zte.clonedata.job;
 
+import com.google.common.collect.Maps;
 import com.zte.clonedata.contanst.Contanst;
+import com.zte.clonedata.contanst.RunningContanst;
 import com.zte.clonedata.dao.MvMapper;
+import com.zte.clonedata.job.utils.ConvertStringToObject;
+import com.zte.clonedata.model.PageNo;
 import com.zte.clonedata.model.error.BusinessException;
 import com.zte.clonedata.service.PageNoService;
+import com.zte.clonedata.util.FileUtils;
 import com.zte.clonedata.util.PicDownUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,11 +28,11 @@ public abstract class AbstractJob {
     @Autowired
     protected MvMapper mvMapper;
     @Autowired
+    protected RunningContanst runningContanst;
+    @Autowired
     protected PageNoService pageNoService;
-    /**
-     * 切割集合并发访问因子
-     */
-    protected static final int spList = 20;
+    @Autowired
+    protected ConvertStringToObject convertStringToObject;
 
     /**
      * 任务线程主类
@@ -38,28 +43,17 @@ public abstract class AbstractJob {
     protected abstract String execute(String counrty,String year1,String year2) throws InterruptedException;
 
     /**
-     *  获取指定URL的集合
-     * @param url   访问url
-     * @param picDownUtils  图片下载工具类
-     * @param dataMap  url爬取数据保存集合
-     * @param <T>   根据网站类型的实体类
-     */
-    protected abstract <T> void getListByURL(String url, PicDownUtils picDownUtils, Map<String,T> dataMap) throws InterruptedException, BusinessException;
-
-    /**
-     *  执行详单访问保存操作
-     * @param dataMap    需要访问详单的数据集合
-     * @param exe   多线程执行类
-     * @param <T>   根据网站类型的实体类
-     */
-    protected abstract <T> void executeDetail(Map<String,T> dataMap, ExecutorService exe);
-    /**
      * 校验主目录
      */
     protected void checkBasePath(String path) {
-        //豆瓣
-        File baseFile = new File(path);
-        if (!baseFile.exists()) baseFile.mkdirs();
-
+        FileUtils.existsMkdir(path);
+    }
+    protected void updatePageNo(boolean isLock, Integer start, PageNo pageNo) {
+        if (isLock) {
+            pageNo.setValue(String.valueOf(start));
+        } else {
+            pageNo.setValue("0");
+        }
+        pageNoService.updateValueByKeyAndTypeid(pageNo);
     }
 }

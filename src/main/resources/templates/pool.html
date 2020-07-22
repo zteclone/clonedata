@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
-    <script src="/static/layui/layui.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="/clonedata/static/layui/css/layui.css" media="all">
+    <script src="/clonedata/static/layui/layui.js" charset="utf-8"></script>
 </head>
 <body style="text-align:center;background-color: #F2F2F2;">
 <h5>5s刷新</h5>
@@ -30,7 +30,7 @@
 
         function init() {
             $.ajax({
-                url: "/page/quartzPool"
+                url: "../page/quartzPool"
                 , type: "get"
                 , success: function (res) {
                     if (res.code == 0){
@@ -44,7 +44,7 @@
                 }
             });
             $.ajax({
-                url: "/page/httpclientPoolDetail"
+                url: "../page/httpclientPoolDetail"
                 , type: "get"
                 , success: function (res) {
                     if (res.code == 0){
@@ -59,7 +59,7 @@
             });
 
             $.ajax({
-                url: "/page/dataCount"
+                url: "../page/dataCount"
                 , type: "get"
                 , success: function (res) {
                     if (res.code == 0){

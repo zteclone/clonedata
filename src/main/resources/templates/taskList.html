@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>任务管理</title>
-    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
-    <script src="/static/layui/layui.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="/clonedata/static/layui/css/layui.css" media="all">
+    <script src="/clonedata/static/layui/layui.js" charset="utf-8"></script>
 </head>
 <body style="text-align:center;background-color: #F2F2F2;">
 <div style="height: 100px;line-height: 100px;">
@@ -41,7 +41,7 @@
         function init() {
             table.render({
                 elem: '#tab1'
-                , url: '/page/list'
+                , url: '../page/list'
                 , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
                 , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
                     title: '查看池信息'
@@ -86,7 +86,7 @@
                 layer.confirm('确认运行', function (index) {
                     var index = layer.load();
                     $.ajax({
-                        url: "/jobWeb/execute?id=" + data.id
+                        url: "../jobWeb/execute?id=" + data.id
                         , type: "get"
                         , async: false
                         , success: function (res) {
@@ -103,13 +103,13 @@
                     area: ['900px', '650px'],
                     fixed: false, //不固定
                     maxmin: true,
-                    content: '/admin/detail?taskId=' + data.taskId
+                    content: '../admin/detail?taskId=' + data.taskId
                 });
             }
             if (obj.event === 'del') {
                 layer.confirm('确认删除', function (index) {
                     $.ajax({
-                        url: "/jobWeb/del?id=" + data.id
+                        url: "../jobWeb/del?id=" + data.id
                         , type: "get"
                         , async: false
                         , success: function (res) {
@@ -135,12 +135,12 @@
                         area: ['900px', '450px'],
                         fixed: false, //不固定
                         maxmin: true,
-                        content: '/admin/pool'
+                        content: '../admin/pool'
                     });
                     break;
                 case 'HELPBTN':
                     $.ajax({
-                        url: '/douban/getParam'
+                        url: '../douban/getParam'
                         , type: 'get'
                         , success: function (res) {
                             if (res.code != 0){
@@ -166,7 +166,7 @@
         $('#clear').on('click', function () {
             $("#taskname").val('');
             table.reload('tab1', {
-                url: '/page/list'
+                url: '../page/list'
                 , page: {
                     curr: 1 //重新从第 1 页开始
                 }
@@ -177,7 +177,7 @@
         });
         $('#search').on('click', function () {
             table.reload('tab1', {
-                url: '/page/list'
+                url: '../page/list'
                 , page: {
                     curr: 1 //重新从第 1 页开始
                 }
@@ -193,7 +193,7 @@
                 area: ['700px', '550px'],
                 fixed: false, //不固定
                 maxmin: true,
-                content: '/admin/addJob',
+                content: '../admin/addJob',
                 end : function(){
                     init();
                     //return false 开启该代码可禁止点击该按钮关闭
@@ -206,7 +206,7 @@
             if (obj.elem.checked){
                 layer.confirm('确认启动定时任务', function (index) {
                     $.ajax({
-                        url: "/jobWeb/start?id=" + id
+                        url: "../jobWeb/start?id=" + id
                         , type: "get"
                         , async: false
                         , success: function (res) {
@@ -221,7 +221,7 @@
             }else {
                 layer.confirm('确认关闭定时任务', function (index) {
                     $.ajax({
-                        url: "/jobWeb/stop?id=" + id
+                        url: "../jobWeb/stop?id=" + id
                         , type: "get"
                         , async: false
                         , success: function (res) {
@@ -249,7 +249,7 @@
             object.taskExcutePlan = obj.data.taskExcutePlan;
             object.externalCode = obj.data.externalCode;
             $.ajax({
-                url: "/jobWeb/update"
+                url: "../jobWeb/update"
                 , type: "post"
                 , async: false
                 , dataType: "json"

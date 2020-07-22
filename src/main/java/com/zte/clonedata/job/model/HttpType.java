@@ -8,21 +8,19 @@ package com.zte.clonedata.job.model;
  * @Description:
  */
 public enum HttpType {
+    DETAIL,
     /**
      * 豆瓣
      */
-    DOUBAN,
-    /**
-     * 豆瓣
-     */
-    DOUBAN_DETAIL,
+    DOUBAN_TY,
+    DOUBAN_MY,
     /**
      * 猫眼
      */
-    MAOYAN,
+    MAOYAN_MV,
     /**
-     * 猫眼
+     * 代理IP
      */
-    MAOYAN_DETAIL
+    IP_PROXY
     ;
 }

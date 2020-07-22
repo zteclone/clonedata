@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
-    <script src="/static/layui/layui.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="/clonedata/static/layui/css/layui.css" media="all">
+    <script src="/clonedata/static/layui/layui.js" charset="utf-8"></script>
     <style>
         th{
             text-align: right;
@@ -94,7 +94,7 @@
         var mvTypeid = [[${mv.mvTypeid}]];
 
         function init() {
-            $('#url').attr('src','/page/images?movieid=' + [[${mv.movieid}]] +'&mvTypeid='+[[${mv.mvTypeid}]]);
+            $('#url').attr('src','../page/images?movieid=' + [[${mv.movieid}]] +'&mvTypeid='+[[${mv.mvTypeid}]]);
         }
         init();
     });

@@ -6,8 +6,8 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
-    <script src="/static/layui/layui.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="/clonedata/static/layui/css/layui.css" media="all">
+    <script src="/clonedata/static/layui/layui.js" charset="utf-8"></script>
 </head>
 <body style="text-align:center;background-color: #F2F2F2;">
 <div style="height: 100px;line-height: 100px;">
@@ -29,7 +29,7 @@
         function init(){
             table.render({
                 elem: '#tab1'
-                , url: '/pageNo/list'
+                , url: '../pageNo/list'
                 , title: '页数表'
                 , cols: [
                     [
@@ -56,7 +56,7 @@
                 ,"type" : obj.data.type
             };
             $.ajax({
-                url: "/pageNo/update"
+                url: "../pageNo/update"
                 , type: "post"
                 , async: false
                 , dataType: "json"
@@ -72,7 +72,7 @@
         });
         $('#search').on('click', function () {
             table.reload('tab1', {
-                url: '/pageNo/list'
+                url: '../pageNo/list'
                 , page: {
                     curr: 1 //重新从第 1 页开始
                 }
@@ -84,7 +84,7 @@
         $('#clear').on('click', function () {
             $("#key").val('');
             table.reload('tab1', {
-                url: '/pageNo/list'
+                url: '../pageNo/list'
                 , page: {
                     curr: 1 //重新从第 1 页开始
                 }

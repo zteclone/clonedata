@@ -49,14 +49,27 @@ public class ScheduleUtils {
         scheduler.start();
     }
 
+    public static void addScheduleJobAndRunOne(Class<? extends Job> cla, String jobName, String cronExpression) throws SchedulerException {
+        addScheduleJob(cla,jobName,"cron_task_system_group",cronExpression);
+        runOnce(jobName,"cron_task_system_group");
+    }
+
+        public static void addScheduleJob(Class<? extends Job> cla, String jobName,String jobGroup, String cronExpression) throws SchedulerException {
+        JobDetail jobDetail = JobBuilder.newJob(cla).withIdentity(jobName, jobGroup).build();
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression);
+        CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(jobName, jobGroup).withSchedule(scheduleBuilder).build();
+        scheduler.scheduleJob(jobDetail, trigger);
+        scheduler.start();
+    }
+
     public static void updateScheduleJob(String taskId, String cronExpression, String lid) throws SchedulerException {
         TriggerKey triggerKey = getTriggerKey(taskId, JOB_GROUP_NAME);
         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression);
-        CronTrigger trigger = (CronTrigger)scheduler.getTrigger(triggerKey);
+        CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
         if (trigger == null) {
             addScheduleJob(taskId, cronExpression, lid);
         } else {
-            trigger = (CronTrigger)trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
+            trigger = (CronTrigger) trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
             scheduler.rescheduleJob(triggerKey, trigger);
         }
     }
@@ -73,7 +86,11 @@ public class ScheduleUtils {
     }
 
     public static void runOnce(String taskId) throws SchedulerException {
-        JobKey jobKey = JobKey.jobKey(taskId, JOB_GROUP_NAME);
+        runOnce(taskId, JOB_GROUP_NAME);
+    }
+
+    public static void runOnce(String taskId, String jobGroup) throws SchedulerException {
+        JobKey jobKey = JobKey.jobKey(taskId, jobGroup);
         scheduler.triggerJob(jobKey);
     }
 

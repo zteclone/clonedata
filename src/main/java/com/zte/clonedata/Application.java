@@ -1,5 +1,7 @@
 package com.zte.clonedata;
 
+import com.zte.clonedata.config.quartz.IpPortCheckJob;
+import com.zte.clonedata.config.quartz.IpPortJob;
 import com.zte.clonedata.dao.DoubanTvMapper;
 import com.zte.clonedata.dao.MvMapper;
 import com.zte.clonedata.dao.TaskLogMapper;
@@ -10,6 +12,7 @@ import com.zte.clonedata.model.TaskLogExample;
 import com.zte.clonedata.util.*;
 import com.zte.clonedata.web.dto.MvDTO;
 import org.mybatis.spring.annotation.MapperScan;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -39,8 +42,9 @@ public class Application {
      */
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SchedulerException {
         SpringApplication.run(Application.class, args);
+        ScheduleUtils.addScheduleJobAndRunOne(IpPortJob.class,"ipPort","0 10,30,50 * * * ?");
     }
 
     @Autowired
@@ -94,11 +98,6 @@ public class Application {
     @RequestMapping("/admin/addJob")
     public ModelAndView addJob(){
         ModelAndView modelAndView = new ModelAndView("addJob.html");
-        return modelAndView;
-    }
-    @RequestMapping("/admin/quartz")
-    public ModelAndView quartz(){
-        ModelAndView modelAndView = new ModelAndView("quartz.html");
         return modelAndView;
     }
     @RequestMapping("/admin/mv")

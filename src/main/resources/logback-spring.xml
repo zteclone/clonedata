@@ -2,8 +2,10 @@
 <configuration  scan="true" scanPeriod="10 seconds">
     <contextName>logback</contextName>
 
-    <property name="LOG_HOME" value="/home/dev/clonedata/logs" />
+    <!-- 获取yml中的log地址 -->
+    <springProperty scope="context" name="logPath" source="log.file.path"/>
 
+    <property name="LOG_HOME" value="${logPath}" />
     <!--0. 日志格式和颜色渲染 -->
     <!-- 彩色日志依赖的渲染类 -->
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />

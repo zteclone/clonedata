@@ -1,5 +1,9 @@
 package com.zte.clonedata.model;
 
+import com.alibaba.excel.annotation.ExcelIgnore;
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.write.style.ColumnWidth;
+import com.alibaba.excel.annotation.write.style.ContentRowHeight;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.util.StringUtils;
@@ -8,31 +12,52 @@ import java.io.Serializable;
 
 @Getter
 @ToString
+@ColumnWidth(13)
+@ContentRowHeight(15) //由于新版本并没有对单元格设置默认值
 public class Mv implements Serializable {
     /**
      * 主键: id
      */
+    @ExcelProperty(value = "编号",index = 0)
     private String movieid;
     /**
      *  主键: clone_data_type表关联类别id
      */
+    @ExcelProperty(value = "来源",index = 1)
     private String mvTypeid;
+    @ExcelProperty(value = "导演",index = 5)
     private String director;
+    @ExcelProperty(value = "编剧",index = 6)
     private String scenarist;
+    @ExcelProperty(value = "演员",index = 4)
     private String actors;
+    @ExcelProperty(value = "描述",index = 3)
     private String moviedesc;
+    @ExcelProperty(value = "名称",index = 2)
     private String moviename;
+    @ExcelProperty(value = "类型",index = 7)
     private String type;
+    @ExcelProperty(value = "国家",index = 8)
     private String country;
+    @ExcelProperty(value = "语言",index = 9)
     private String language;
+    @ExcelProperty(value = "上映时间",index = 10)
     private String releasedata;
+    @ExcelProperty(value = "时长",index = 11)
     private String runtime;
+    @ExcelProperty(value = "评分",index = 12)
     private String ratingnum;
+    @ExcelProperty(value = "标签",index = 13)
     private String tags;
+    @ExcelIgnore
     private String pDate;
+    @ExcelProperty(value = "别名",index = 14)
     private String aka;
+    @ExcelProperty(value = "封面地址",index = 15)
     private String httpImage;
+    @ExcelProperty(value = "封面本机地址",index = 16)
     private String filepath;
+    @ExcelProperty(value = "详情页地址",index = 17)
     private String url;
 
     public Mv(){}

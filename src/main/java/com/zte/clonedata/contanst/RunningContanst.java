@@ -2,6 +2,7 @@ package com.zte.clonedata.contanst;
 
 import com.zte.clonedata.service.DataTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
@@ -24,9 +25,15 @@ public class RunningContanst {
      * 豆瓣 id
      */
     public static String TYPE_MAOYAN_ID;
-
-
-
+    /**
+     * Common
+     */
+    @Value("${project.baseUrl}")
+    public String BASEURL;
+    /**
+     * IP代理开关
+     */
+    public static final boolean IS_PROXY = false;
 
     @Autowired
     private DataTypeService dataTypeService;

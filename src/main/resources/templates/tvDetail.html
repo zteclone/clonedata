@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
-    <script src="/static/layui/layui.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="/clonedata/static/layui/css/layui.css" media="all">
+    <script src="/clonedata/static/layui/layui.js" charset="utf-8"></script>
     <style>
         th{
             text-align: right;
@@ -91,7 +91,7 @@
     layui.use(['table', 'jquery'], function () {
         var $ = layui.jquery;
         function init() {
-            $('#url').attr('src','/page/imagesTv?tvid=' + [[${tv.tvid}]]);
+            $('#url').attr('src','../page/imagesTv?tvid=' + [[${tv.tvid}]]);
         }
         init();
     });

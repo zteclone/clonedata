@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
-    <script src="/static/layui/layui.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="/clonedata/static/layui/css/layui.css" media="all">
+    <script src="/clonedata/static/layui/layui.js" charset="utf-8"></script>
 </head>
 <body style="text-align:center;background-color: #F2F2F2;">
 <div style="margin-top: 5%">
@@ -47,7 +47,7 @@
         function init() {
             table.render({
                 elem: '#tab1'
-                , url: '/taskLog/detail?taskId='+taskId
+                , url: '../taskLog/detail?taskId='+taskId
                 , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
                 , defaultToolbar: ['filter', 'exports', 'print']
                 , title: '数据表'
@@ -80,7 +80,7 @@
             if (obj.event === 'del') {
                 return;
                 $.ajax({
-                    url: "/taskLog/del?id=" + data.id
+                    url: "../taskLog/del?id=" + data.id
                     , type: "get"
                     , async: false
                     , success: function (res) {

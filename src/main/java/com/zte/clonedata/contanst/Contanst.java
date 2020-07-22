@@ -11,11 +11,6 @@ import com.zte.clonedata.util.DateUtils;
  */
 public class Contanst {
 
-    /**
-     * Common
-     */
-    public static final String BASEURL = "/home/zte/clonedata/";
-    public static final String METHOD_TYPE_GET = "GET";
     public static final String CHARSET = "utf-8";
 
     public static final String DOUBAN = "豆瓣";
@@ -47,4 +42,9 @@ public class Contanst {
     public static final String MAOYAN_HTTPS = "https://maoyan.com";
 
     public static final String NULL_NUM = "暂无评分";
+
+    public static final int DOUBAN_MAX_THUS_PAGE = 300;
+    public static final int DOUBAN_MAX_PAGE = 2000;
+    public static final int MAOYAN_MAX_THUS_PAGE = 300;
+    public static final int MAOYAN_MAX_PAGE = 1500;
 }

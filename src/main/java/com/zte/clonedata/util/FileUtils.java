@@ -15,6 +15,28 @@ import java.io.InputStream;
 public class FileUtils {
     private FileUtils(){}
 
+    public static File existsFile(String path){
+        File file = new File(path);
+        existsFile(file);
+        return file;
+    }
+    public static void existsFile(File file){
+        File parentFile = file.getParentFile();
+        if (!parentFile.exists()){
+            parentFile.mkdirs();
+        }
+    }
+    public static File existsMkdir(String path){
+        File file = new File(path);
+        existsFile(file);
+        return file;
+    }
+    public static void existsMkdir(File file){
+        if (!file.exists()){
+            file.mkdirs();
+        }
+    }
+
     public static void writeToFile(File file, InputStream inputStream) {
         FileOutputStream outputStream = null;
 

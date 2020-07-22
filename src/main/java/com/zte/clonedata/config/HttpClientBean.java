@@ -1,9 +1,13 @@
 package com.zte.clonedata.config;
 
+import com.zte.clonedata.dao.IpProxyMapper;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.HttpRequestRetryHandler;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
@@ -12,6 +16,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.protocol.HttpContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -19,6 +25,9 @@ import org.springframework.context.annotation.Scope;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.SocketException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
@@ -68,6 +77,7 @@ public class HttpClientBean {
         httpClientBuilder.setConnectionManager(httpClientConnectionManager);
         return httpClientBuilder;
     }
+
     @Bean
     @Scope("prototype")
     public HttpClient httpClient(HttpClientBuilder httpClientBuilder){
@@ -82,20 +92,14 @@ public class HttpClientBean {
 
 
     @Bean
+    @Scope("prototype")
     public RequestConfig.Builder requestConfigBuilder(){
-        RequestConfig.Builder b = RequestConfig.custom();
-        b.setConnectTimeout(8000);
-        b.setConnectionRequestTimeout(800);
-        b.setSocketTimeout(8000);
-        return b;
+        return RequestConfig.custom()
+                .setConnectTimeout(20000)
+                .setSocketTimeout(60000)
+                .setStaleConnectionCheckEnabled(true)
+                .setCookieSpec(CookieSpecs.STANDARD);
     }
-    @Bean
-    public RequestConfig requestConfig(RequestConfig.Builder requestConfigBuilder){
-        RequestConfig build = requestConfigBuilder.build();
-        return build;
-    }
-
-
 
 
     /**

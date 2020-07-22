@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
-    <script src="/static/layui/layui.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="/clonedata/static/layui/css/layui.css" media="all">
+    <script src="/clonedata/static/layui/layui.js" charset="utf-8"></script>
 </head>
 <body style="text-align:center;background-color: #F2F2F2;">
 <form class="layui-form" action="" style="margin: 5% 5%">
@@ -54,7 +54,7 @@
         //监听提交
         form.on('submit(add)', function(data){
             $.ajax({
-                url: "/jobWeb/add"
+                url: "../jobWeb/add"
                 , data: JSON.stringify(data.field)
                 , type: "post"
                 , contentType: "application/json"
