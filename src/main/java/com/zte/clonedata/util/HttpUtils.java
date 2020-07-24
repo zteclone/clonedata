@@ -1,6 +1,6 @@
 package com.zte.clonedata.util;
 
-import com.zte.clonedata.contanst.Contanst;
+import com.zte.clonedata.contanst.JobContanst;
 import com.zte.clonedata.contanst.RunningContanst;
 import com.zte.clonedata.dao.IpProxyMapper;
 import com.zte.clonedata.job.model.HttpType;
@@ -13,7 +13,6 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -21,7 +20,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 
@@ -112,11 +110,13 @@ public class HttpUtils {
             } else {
                 int i = random.nextInt(10);
                 HttpHost httpHost = null;
-                if (i < 3 && RunningContanst.IS_PROXY) {
+                if (RunningContanst.IS_OPEN_IP_PROXY && i < RunningContanst.PROXY_PPROPORTION) {
                     if (ipProxyMapper == null) {
                         ipProxyMapper = SpringContextUtil.getBean(IpProxyMapper.class);
                     }
-                    ipProxy = ipProxyMapper.selectRandOne();
+                    if (ipProxyMapper.proxyCount() != 0){
+                        ipProxy = ipProxyMapper.selectRandOne();
+                    }
                     if (ipProxy != null) {
                         httpHost = new HttpHost(ipProxy.getIp(), ipProxy.getPort(),ipProxy.getHttpType());
                     }
@@ -139,7 +139,7 @@ public class HttpUtils {
                     ipProxyMapper.updateExecuteCount(ipProxy.getId());
                 }
                 resultJson = EntityUtils
-                        .toString(response.getEntity(), Contanst.CHARSET);
+                        .toString(response.getEntity(), JobContanst.CHARSET);
                 b = true;
                 return resultJson;
             } else {

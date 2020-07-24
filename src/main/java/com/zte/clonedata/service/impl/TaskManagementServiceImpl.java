@@ -93,19 +93,4 @@ public class TaskManagementServiceImpl implements TaskManagementService {
         }
     }
 
-    @Override
-    @Transactional()
-    public void updateExecuteWeek(String week) {
-        TaskManagementExample example = new TaskManagementExample();
-        TaskManagementExample.Criteria criteria = example.createCriteria();
-        criteria.andTaskNameLike("豆瓣  电影  %");
-        List<TaskManagement> list = taskManagementMapper.selectByExample(example);
-        list.forEach(x -> {
-            TaskManagement taskManagement = new TaskManagement();
-            taskManagement.setId(x.getId());
-            String taskExcutePlan = x.getTaskExcutePlan();
-            taskManagement.setTaskExcutePlan(taskExcutePlan.substring(0,taskExcutePlan.length() - 1).concat(week));
-            taskManagementMapper.updateByPrimaryKeySelective(taskManagement);
-        });
-    }
 }

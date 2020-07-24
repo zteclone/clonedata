@@ -442,4 +442,23 @@
     and mv_typeid = #{mvTypeid,jdbcType=VARCHAR}
 
   </select>
+
+
+  <select id="getNumByPrimaryKey" parameterType="java.lang.String" resultType="java.lang.String">
+    select
+           ratingnum
+    from
+         clone_mv_detail
+    where
+          movieid = #{movieid,jdbcType=VARCHAR}
+      and mv_typeid = #{mvTypeid,jdbcType=VARCHAR}
+  </select>
+
+  <update id="updateRatingByPrimarKey" parameterType="java.lang.String">
+    update
+        clone_mv_detail
+    set ratingnum = #{ratingnum,jdbcType=VARCHAR}
+    where movieid = #{movieid,jdbcType=VARCHAR}
+    and mv_typeid = #{mvTypeid,jdbcType=VARCHAR}
+  </update>
 </mapper>

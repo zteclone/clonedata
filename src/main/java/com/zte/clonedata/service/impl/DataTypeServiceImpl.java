@@ -1,6 +1,5 @@
 package com.zte.clonedata.service.impl;
 
-import com.zte.clonedata.contanst.Contanst;
 import com.zte.clonedata.dao.DataTypeMapper;
 import com.zte.clonedata.model.DataType;
 import com.zte.clonedata.service.DataTypeService;

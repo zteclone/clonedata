@@ -34,8 +34,6 @@ public class JobWeb {
 
     @Autowired
     private TaskManagementService taskManagementService;
-    @Autowired
-    private TaskParamService taskParamService;
 
     /**
      * 新增任务
@@ -84,18 +82,11 @@ public class JobWeb {
      */
     @GetMapping(path = "/execute")
     public ResponseUtils execute(@RequestParam("id")String id) {
-        Map<String, String> result = null;
         try {
-            TaskManagement taskManagement = taskManagementService.selectTaskManagementByTaskId(id);
-            List<TaskParam> taskParams = taskParamService.selectTaskParamListByTaskManagement(taskManagement);
-            result = HttpUtils.doGet(taskManagement.getExcuteTarget(), toParamMap(taskParams), taskManagement.getTimeoutSecond() == null ? null : taskManagement.getTimeoutSecond() * 1000, taskManagement.getExternalCode());
-            if (result.get("STATUS").equals("FAIL")){
-                return ResponseUtils.fail("执行失败: 网络连接异常");
-            }
-            return JSONObject.parseObject(result.get("MESSAGE"), ResponseUtils.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseUtils.success("执行失败: ".concat(e.getMessage()));
+            ScheduleUtils.runOnce(id,ScheduleUtils.JOB_GROUP_NAME);
+            return ResponseUtils.success("执行成功，稍后请在任务详情处查看。");
+        } catch (SchedulerException e) {
+            return ResponseUtils.success("执行失败: 未装载定时任务");
         }
     }
 
@@ -164,31 +155,5 @@ public class JobWeb {
             return ResponseUtils.success("修改失败: ".concat(e.getCommonError().getErrorMsg()));
         }
         return ResponseUtils.success("修改成功");
-    }
-
-    @Autowired
-    private InitTaskListener initTaskListener;
-    @GetMapping("/updateExecuteWeek")
-    public ResponseUtils updateExecuteWeek(@RequestParam(value = "week")int week) throws SchedulerException {
-        if (0 < week && week < 8){
-            taskManagementService.updateExecuteWeek(String.valueOf(week));
-            Set<JobKey> jobKeys = ScheduleUtils.getScheduler().getJobKeys(GroupMatcher.anyGroup());
-            List<JobKey> jobLists = Lists.newArrayList();
-            jobLists.addAll(jobKeys);
-            ScheduleUtils.getScheduler().deleteJobs(jobLists);
-            initTaskListener.loadJob();
-            return ResponseUtils.success("修改成功");
-        }
-        return ResponseUtils.fail("参数错误");
-    }
-
-    private Map<String, String> toParamMap(List<TaskParam> taskParamList) {
-        Map<String, String> map = new HashMap(16);
-        if (taskParamList != null) {
-            taskParamList.forEach((x) -> {
-                map.put(x.getParamName(), x.getParamValue());
-            });
-        }
-        return map;
     }
 }

@@ -1,14 +1,13 @@
 package com.zte.clonedata.job.douban;
 
-import com.zte.clonedata.contanst.Contanst;
+import com.zte.clonedata.contanst.JobContanst;
 import com.zte.clonedata.contanst.ChangeRunningContanst;
 import com.zte.clonedata.dao.MvMapper;
 import com.zte.clonedata.job.model.HttpType;
-import com.zte.clonedata.job.utils.DetailUtils;
+import com.zte.clonedata.job.utils.JobHttpUtils;
 import com.zte.clonedata.model.Mv;
 import com.zte.clonedata.model.error.BusinessException;
 import com.zte.clonedata.util.DateUtils;
-import com.zte.clonedata.util.HttpUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -18,8 +17,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,6 +33,8 @@ public class JobDoubanMvDetail extends Thread {
 
     private List<Mv> list;
     private MvMapper mvMapper;
+    public static int successCount = 0;
+    private static Object OBJ = new Object();
 
     public JobDoubanMvDetail(List<Mv> list, MvMapper mvMapper) {
         this.mvMapper = mvMapper;
@@ -53,6 +52,8 @@ public class JobDoubanMvDetail extends Thread {
             } catch (Exception e) {
                 if (e instanceof DataIntegrityViolationException) {
                     log.error("详单存入数据库异常,请检查数据库配置及字段. >>> {}", e.getMessage());
+                }else if (e instanceof BusinessException){
+                    log.error("详单执行错误！原因：{}",((BusinessException) e).getCommonError().getErrorMsg());
                 }else{
                     log.error("详单执行错误！原因：{}",e.getMessage());
                 }
@@ -62,7 +63,8 @@ public class JobDoubanMvDetail extends Thread {
 
 
     private void getMoviceSave(Mv doubanMv) throws InterruptedException, BusinessException {
-        String result = DetailUtils.getHtmlData(doubanMv.getUrl(), 0,Contanst.DOUBAN_HOST1,HttpType.DETAIL);
+        log.debug("详单url：{}",doubanMv.getUrl());
+        String result = JobHttpUtils.getHtmlData(doubanMv.getUrl(), 0, JobContanst.DOUBAN_HOST1,HttpType.DETAIL,false);
         if (StringUtils.isBlank(result)) return;
 
         Document doc = Jsoup.parse(result);
@@ -142,6 +144,9 @@ public class JobDoubanMvDetail extends Thread {
             doubanMv.setTags(tags);
         }
         mvMapper.insertSelective(doubanMv);
+        synchronized (OBJ){
+            successCount++;
+        }
         Thread.sleep(ChangeRunningContanst.SLEEP_DETAIL_SPAN_TIME);
     }
 

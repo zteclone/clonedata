@@ -9,8 +9,7 @@ INSERT IGNORE INTO `clonedata`.`clone_dict` VALUES ('4', 'SLEEP_INDEX_ERROR_SPAN
 INSERT IGNORE INTO `clonedata`.`clone_dict` VALUES ('5', 'SLEEP_DETAIL_SPAN_TIME', '5', '爬取详情页间隔（秒）');
 INSERT IGNORE INTO `clonedata`.`clone_dict` VALUES ('6', 'SLEEP_DETAIL_ERROR_SPAN_TIME', '5', '爬取详情页错误间隔（秒）');
 INSERT IGNORE INTO `clonedata`.`clone_dict` VALUES ('8', 'SLEEP_FTP_SPAN_TIME', '1', 'FTP传送间隔（秒）');
-INSERT IGNORE INTO `clonedata`.`clone_dict` VALUES ('9', 'RETRY_MAIN_COUNT', '5', '主查询错误重试次数');
-INSERT IGNORE INTO `clonedata`.`clone_dict` VALUES ('10', 'RETRY_DETAIL_COUNT', '5', '详情查询错误重试次数');
+INSERT IGNORE INTO `clonedata`.`clone_dict` VALUES ('9', 'RETRY_COUNT', '5', 'http错误重试次数');
 
 
 # -- ----------------------------

@@ -38,17 +38,17 @@ public class Application {
      * 任务Web页面  >>>         http://localhost:8090/admin/taskList
      *
      *
-     * http://localhost:8090/jobWeb/updateExecuteWeek?week=7
      */
 
 
     public static void main(String[] args) throws SchedulerException {
         SpringApplication.run(Application.class, args);
         ScheduleUtils.addScheduleJobAndRunOne(IpPortJob.class,"ipPort","0 10,30,50 * * * ?");
+        FTPUtils ftpUtils = new FTPUtils();
+        ftpUtils.connect();
+        ftpUtils.disconnect();
     }
 
-    @Autowired
-    private FTPUtils ftpUtils;
     @Autowired
     private TaskLogMapper taskLogMapper;
     @Autowired
@@ -56,9 +56,7 @@ public class Application {
     @Autowired
     private DoubanTvMapper doubanTvMapper;
     @PostConstruct
-    public void init() throws InterruptedException {
-        ftpUtils.connect();
-        ftpUtils.disconnect();
+    public void init() {
         updateTaskLogStatusIs0();//修改任务表状态为0的为失败
     }
 
@@ -113,6 +111,11 @@ public class Application {
     @RequestMapping("/admin/dict")
     public ModelAndView dict(){
         ModelAndView modelAndView = new ModelAndView("dict.html");
+        return modelAndView;
+    }
+    @RequestMapping("/admin/httpSearch")
+    public ModelAndView httpSearch(){
+        ModelAndView modelAndView = new ModelAndView("httpSearch.html");
         return modelAndView;
     }
     @RequestMapping("/admin/pageNo")

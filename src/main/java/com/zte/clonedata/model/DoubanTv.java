@@ -2,12 +2,18 @@ package com.zte.clonedata.model;
 
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class DoubanTv implements Serializable {
     @ExcelProperty(value = "编号",index = 0)
     private String tvid;
@@ -48,7 +54,6 @@ public class DoubanTv implements Serializable {
     @ExcelProperty(value = "集数",index = 17)
     private String episodesCount;
     private static final long serialVersionUID = 1L;
-
 
     public void setTvid(String tvid) {
         this.tvid = tvid;

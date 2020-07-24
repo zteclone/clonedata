@@ -44,11 +44,7 @@ public class ChangeRunningContanst {
     /**
      * 主爬取任务重试次数
      */
-    public static int RETRY_MAIN_COUNT = 5;
-    /**
-     * 详单重试次数
-     */
-    public static int RETRY_DETAIL_COUNT = 5;
+    public static int RETRY_COUNT = 5;
     @Autowired
     private DictService dictService;
     @PostConstruct
@@ -58,10 +54,8 @@ public class ChangeRunningContanst {
     }
 
     public void retry() {
-        int retry_main_count = dictService.selectIntByKey("RETRY_MAIN_COUNT");
-        if (retry_main_count!= 0) RETRY_MAIN_COUNT = retry_main_count;
-        int retry_detail_count = dictService.selectIntByKey("RETRY_DETAIL_COUNT");
-        if (retry_detail_count!= 0) RETRY_DETAIL_COUNT = retry_detail_count;
+        int retry_count = dictService.selectIntByKey("RETRY_COUNT");
+        if (retry_count!= 0) RETRY_COUNT = retry_count;
     }
 
     public void sleep() {

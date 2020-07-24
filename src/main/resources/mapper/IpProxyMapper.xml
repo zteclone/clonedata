@@ -70,4 +70,8 @@
     where execute_count &gt; 100
       and error_count &lt; execute_count/2
   </update>
+
+  <select id="proxyCount" resultType="java.lang.Integer">
+    select count(*) from clone_ip_proxy
+  </select>
 </mapper>

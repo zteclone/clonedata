@@ -35,4 +35,10 @@ public interface MvMapper {
     int updateByPrimaryKey(Mv record);
 
     MvDTO selectTypenameByMovieidAndMvtypeid(Mv mv);
+
+    String getNumByPrimaryKey(@Param("movieid") String movieid,@Param("mvTypeid")String mvTypeid);
+
+    void updateRatingByPrimarKey(@Param("ratingnum") String ratingnum,
+                                 @Param("movieid") String movieid,
+                                 @Param("mvTypeid")String mvTypeid);
 }

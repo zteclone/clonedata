@@ -1,14 +1,13 @@
 package com.zte.clonedata.job.douban;
 
-import com.zte.clonedata.contanst.Contanst;
+import com.zte.clonedata.contanst.JobContanst;
 import com.zte.clonedata.contanst.ChangeRunningContanst;
 import com.zte.clonedata.dao.DoubanTvMapper;
 import com.zte.clonedata.job.model.HttpType;
-import com.zte.clonedata.job.utils.DetailUtils;
+import com.zte.clonedata.job.utils.JobHttpUtils;
 import com.zte.clonedata.model.DoubanTv;
 import com.zte.clonedata.model.error.BusinessException;
 import com.zte.clonedata.util.DateUtils;
-import com.zte.clonedata.util.HttpUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -35,13 +34,12 @@ public class JobDoubanTvDetail extends Thread {
 
     private List<DoubanTv> list;
     private DoubanTvMapper doubanTvMapper;
+    public static int successCount = 0;
+    private static Object OBJ = new Object();
 
     public JobDoubanTvDetail(List<DoubanTv> list, DoubanTvMapper doubanTvMapper) {
         this.doubanTvMapper = doubanTvMapper;
         this.list = list;
-    }
-
-    public JobDoubanTvDetail() {
     }
 
     @SneakyThrows
@@ -55,6 +53,8 @@ public class JobDoubanTvDetail extends Thread {
             } catch (Exception e) {
                 if (e instanceof DataIntegrityViolationException) {
                     log.error("详单存入数据库异常,请检查数据库配置及字段. >>> {}", e.getMessage());
+                }else if (e instanceof BusinessException){
+                    log.error("详单执行错误！原因：{}",((BusinessException) e).getCommonError().getErrorMsg());
                 }else{
                     log.error("详单执行错误！原因：{}",e.getMessage());
                 }
@@ -63,11 +63,9 @@ public class JobDoubanTvDetail extends Thread {
     }
 
 
-    private int c = 0;
-
-
-    private void getTvSave(DoubanTv doubanTv) throws InterruptedException {
-        String result = DetailUtils.getHtmlData(doubanTv.getUrl(), 0,Contanst.DOUBAN_HOST1,HttpType.DETAIL);
+    private void getTvSave(DoubanTv doubanTv) throws InterruptedException, BusinessException {
+        log.debug("详单url：{}",doubanTv.getUrl());
+        String result = JobHttpUtils.getHtmlData(doubanTv.getUrl(), 0, JobContanst.DOUBAN_HOST1,HttpType.DETAIL,false);
         if (StringUtils.isBlank(result)) return;
 
         Document doc = Jsoup.parse(result);
@@ -196,6 +194,9 @@ public class JobDoubanTvDetail extends Thread {
 
 
         doubanTvMapper.insertSelective(doubanTv);
+        synchronized (OBJ){
+            successCount++;
+        }
         Thread.sleep(ChangeRunningContanst.SLEEP_DETAIL_SPAN_TIME);
     }
 

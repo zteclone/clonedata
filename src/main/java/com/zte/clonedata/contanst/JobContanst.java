@@ -9,7 +9,7 @@ import com.zte.clonedata.util.DateUtils;
  * @Date: Creating in 16:41 2020/5/28
  * @Description:
  */
-public class Contanst {
+public class JobContanst {
 
     public static final String CHARSET = "utf-8";
 
@@ -45,6 +45,6 @@ public class Contanst {
 
     public static final int DOUBAN_MAX_THUS_PAGE = 300;
     public static final int DOUBAN_MAX_PAGE = 2000;
-    public static final int MAOYAN_MAX_THUS_PAGE = 300;
-    public static final int MAOYAN_MAX_PAGE = 1500;
+    public static final int MAOYAN_MAX_THUS_PAGE = 100;
+    public static final int MAOYAN_MAX_PAGE = 1000;
 }

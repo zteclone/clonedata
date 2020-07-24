@@ -3,6 +3,7 @@ package com.zte.clonedata.web;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
+import com.zte.clonedata.contanst.RunningContanst;
 import com.zte.clonedata.dao.DoubanTvMapper;
 import com.zte.clonedata.dao.MvMapper;
 import com.zte.clonedata.model.DoubanTv;
@@ -44,6 +45,8 @@ public class PageWeb {
     private MvMapper mvMapper;
     @Autowired
     private DoubanTvMapper doubanTvMapper;
+    @Autowired
+    private RunningContanst runningContanst;
 
 
     @GetMapping("/list")
@@ -129,6 +132,13 @@ public class PageWeb {
         ServletOutputStream out = null;
         try {
             File file = new File(filepath);
+            if (!file.exists()){
+                file = new File(runningContanst.BASEURL.concat("images")
+                        .concat(File.separator)
+                        .concat("douban")
+                        .concat(File.separator)
+                        .concat("tv_default_large.png"));
+            }
             fis = new FileInputStream(file);
             long size = file.length();
             byte[] temp = new byte[(int) size];

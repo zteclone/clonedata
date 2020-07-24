@@ -24,5 +24,4 @@ public interface TaskManagementService {
 
     TaskManagement selectTaskManagementByTaskname(String taskName) throws BusinessException;
 
-    void updateExecuteWeek(String week);
 }

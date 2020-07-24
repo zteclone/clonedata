@@ -14,4 +14,5 @@ public interface IpProxyMapper {
     void updateErrorCount(String id);
     void deleteError();
     void updateOld();
+    int proxyCount();
 }

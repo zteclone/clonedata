@@ -51,8 +51,7 @@ public class PicDownUtils implements Runnable {
         log.info("成功: {}, 失败: {}, 成功率: {}", size, err, err == 0 ? "100%" : String.valueOf(df.format((double) (size - err) / (double) size * 100)).concat("%"));
         log.debug("执行图片下载,保存任务结束,用时: {}   >>>", System.currentTimeMillis() - start);
         //FTP TODO 改前缀或后缀  修改JobDoubanMv的查询是否有文件的文件名前缀后缀
-            /*FTPUtils ftpUtils = SpringContextUtil.getBean(FTPUtils.class);
-            ftpUtils.uploadFile(fileList);*/
+        new FTPUtils().uploadFile(fileList);
     }
 
     private File downSaveReturnFile(String url, File file) throws InterruptedException {
@@ -63,7 +62,7 @@ public class PicDownUtils implements Runnable {
             return file;
         } catch (BusinessException e) {
             log.error(e.getCommonError().getErrorMsg());
-            if (c++ < ChangeRunningContanst.RETRY_DETAIL_COUNT) {
+            if (c++ < ChangeRunningContanst.RETRY_COUNT) {
                 log.error("{} 毫秒后再次尝试获取图片，次数:  >>>{}<<<", ChangeRunningContanst.SLEEP_DETAIL_ERROR_SPAN_TIME, c);
                 Thread.sleep(ChangeRunningContanst.SLEEP_DETAIL_ERROR_SPAN_TIME);
                 return downSaveReturnFile(url, file);

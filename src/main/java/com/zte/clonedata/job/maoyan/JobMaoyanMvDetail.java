@@ -1,14 +1,12 @@
 package com.zte.clonedata.job.maoyan;
 
-import com.zte.clonedata.contanst.Contanst;
-import com.zte.clonedata.contanst.ChangeRunningContanst;
+import com.zte.clonedata.contanst.JobContanst;
 import com.zte.clonedata.dao.MvMapper;
 import com.zte.clonedata.job.model.HttpType;
-import com.zte.clonedata.job.utils.DetailUtils;
+import com.zte.clonedata.job.utils.JobHttpUtils;
 import com.zte.clonedata.model.Mv;
 import com.zte.clonedata.model.error.BusinessException;
 import com.zte.clonedata.util.DateUtils;
-import com.zte.clonedata.util.HttpUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -18,8 +16,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,6 +30,12 @@ public class JobMaoyanMvDetail extends Thread {
 
     private List<Mv> list;
     private MvMapper mvMapper;
+    public static int successCount = 0;
+    private static Object OBJ = new Object();
+    /**
+     * 10s * 个数 /60 = 用时（分钟）
+     */
+    private static final int SLEEP = 10000;
 
     public JobMaoyanMvDetail(List<Mv> list, MvMapper mvMapper) {
         this.mvMapper = mvMapper;
@@ -51,16 +53,19 @@ public class JobMaoyanMvDetail extends Thread {
             } catch (Exception e) {
                 if (e instanceof DataIntegrityViolationException) {
                     log.error("详单存入数据库异常,请检查数据库配置及字段. >>> {}", e.getMessage());
+                }else if (e instanceof BusinessException){
+                    log.error("详单执行错误！原因：{}",((BusinessException) e).getCommonError().getErrorMsg());
                 }else{
-                    e.printStackTrace();
-                    log.error("详单执行错误！原因：{}",e.getMessage());
+                    log.error("详单执行错误！原因：美团验证未通过");
+                    Thread.sleep(SLEEP);
                 }
             }
         }
     }
 
-    private void getMoviceSave(Mv maoyanMv) throws InterruptedException {
-        String result = DetailUtils.getHtmlData(maoyanMv.getUrl(), 0, Contanst.MAOYAN_HOST1,HttpType.MAOYAN_MV);
+    private void getMoviceSave(Mv maoyanMv) throws InterruptedException, BusinessException {
+        log.debug("详单url：{}",maoyanMv.getUrl());
+        String result = JobHttpUtils.getHtmlData(maoyanMv.getUrl(), 0, JobContanst.MAOYAN_HOST1,HttpType.MAOYAN_MV,false);
         if (StringUtils.isBlank(result)) return;
 
         Document doc = Jsoup.parse(result);
@@ -95,14 +100,9 @@ public class JobMaoyanMvDetail extends Thread {
         maoyanMv.setReleasedata(c2.get(2).text());
         maoyanMv.setMoviedesc(doc.select("span[class=\"dra\"]").text());
         mvMapper.insertSelective(maoyanMv);
-        Thread.sleep(20000);
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        String url = "https://maoyan.com/films/346089";
-        Mv mv = new Mv();
-        mv.setUrl(url);
-        JobMaoyanMvDetail detail = new JobMaoyanMvDetail(null,null);
-        detail.getMoviceSave(mv);
+        synchronized (OBJ){
+            successCount++;
+        }
+        Thread.sleep(SLEEP);
     }
 }

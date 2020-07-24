@@ -4,8 +4,7 @@ import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.alibaba.excel.annotation.write.style.ContentRowHeight;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
@@ -14,6 +13,9 @@ import java.io.Serializable;
 @ToString
 @ColumnWidth(13)
 @ContentRowHeight(15) //由于新版本并没有对单元格设置默认值
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Mv implements Serializable {
     /**
      * 主键: id
@@ -60,7 +62,6 @@ public class Mv implements Serializable {
     @ExcelProperty(value = "详情页地址",index = 17)
     private String url;
 
-    public Mv(){}
     public Mv(String movieid,String mvTypeid){
         this.movieid = movieid;
         this.mvTypeid = mvTypeid;

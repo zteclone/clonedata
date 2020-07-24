@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Properties;
 
 import static com.zte.clonedata.contanst.ChangeRunningContanst.SLEEP_FTP_SPAN_TIME;
+import static com.zte.clonedata.contanst.RunningContanst.*;
 
 /**
  * ProjectName: clonedata-com.zte.clonedata.util
@@ -21,39 +22,15 @@ import static com.zte.clonedata.contanst.ChangeRunningContanst.SLEEP_FTP_SPAN_TI
  <version>0.1.55</version>
  </dependency>
  *
-
-#FTP目标服务器配置
-ftp:
-  isopen: false
-  host: 192.168.139.202
-  port: 22
-  username: root
-  password: 123
-  savepath: /home/img/
-
  *
  * @Author: Liang Xiaomin
  * @Date: Creating in 9:49 2020/6/2
  * @Description:
  */
 @Slf4j
-@Component
 public class FTPUtils {
     private ChannelSftp sftp = null;
     private Session sshSession = null;
-
-    @Value("${ftp.host:}")
-    private String FTP_ADDRESS;
-    @Value("${ftp.port:0}")
-    private int FTP_PORT;
-    @Value("${ftp.username:}")
-    private String FTP_USERNAME;
-    @Value("${ftp.password:}")
-    private String FTP_PASSWORD;
-    @Value("${ftp.savepath:}")
-    private String FTP_BASEPATH;
-    @Value("${ftp.isopen:false}")
-    private boolean isopen;
 
     /**
      * 连接sftp服务器
@@ -81,17 +58,24 @@ public class FTPUtils {
         }
         return sftp;
     }
-
     /**
-     * 上传单个文件
+     * 上传文件
      */
     public void uploadFile(List<File> fileList){
+        uploadFile(fileList,true);
+    }
+    /**
+     * 上传文件
+     */
+    public void uploadFile(List<File> fileList,boolean isClose){
         if (!isopen || StringUtils.isEmpty(FTP_ADDRESS)){//FTP上传
             return;
         }
         log.info(">>>>>>>>>uploadFile--ftp上传文件开始>>>>>>>>>>>>>");
         long start = System.currentTimeMillis();
-        connect();
+        if (sftp == null){
+            connect();
+        }
         try {
             sftp.cd(FTP_BASEPATH);
         } catch (SftpException e) {
@@ -128,7 +112,9 @@ public class FTPUtils {
             }
         }
         //关闭资源
-        disconnect();
+        if (isClose){
+            disconnect();
+        }
         log.info(">>>>>>>>>uploadFile--ftp上传文件结束,用时: {}>>>>>>>>>>>>>",System.currentTimeMillis()-start);
     }
 

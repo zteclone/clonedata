@@ -18,7 +18,7 @@ import java.util.List;
 public class ScheduleUtils {
     private static final Logger log = LoggerFactory.getLogger(ScheduleUtils.class);
     private static Scheduler scheduler = null;
-    private static final String JOB_GROUP_NAME = "cron_task_group";
+    public static final String JOB_GROUP_NAME = "cron_task_group";
     public static final String JOB_PARAM_KEY = "taskId";
     public static final String LID = "lid";
 

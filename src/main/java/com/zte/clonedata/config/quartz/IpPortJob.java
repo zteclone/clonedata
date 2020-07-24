@@ -1,7 +1,6 @@
 package com.zte.clonedata.config.quartz;
 
-import com.google.common.collect.Lists;
-import com.zte.clonedata.contanst.Contanst;
+import com.zte.clonedata.contanst.JobContanst;
 import com.zte.clonedata.dao.IpProxyMapper;
 import com.zte.clonedata.job.model.HttpType;
 import com.zte.clonedata.model.IpProxy;
@@ -19,12 +18,9 @@ import org.jsoup.select.Elements;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * ProjectName: clonedata-com.zte.clonedata.config.quartz
@@ -104,7 +100,7 @@ public class IpPortJob  implements Job {
                         int success = 0;
                         for (int j = 0; j < 3; j++) {
                             long start = System.currentTimeMillis();
-                            boolean b = HttpUtils.testGet(url, Contanst.DOUBAN_HOST1,proxy);
+                            boolean b = HttpUtils.testGet(url, JobContanst.DOUBAN_HOST1,proxy);
                             if (b && System.currentTimeMillis() - start < 100000){
                                 success++;
                             }

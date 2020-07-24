@@ -79,6 +79,7 @@
             layer.confirm('确认导出全部？', function (index) {
                 window.location.href = '../tv/export';
                 layer.close(index);
+                layer.msg("生成中...");
             });
         });
         //监听行工具事件
