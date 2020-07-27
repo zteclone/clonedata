@@ -1,16 +1,13 @@
 package com.zte.clonedata.web;
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.zte.clonedata.model.Dict;
 import com.zte.clonedata.model.PageNo;
-import com.zte.clonedata.service.DictService;
 import com.zte.clonedata.service.PageNoService;
 import com.zte.clonedata.util.ResponseUtils;
 import com.zte.clonedata.web.dto.PageNoDTO;
-import com.zte.clonedata.web.validator.ValidationResult;
-import com.zte.clonedata.web.validator.ValidatorImpl;
+import com.zte.clonedata.web.dto.validator.ValidationResult;
+import com.zte.clonedata.web.dto.validator.ValidatorImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

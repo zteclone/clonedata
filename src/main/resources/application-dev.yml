@@ -16,7 +16,7 @@ log:
 proxy:
   # 代理开关
   isOpenIpProxy: false
-  # 打开代理后http代理比例 0-10
+  # 打开代理后,代理发送请求比例 0-10
   proxypProportion: -1
 #FTP传输封面图片 目标服务器配置
 ftp:

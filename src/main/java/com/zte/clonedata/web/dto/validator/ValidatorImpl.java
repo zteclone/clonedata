@@ -1,4 +1,4 @@
-package com.zte.clonedata.web.validator;
+package com.zte.clonedata.web.dto.validator;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;

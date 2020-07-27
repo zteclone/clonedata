@@ -41,6 +41,10 @@ public class JobDoubanMvDetail extends Thread {
         this.list = list;
     }
 
+    public JobDoubanMvDetail() {
+
+    }
+
     @SneakyThrows
     @Override
     public void run() {
@@ -62,12 +66,20 @@ public class JobDoubanMvDetail extends Thread {
     }
 
 
-    private void getMoviceSave(Mv doubanMv) throws InterruptedException, BusinessException {
+    public void getMoviceSave(Mv doubanMv) throws InterruptedException, BusinessException {
         log.debug("详单url：{}",doubanMv.getUrl());
         String result = JobHttpUtils.getHtmlData(doubanMv.getUrl(), 0, JobContanst.DOUBAN_HOST1,HttpType.DETAIL,false);
         if (StringUtils.isBlank(result)) return;
-
         Document doc = Jsoup.parse(result);
+        getDoubanmvData(doubanMv,doc);
+        mvMapper.insertSelective(doubanMv);
+        synchronized (OBJ){
+            successCount++;
+        }
+        Thread.sleep(ChangeRunningContanst.SLEEP_DETAIL_SPAN_TIME);
+    }
+
+    public void getDoubanmvData(Mv doubanMv, Document doc) {
         Elements subject = doc.select("div#info");
         //导演
         Elements directs = subject.select("a[rel=\"v:directedBy\"]");
@@ -143,11 +155,6 @@ public class JobDoubanMvDetail extends Thread {
             String tags = tag.replaceAll(" ", "|");
             doubanMv.setTags(tags);
         }
-        mvMapper.insertSelective(doubanMv);
-        synchronized (OBJ){
-            successCount++;
-        }
-        Thread.sleep(ChangeRunningContanst.SLEEP_DETAIL_SPAN_TIME);
     }
 
 }

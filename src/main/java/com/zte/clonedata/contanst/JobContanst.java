@@ -18,6 +18,7 @@ public class JobContanst {
     public static final String TYPE_DOUBAN = "douban";
     public static final String TYPE_MAOYAN = "maoyan";
     public static final String DOUBAN_HOST1 = "movie.douban.com";
+    public static final String DOUBAN_HOST_SEARCH = "search.douban.com";
     public static final String MAOYAN_HOST1 = "maoyan.com";
     public static final String[] DOUBAN_COUNTRYS = {
             "中国大陆","美国","中国香港",

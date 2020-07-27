@@ -42,6 +42,10 @@ public class JobDoubanTvDetail extends Thread {
         this.list = list;
     }
 
+    public JobDoubanTvDetail() {
+
+    }
+
     @SneakyThrows
     @Override
     public void run() {
@@ -63,12 +67,20 @@ public class JobDoubanTvDetail extends Thread {
     }
 
 
-    private void getTvSave(DoubanTv doubanTv) throws InterruptedException, BusinessException {
+    public void getTvSave(DoubanTv doubanTv) throws InterruptedException, BusinessException {
         log.debug("详单url：{}",doubanTv.getUrl());
         String result = JobHttpUtils.getHtmlData(doubanTv.getUrl(), 0, JobContanst.DOUBAN_HOST1,HttpType.DETAIL,false);
         if (StringUtils.isBlank(result)) return;
-
         Document doc = Jsoup.parse(result);
+        getDoubantvData(doubanTv,doc);
+        doubanTvMapper.insertSelective(doubanTv);
+        synchronized (OBJ){
+            successCount++;
+        }
+        Thread.sleep(ChangeRunningContanst.SLEEP_DETAIL_SPAN_TIME);
+    }
+
+    public void getDoubantvData(DoubanTv doubanTv, Document doc) {
         Elements subject = doc.select("div#info");
         //导演
         Elements directs = subject.select("a[rel=\"v:directedBy\"]");
@@ -191,16 +203,7 @@ public class JobDoubanTvDetail extends Thread {
                 doubanTv.setEpisodesCount(episodes_count);
             }
         }
-
-
-        doubanTvMapper.insertSelective(doubanTv);
-        synchronized (OBJ){
-            successCount++;
-        }
-        Thread.sleep(ChangeRunningContanst.SLEEP_DETAIL_SPAN_TIME);
     }
-
-
 
 
 }

@@ -1,5 +1,5 @@
 #
-#  生产环境
+#  开发环境
 #
 server:
   port: 8090
@@ -7,17 +7,25 @@ server:
     context-path: /clonedata
 # 文件保存目录
 project:
-  baseUrl: /home/zte/clonedata/
+  baseUrl: /home/zte1/clonedata/
 # 日志输出目录
 log:
   file:
-    path: /home/dev/clonedata/logs
+    path: /home/zte1/clonedata/logs
 # 代理IP相关配置
 proxy:
   # 代理开关
   isOpenIpProxy: false
-  # 打开代理后http代理比例 0-10
-  proxypProportion: 0
+  # 打开代理后,代理发送请求比例 0-10
+  proxypProportion: -1
+#FTP传输封面图片 目标服务器配置
+ftp:
+  isopen: false
+  host: 192.168.139.202
+  port: 22
+  username: root
+  password: 123
+  savepath: /home/img/
 spring:
   datasource:
     url: jdbc:mysql://localhost:13306/clonedata?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=false&autoReconnect=true&failOverReadOnly=false
