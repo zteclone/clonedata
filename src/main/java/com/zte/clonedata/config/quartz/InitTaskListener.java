@@ -78,6 +78,6 @@ public class InitTaskListener implements InitializingBean, ServletContextAware {
         /**
          * 每30秒检查一次ip错误次数多的ip
          */
-        ScheduleUtils.addScheduleJob(IpPortCheckJob.class,"ipPortCheck","cron_task_system_group","0 0/5 * * * ?");
+        //ScheduleUtils.addScheduleJob(IpPortCheckJob.class,"ipPortCheck","cron_task_system_group","0 0/5 * * * ?");
     }
 }

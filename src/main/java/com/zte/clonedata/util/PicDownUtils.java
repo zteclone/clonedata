@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * ProjectName: clonedata-com.zte.clonedata.util
@@ -63,8 +64,8 @@ public class PicDownUtils implements Runnable {
         } catch (BusinessException e) {
             log.error(e.getCommonError().getErrorMsg());
             if (c++ < ChangeRunningContanst.RETRY_COUNT) {
-                log.error("{} 毫秒后再次尝试获取图片，次数:  >>>{}<<<", ChangeRunningContanst.SLEEP_DETAIL_ERROR_SPAN_TIME, c);
-                Thread.sleep(ChangeRunningContanst.SLEEP_DETAIL_ERROR_SPAN_TIME);
+                log.error("{} 秒后再次尝试获取图片，次数:  >>>{}<<<", ChangeRunningContanst.SLEEP_DETAIL_ERROR_SPAN_TIME, c);
+                TimeUnit.SECONDS.sleep(ChangeRunningContanst.SLEEP_DETAIL_ERROR_SPAN_TIME);
                 return downSaveReturnFile(url, file);
             } else {
                 err++;

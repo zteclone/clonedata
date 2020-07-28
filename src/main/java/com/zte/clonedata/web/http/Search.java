@@ -159,8 +159,11 @@ public class Search {
 
 
     private String getDoubanWindowData(String moviename, String pagestart) throws BusinessException, InterruptedException {
+        //网址
         String url = String.format("https://search.douban.com/movie/subject_search?search_text=%s&cat=1002&start=%s", moviename, pagestart);
+        //返回值
         String htmlData = JobHttpUtils.getHtmlData(url, 0, JobContanst.DOUBAN_HOST_SEARCH, HttpType.DETAIL, false);
+        //正则获取指定内容
         Pattern pp = Pattern.compile("window\\.__DATA__ = \"([^\"]+)\"");
         Matcher m = pp.matcher(htmlData);
         if (m.find()) {

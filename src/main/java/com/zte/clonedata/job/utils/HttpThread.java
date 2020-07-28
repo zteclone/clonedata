@@ -18,7 +18,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * ProjectName: clonedata-com.zte.clonedata.job
@@ -34,15 +33,13 @@ import java.util.stream.Collectors;
 public class HttpThread extends Thread {
 
     private String url;
-    private String host;
     private HttpType httpType;
     private String errMsg;
     private boolean pageLock = true;
     private int addCount = 0;
 
-    public HttpThread(String url, String host, HttpType httpType) throws InterruptedException {
+    public HttpThread(String url, HttpType httpType) throws InterruptedException {
         this.url = url;
-        this.host = host;
         this.httpType = httpType;
         this.start();
     }

@@ -5,6 +5,7 @@ import com.zte.clonedata.config.quartz.IpPortJob;
 import com.zte.clonedata.dao.DoubanTvMapper;
 import com.zte.clonedata.dao.MvMapper;
 import com.zte.clonedata.dao.TaskLogMapper;
+import com.zte.clonedata.job.douban.HotDataJob;
 import com.zte.clonedata.model.DoubanTv;
 import com.zte.clonedata.model.Mv;
 import com.zte.clonedata.model.TaskLog;
@@ -33,9 +34,9 @@ import java.util.Date;
 public class Application {
 
     /**
-     * druid监控页面 >>>        http://localhost:8090/druid/
+     * druid监控页面 >>>        http://localhost:8090/clonedata/druid/
      * maven配置 >>>           mybatis-generator:generate
-     * 任务Web页面  >>>         http://localhost:8090/admin/taskList
+     * 任务Web页面  >>>         http://localhost:8090/clonedata
      *
      *
      */
@@ -43,7 +44,9 @@ public class Application {
 
     public static void main(String[] args) throws SchedulerException {
         SpringApplication.run(Application.class, args);
-        ScheduleUtils.addScheduleJobAndRunOne(IpPortJob.class,"ipPort","0 10,30,50 * * * ?");
+        //ScheduleUtils.addScheduleJobAndRunOne(IpPortJob.class,"ipPort","0 10,30,50 * * * ?");
+        ScheduleUtils.addScheduleJobAndRunOne(HotDataJob.class,"hotDoubanDataJob","0 40 8,12,16,20 * * ?");
+
         FTPUtils ftpUtils = new FTPUtils();
         ftpUtils.connect();
         ftpUtils.disconnect();

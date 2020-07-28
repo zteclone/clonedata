@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -70,7 +71,7 @@ public class JobDoubanMv extends AbstractJob {
                     log.info("此段收集电影信息已达{},结束此段任务 ... >>> country: {}, year: {}-{}", JobContanst.DOUBAN_MAX_PAGE, counrty, year1, year2);
                     break;
                 }
-                Thread.sleep(ChangeRunningContanst.SLEEP_INDEX_SPAN_TIME);
+                TimeUnit.SECONDS.sleep(ChangeRunningContanst.SLEEP_INDEX_SPAN_TIME);
             }
             //修改页数
             updatePageNo(isLock, start, pageNo);
@@ -86,7 +87,7 @@ public class JobDoubanMv extends AbstractJob {
                 if (exe.isTerminated()) {
                     break;
                 }
-                Thread.sleep(5000);
+                TimeUnit.SECONDS.sleep(5);
             }
             if (executeResult == null) {
                 executeResult = String.format("请求成功,新增电影: %s 条", JobDoubanMvDetail.successCount);

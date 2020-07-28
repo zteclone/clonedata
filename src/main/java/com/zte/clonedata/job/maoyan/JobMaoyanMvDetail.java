@@ -1,5 +1,6 @@
 package com.zte.clonedata.job.maoyan;
 
+import com.zte.clonedata.contanst.ChangeRunningContanst;
 import com.zte.clonedata.contanst.JobContanst;
 import com.zte.clonedata.dao.MvMapper;
 import com.zte.clonedata.job.model.HttpType;
@@ -17,6 +18,7 @@ import org.jsoup.select.Elements;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * ProjectName: clonedata-com.zte.clonedata.job.douban
@@ -35,7 +37,7 @@ public class JobMaoyanMvDetail extends Thread {
     /**
      * 10s * 个数 /60 = 用时（分钟）
      */
-    private static final int SLEEP = 10000;
+    private static final int SLEEP = 10;
 
     public JobMaoyanMvDetail(List<Mv> list, MvMapper mvMapper) {
         this.mvMapper = mvMapper;
@@ -57,7 +59,7 @@ public class JobMaoyanMvDetail extends Thread {
                     log.error("详单执行错误！原因：{}",((BusinessException) e).getCommonError().getErrorMsg());
                 }else{
                     log.error("详单执行错误！原因：美团验证未通过");
-                    Thread.sleep(SLEEP);
+                    TimeUnit.SECONDS.sleep(SLEEP);
                 }
             }
         }
@@ -103,6 +105,6 @@ public class JobMaoyanMvDetail extends Thread {
         synchronized (OBJ){
             successCount++;
         }
-        Thread.sleep(SLEEP);
+        TimeUnit.SECONDS.sleep(SLEEP);
     }
 }

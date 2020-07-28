@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 import java.io.*;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import static com.zte.clonedata.contanst.ChangeRunningContanst.SLEEP_FTP_SPAN_TIME;
 import static com.zte.clonedata.contanst.RunningContanst.*;
@@ -94,7 +95,7 @@ public class FTPUtils {
                 inputStream = new FileInputStream(file);
                 String filename = file.getName();
                 sftp.put(inputStream, filename);
-                Thread.sleep(SLEEP_FTP_SPAN_TIME);
+                TimeUnit.SECONDS.sleep(SLEEP_FTP_SPAN_TIME);
             } catch (SftpException e) {
                 log.error("sftp异常-->", e);
             } catch (FileNotFoundException e) {

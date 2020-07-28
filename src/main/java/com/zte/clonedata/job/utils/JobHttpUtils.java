@@ -7,6 +7,8 @@ import com.zte.clonedata.model.error.EmBusinessError;
 import com.zte.clonedata.util.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * ProjectName: clonedata-com.zte.clonedata.job.utils
  *
@@ -17,29 +19,30 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JobHttpUtils {
 
-    public static String getHtmlData(String url, int c,String agentHost,HttpType httpType,boolean isMain) throws InterruptedException, BusinessException {
+    public static String getHtmlData(String url, int c, String agentHost, HttpType httpType, boolean isMain) throws InterruptedException, BusinessException {
         try {
             return HttpUtils.getJson(url, agentHost, httpType);
         } catch (Exception e) {
             log.error("发生错误url >>> {}", url);
-            if (e instanceof BusinessException){
+            if (e instanceof BusinessException) {
                 BusinessException err = (BusinessException) e;
                 log.error("获取错误 >>> {}", err.getCommonError().getErrorMsg());
-                if (err.getCommonError().getErrorMsg().contains("HttpStatus: 4")) throw new BusinessException(EmBusinessError.HTTP_400);
-            }else {
+                if (err.getCommonError().getErrorMsg().contains("HttpStatus: 4"))
+                    throw new BusinessException(EmBusinessError.HTTP_400);
+            } else {
                 log.error("获取错误 >>> {}", e.getMessage());
             }
             if (c++ < ChangeRunningContanst.RETRY_COUNT) {
                 int i;
-                if (isMain){
+                if (isMain) {
                     i = ChangeRunningContanst.SLEEP_INDEX_ERROR_SPAN_TIME;
-                }else {
+                } else {
                     i = ChangeRunningContanst.SLEEP_DETAIL_ERROR_SPAN_TIME;
                 }
-                log.error("{} 毫秒后再次尝试获取，次数:  >>>{}<<<", i, c);
-                Thread.sleep(i);
-                return getHtmlData(url, c,agentHost,httpType,isMain);
-            }else {
+                log.error("{} 秒后再次尝试获取，次数:  >>>{}<<<", i, c);
+                TimeUnit.SECONDS.sleep(i);
+                return getHtmlData(url, c, agentHost, httpType, isMain);
+            } else {
                 throw new BusinessException(EmBusinessError.HTTP_COUNT_MORETHAN);
             }
         }

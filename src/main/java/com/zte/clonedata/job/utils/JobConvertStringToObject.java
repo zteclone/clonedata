@@ -56,7 +56,7 @@ public class JobConvertStringToObject {
         for (DoubanModel doubanModel : doubanModelList) {
             String path = getDoubanImagePath(doubanModel.getCover());
             String dbNum = mvMapper.getNumByPrimaryKey(doubanModel.getId(),RunningContanst.TYPE_DOUBAN_ID);
-            if (StringUtils.isBlank(dbNum)) {
+            if (dbNum == null) {
                 Mv m = Mv.builder()
                         .movieid(doubanModel.getId())
                         .mvTypeid(RunningContanst.TYPE_DOUBAN_ID)
@@ -138,7 +138,7 @@ public class JobConvertStringToObject {
                     }
                     String path = runningContanst.BASEURL.concat("images").concat(File.separator).concat(JobContanst.TYPE_MAOYAN).concat(File.separator).concat(id).concat(".jpg");
                     String dbnNum = mvMapper.getNumByPrimaryKey(id,RunningContanst.TYPE_MAOYAN_ID);
-                    if (StringUtils.isBlank(dbnNum)) {
+                    if (dbnNum == null) {
                         //不存在
                         Mv m = Mv.builder().movieid(id).mvTypeid(RunningContanst.TYPE_MAOYAN_ID)
                                 .url(JobContanst.MAOYAN_HTTPS.concat(mvUrl))

@@ -19,6 +19,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -77,7 +78,7 @@ public class JobDoubanTvDetail extends Thread {
         synchronized (OBJ){
             successCount++;
         }
-        Thread.sleep(ChangeRunningContanst.SLEEP_DETAIL_SPAN_TIME);
+        TimeUnit.SECONDS.sleep(ChangeRunningContanst.SLEEP_DETAIL_SPAN_TIME);
     }
 
     public void getDoubantvData(DoubanTv doubanTv, Document doc) {
