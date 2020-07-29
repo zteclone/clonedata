@@ -18,8 +18,8 @@ public class IpPortCheckJob implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        /*IpProxyMapper ipProxyMapper = SpringContextUtil.getBean(IpProxyMapper.class);
+        IpProxyMapper ipProxyMapper = SpringContextUtil.getBean(IpProxyMapper.class);
         ipProxyMapper.deleteError();
-        ipProxyMapper.updateOld();*/
+        ipProxyMapper.updateOld();
     }
 }

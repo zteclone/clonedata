@@ -138,12 +138,13 @@ create table if not exists `clonedata`.`task_log`
 
 create table if not exists `clonedata`.`clone_ip_proxy`
 (
-    `id`            varchar(32)  NOT NULL,
-    `ip`            varchar(255) NOT NULL DEFAULT '',
-    `port`          int(6)       NOT NULL DEFAULT '0',
-    `execute_count` int(5)       NOT NULL DEFAULT '0',
-    `error_count`   int(1)       NOT NULL DEFAULT '0',
-    `upd_dt`        varchar(14)  NOT NULL DEFAULT '',
+    `id` varchar(32) NOT NULL,
+    `ip` varchar(255) NOT NULL DEFAULT '',
+    `port` int(6) NOT NULL DEFAULT '0',
+    `execute_count` int(5) NOT NULL DEFAULT '0',
+    `error_count` int(1) NOT NULL DEFAULT '0',
+    `upd_dt` varchar(14) NOT NULL DEFAULT '',
+    `http_type` varchar(5) NOT NULL DEFAULT '',
+    `is_old` int(1) NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

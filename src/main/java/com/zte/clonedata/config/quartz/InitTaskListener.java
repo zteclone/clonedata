@@ -1,5 +1,7 @@
 package com.zte.clonedata.config.quartz;
 
+import com.zte.clonedata.contanst.RunningContanst;
+import com.zte.clonedata.job.douban.HotDataJob;
 import com.zte.clonedata.model.TaskManagement;
 import com.zte.clonedata.model.error.BusinessException;
 import com.zte.clonedata.service.TaskLogService;
@@ -31,6 +33,9 @@ public class InitTaskListener implements InitializingBean, ServletContextAware {
 
     @Autowired
     private TaskManagementService taskManagementService;
+
+    @Autowired
+    private RunningContanst runningContanst;
 
     /**
      * 编写初始化代码
@@ -76,8 +81,11 @@ public class InitTaskListener implements InitializingBean, ServletContextAware {
 
         });
         /**
-         * 每30秒检查一次ip错误次数多的ip
+         * 每 5min 检查一次ip错误次数多的ip
          */
-        //ScheduleUtils.addScheduleJob(IpPortCheckJob.class,"ipPortCheck","cron_task_system_group","0 0/5 * * * ?");
+        if (RunningContanst.IS_OPEN_IP_PROXY){
+            ScheduleUtils.addScheduleJob(IpPortCheckJob.class,"ipPortCheck","cron_task_system_group","0 0/5 * * * ?");
+        }
+        ScheduleUtils.addScheduleJob(HotDataJob.class,"hotDoubanDataJob","cron_task_system_group","0 40 8,12,16,20 * * ?");
     }
 }

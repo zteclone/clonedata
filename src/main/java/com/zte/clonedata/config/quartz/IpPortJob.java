@@ -21,6 +21,7 @@ import org.quartz.JobExecutionException;
 
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * ProjectName: clonedata-com.zte.clonedata.config.quartz
@@ -43,7 +44,7 @@ public class IpPortJob  implements Job {
     @SneakyThrows
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        /*ExecutorService exe = Executors.newCachedThreadPool();
+        ExecutorService exe = Executors.newCachedThreadPool();
         //7云
         this.get7yun(exe);
         String url = "https://movie.douban.com/tag/#/?sort=U&range=0,10&tags=%E7%94%B5%E5%BD%B1";
@@ -58,7 +59,7 @@ public class IpPortJob  implements Job {
             int success = 0;
             for (int i = 0; i < 3; i++) {
                 long start = System.currentTimeMillis();
-                boolean b = HttpUtils.testGet(url, Contanst.DOUBAN_HOST1,proxy);
+                boolean b = HttpUtils.testGet(url, JobContanst.DOUBAN_HOST1,proxy);
                 if (System.currentTimeMillis() - start < 100000 && b){
                     success++;
                 }
@@ -74,7 +75,7 @@ public class IpPortJob  implements Job {
             }
             Thread.sleep(10000);
         }
-        log.info("更新ip库成功");*/
+        log.info("更新ip库成功");
     }
 
 

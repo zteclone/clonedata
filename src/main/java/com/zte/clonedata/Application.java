@@ -2,6 +2,7 @@ package com.zte.clonedata;
 
 import com.zte.clonedata.config.quartz.IpPortCheckJob;
 import com.zte.clonedata.config.quartz.IpPortJob;
+import com.zte.clonedata.contanst.RunningContanst;
 import com.zte.clonedata.dao.DoubanTvMapper;
 import com.zte.clonedata.dao.MvMapper;
 import com.zte.clonedata.dao.TaskLogMapper;
@@ -37,16 +38,14 @@ public class Application {
      * druid监控页面 >>>        http://localhost:8090/clonedata/druid/
      * maven配置 >>>           mybatis-generator:generate
      * 任务Web页面  >>>         http://localhost:8090/clonedata
-     *
-     *
      */
 
 
     public static void main(String[] args) throws SchedulerException {
         SpringApplication.run(Application.class, args);
-        //ScheduleUtils.addScheduleJobAndRunOne(IpPortJob.class,"ipPort","0 10,30,50 * * * ?");
-        ScheduleUtils.addScheduleJobAndRunOne(HotDataJob.class,"hotDoubanDataJob","0 40 8,12,16,20 * * ?");
-
+        if (RunningContanst.IS_OPEN_IP_PROXY) {
+            ScheduleUtils.addScheduleJobAndRunOne(IpPortJob.class, "ipPort", "0 0 0,5,12,18 * * ?");
+        }
         FTPUtils ftpUtils = new FTPUtils();
         ftpUtils.connect();
         ftpUtils.disconnect();
@@ -58,6 +57,7 @@ public class Application {
     private MvMapper mvMapper;
     @Autowired
     private DoubanTvMapper doubanTvMapper;
+
     @PostConstruct
     public void init() {
         updateTaskLogStatusIs0();//修改任务表状态为0的为失败
@@ -72,78 +72,90 @@ public class Application {
         taskLog.setStatus(2);
         SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMddHHmmss");
         taskLog.setEndtime(sdf2.format(new Date()));
-        taskLogMapper.updateByExampleSelective(taskLog,example);
+        taskLogMapper.updateByExampleSelective(taskLog, example);
     }
 
     @RequestMapping("")
-    public ModelAndView index(){
+    public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("index.html");
         return modelAndView;
     }
+
     @RequestMapping("/admin/taskList")
-    public ModelAndView taskList(){
+    public ModelAndView taskList() {
         ModelAndView modelAndView = new ModelAndView("taskList.html");
         return modelAndView;
     }
+
     @RequestMapping("/admin/detail")
-    public ModelAndView detail(@RequestParam("taskId") String taskId){
+    public ModelAndView detail(@RequestParam("taskId") String taskId) {
         ModelAndView modelAndView = new ModelAndView("detail.html");
-        modelAndView.addObject("taskId",taskId);
+        modelAndView.addObject("taskId", taskId);
         return modelAndView;
     }
+
     @RequestMapping("/admin/pool")
-    public ModelAndView pool(){
+    public ModelAndView pool() {
         ModelAndView modelAndView = new ModelAndView("pool.html");
         return modelAndView;
     }
+
     @RequestMapping("/admin/addJob")
-    public ModelAndView addJob(){
+    public ModelAndView addJob() {
         ModelAndView modelAndView = new ModelAndView("addJob.html");
         return modelAndView;
     }
+
     @RequestMapping("/admin/mv")
-    public ModelAndView mv(){
+    public ModelAndView mv() {
         ModelAndView modelAndView = new ModelAndView("mv.html");
         return modelAndView;
     }
+
     @RequestMapping("/admin/tv")
-    public ModelAndView tv(){
+    public ModelAndView tv() {
         ModelAndView modelAndView = new ModelAndView("tv.html");
         return modelAndView;
     }
+
     @RequestMapping("/admin/dict")
-    public ModelAndView dict(){
+    public ModelAndView dict() {
         ModelAndView modelAndView = new ModelAndView("dict.html");
         return modelAndView;
     }
+
     @RequestMapping("/admin/httpSearch")
-    public ModelAndView httpSearch(){
+    public ModelAndView httpSearch() {
         ModelAndView modelAndView = new ModelAndView("httpSearch.html");
         return modelAndView;
     }
+
     @RequestMapping("/admin/pageNo")
-    public ModelAndView pageNo(){
+    public ModelAndView pageNo() {
         ModelAndView modelAndView = new ModelAndView("pageNo.html");
         return modelAndView;
     }
+
     @RequestMapping("/admin/inithtml")
-    public ModelAndView inithtml(){
+    public ModelAndView inithtml() {
         ModelAndView modelAndView = new ModelAndView("inithtml.html");
         return modelAndView;
     }
+
     @RequestMapping("/admin/mvDetail")
-    public ModelAndView mvDetail(@RequestParam(value = "movieid",defaultValue = "") String movieid
-            ,@RequestParam(value = "mvTypeid",defaultValue = "")String mvTypeid){
+    public ModelAndView mvDetail(@RequestParam(value = "movieid", defaultValue = "") String movieid
+            , @RequestParam(value = "mvTypeid", defaultValue = "") String mvTypeid) {
         ModelAndView modelAndView = new ModelAndView("mvDetail.html");
         MvDTO mvDTO = mvMapper.selectTypenameByMovieidAndMvtypeid(new Mv(movieid, mvTypeid));
-        modelAndView.addObject("mv",mvDTO);
+        modelAndView.addObject("mv", mvDTO);
         return modelAndView;
     }
+
     @RequestMapping("/admin/tvDetail")
-    public ModelAndView tvDetail(@RequestParam(value = "tvid",defaultValue = "") String tvid){
+    public ModelAndView tvDetail(@RequestParam(value = "tvid", defaultValue = "") String tvid) {
         ModelAndView modelAndView = new ModelAndView("tvDetail.html");
         DoubanTv doubanTv = doubanTvMapper.selectByPrimaryKey(tvid);
-        modelAndView.addObject("tv",doubanTv);
+        modelAndView.addObject("tv", doubanTv);
         return modelAndView;
     }
 }
