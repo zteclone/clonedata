@@ -34,15 +34,16 @@ public class HotDataJob implements Job {
     @Autowired
     protected PageNoService pageNoService;
 
+    public static final String[] PROGRAMTYPES = {"电影", "电视剧"};
+    public static final String[] TYPES = {"U", "T", "S", "R"};
+
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        String[] programTypes = {"电影", "电视剧"};
-        String[] types = {"U", "T", "S", "R"};
         Random random = new Random();
-        int pr = random.nextInt(programTypes.length);
-        int tr = random.nextInt(types.length);
-        String programType = programTypes[pr];
-        String type = types[tr];
+        int pr = random.nextInt(PROGRAMTYPES.length);
+        int tr = random.nextInt(TYPES.length);
+        String programType = PROGRAMTYPES[pr];
+        String type = TYPES[tr];
         HttpType httpType = null;
         int successCnt = 0;
         for (int i = 0; i <= 40; i = i + 20) {

@@ -6,10 +6,12 @@ import java.util.List;
 
 import com.zte.clonedata.web.dto.PageNoDTO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 /**
  * 页数
  */
+@Repository
 public interface PageNoMapper {
     long countByExample(PageNoExample example);
 

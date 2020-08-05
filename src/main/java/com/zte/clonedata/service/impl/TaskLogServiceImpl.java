@@ -6,6 +6,8 @@ import com.zte.clonedata.model.TaskLogExample;
 import com.zte.clonedata.service.TaskLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,11 +33,13 @@ public class TaskLogServiceImpl implements TaskLogService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void addTaskLog(TaskLog taskLog) {
         taskLogMapper.insertSelective(taskLog);
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void updateTaskLog(TaskLog taskLog) {
         taskLogMapper.updateByPrimaryKeySelective(taskLog);
     }

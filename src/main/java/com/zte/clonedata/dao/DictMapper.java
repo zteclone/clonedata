@@ -1,9 +1,11 @@
 package com.zte.clonedata.dao;
 
 import com.zte.clonedata.model.Dict;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface DictMapper {
 
     int deleteByPrimaryKey(String id);

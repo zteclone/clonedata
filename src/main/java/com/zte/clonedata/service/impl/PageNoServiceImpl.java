@@ -9,6 +9,8 @@ import com.zte.clonedata.web.dto.PageNoDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class PageNoServiceImpl implements PageNoService {
 
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void insert(PageNo pageNo) {
         pageNo.setId(UUIDUtils.get());
         pageNo.setUpdateDt(DateUtils.getNowYYYYMMDDHHMMSS());
@@ -35,12 +38,14 @@ public class PageNoServiceImpl implements PageNoService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void updateValueByKeyAndTypeid(PageNo pageNo) {
         pageNo.setUpdateDt(DateUtils.getNowYYYYMMDDHHMMSS());
         pageNoMapper.updateValueByKeyAndTypeid(pageNo);
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void updateValueByIdAndTypeid(PageNo pageNo) {
         pageNo.setUpdateDt(DateUtils.getNowYYYYMMDDHHMMSS());
         pageNoMapper.updateValueByIdAndTypeid(pageNo);

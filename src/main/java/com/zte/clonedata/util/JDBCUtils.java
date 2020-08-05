@@ -34,11 +34,4 @@ public class JDBCUtils {
         return con;
     }
 
-
-
-    public void delete() throws SQLException, ClassNotFoundException {
-        Connection con = getCon();
-        String yyyyMMdd = DateTime.now().minusDays(7).toString("yyyyMMdd");
-        con.close();
-    }
 }

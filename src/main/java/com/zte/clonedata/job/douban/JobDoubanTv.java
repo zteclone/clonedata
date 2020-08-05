@@ -62,7 +62,7 @@ public class JobDoubanTv extends AbstractJob {
                     executeResult = "发生错误! 可能原因: ".concat(e.getMessage());
                     break;
                 }
-                log.info("key => 豆瓣电视剧 - {}, start => {}", key, start);
+                log.info("key => {}, start => {}", key, start);
                 start = start + 20;
                 thisc = thisc + 20;
                 if (thisc >= JobContanst.DOUBAN_MAX_THUS_PAGE) {

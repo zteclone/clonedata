@@ -11,6 +11,7 @@ import com.zte.clonedata.util.UUIDUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -65,6 +66,7 @@ public class TaskManagementServiceImpl implements TaskManagementService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void insert(TaskManagement taskManagement) {
         String id = UUIDUtils.get();
         taskManagement.setTaskStatus("1");
@@ -76,6 +78,7 @@ public class TaskManagementServiceImpl implements TaskManagementService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void delById(String id) {
         taskManagementMapper.deleteByPrimaryKey(id);
     }

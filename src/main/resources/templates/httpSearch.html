@@ -107,6 +107,7 @@
                                 thmsg += '<th lay-data="{field:\'id\',hide: true}">编号</th>';
                                 thmsg += '<th lay-data="{field:\'programType\',hide: true}">节目类型</th>';
                                 thmsg += '<th lay-data="{field:\'title\',width: 300}">名称</th>';
+                                thmsg += '<th lay-data="{field:\'programType2\',width: 100}">节目类型</th>';
                                 thmsg += '<th lay-data="{field:\'actors\'}">演员</th>';
                                 thmsg += '<th lay-data="{field:\'ratingnum\',width: 80}">评分</th>';
                                 thmsg += '<th lay-data="{field:\'type\',width: 230}">标签</th>';
@@ -116,6 +117,7 @@
                                     tdmsg += '<td>' + res2.data[i].id + '</td>';
                                     tdmsg += '<td>' + res2.data[i].programType + '</td>';
                                     tdmsg += '<td>' + res2.data[i].title + '</td>';
+                                    tdmsg += '<td>' + (res2.data[i].programType === 'mv'?'电影':'电视剧') + '</td>';
                                     tdmsg += '<td>' + (res2.data[i].actors?res2.data[i].actors:' ') + '</td>';
                                     tdmsg += '<td>' + (res2.data[i].ratingnum!='0'?res2.data[i].ratingnum:' ') + '</td>';
                                     tdmsg += '<td>' + (res2.data[i].type?res2.data[i].type:' ') + '</td>';

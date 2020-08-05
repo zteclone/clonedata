@@ -429,4 +429,13 @@
       episodes_count = #{episodesCount,jdbcType=VARCHAR}
     where tvid = #{tvid,jdbcType=VARCHAR}
   </update>
+  <select id="getTvSevenCnt" resultType="java.util.Map">
+    select
+      left(c.p_date,8) as d,count(*) as c
+    from
+      clone_douban_tv_detail c
+    group by d
+    order by d desc
+    limit 7
+  </select>
 </mapper>

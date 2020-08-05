@@ -70,10 +70,8 @@ public class HttpThread extends Thread {
         } catch (BusinessException e) {
             if (e.getCommonError().getErrorCode() == 20002)pageLock = false;
             errMsg = e.getCommonError().getErrorMsg();
-            return;
         }catch (Exception e){
             errMsg = e.getMessage();
-            return;
         }finally {
             if (StringUtils.isBlank(errMsg)){
                 log.info("请求成功");
@@ -86,6 +84,12 @@ public class HttpThread extends Thread {
             t1.start();
         }
         addCount = map.size();
+        Map<String,String> msgMap = Maps.newHashMap();
+        msgMap.put("任务URL: ",url);
+        msgMap.put("任务类型: ",httpType.name());
+        msgMap.put("任务成功个数: ",String.valueOf(addCount));
+        msgMap.put("任务错误信息: ",errMsg);
+        log.debug("单条任务信息: {}",msgMap);
     }
 
 

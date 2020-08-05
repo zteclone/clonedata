@@ -12,6 +12,7 @@ import com.zte.clonedata.job.utils.JobHttpUtils;
 import com.zte.clonedata.model.DoubanTv;
 import com.zte.clonedata.model.Mv;
 import com.zte.clonedata.model.error.BusinessException;
+import com.zte.clonedata.util.DateUtils;
 import com.zte.clonedata.util.PicDownUtils;
 import com.zte.clonedata.util.ResponseUtils;
 import com.zte.clonedata.web.dto.SearchDoubanInputDTO;
@@ -56,15 +57,16 @@ public class Search {
         }
         moviename = moviename.trim();
         String[] str = new String[2];
-        try {
-            str[0] = this.getDoubanWindowData(moviename, "0");
-            str[1] = this.getDoubanWindowData(moviename, "15");
-            return ResponseUtils.successData(str);
-        } catch (InterruptedException e) {
-            return ResponseUtils.fail(e.getMessage());
-        } catch (BusinessException e) {
-            return ResponseUtils.fail(e.getCommonError().getErrorMsg());
+        for (int i = 0; i < 2; i++) {
+            try {
+                str[i] = this.getDoubanWindowData(moviename, String.valueOf(i*15));
+            } catch (BusinessException e) {
+                log.error(e.getCommonError().getErrorMsg());
+            } catch (InterruptedException e) {
+                log.error(e.getMessage());
+            }
         }
+        return ResponseUtils.successData(str);
     }
 
     @PostMapping("/doubanSave")
@@ -74,6 +76,7 @@ public class Search {
         PicDownUtils picDownUtils = new PicDownUtils();
 
         LinkedList<SearchDoubanOutputDTO> resultList = Lists.newLinkedList();
+        String nowYYYYMMDDHHMMSS = DateUtils.getNowYYYYMMDDHHMMSS();
         for (SearchDoubanInputDTO searchDoubanDTO : list) {
             String id = searchDoubanDTO.getId();
             if (StringUtils.isBlank(id) || StringUtils.isBlank(searchDoubanDTO.getUrl())) continue;
@@ -97,6 +100,7 @@ public class Search {
                                     .httpImage(searchDoubanDTO.getCover_url())
                                     .url(searchDoubanDTO.getUrl())
                                     .filepath(imagePath)
+                                    .pDate(nowYYYYMMDDHHMMSS)
                                     .build();
                             jobDoubanTvDetail.getDoubantvData(build, doc);
                             doubanTvMapper.insertSelective(build);
@@ -110,6 +114,7 @@ public class Search {
                                     .httpImage(searchDoubanDTO.getCover_url())
                                     .url(searchDoubanDTO.getUrl())
                                     .filepath(imagePath)
+                                    .pDate(nowYYYYMMDDHHMMSS)
                                     .build();
                             jobDoubanMvDetail.getDoubanmvData(build, doc);
                             mvMapper.insertSelective(build);

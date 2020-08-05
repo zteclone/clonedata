@@ -31,6 +31,12 @@ public class DateUtils {
             return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         }
     };
+    public static ThreadLocal<SimpleDateFormat> sdf4 = new ThreadLocal<SimpleDateFormat>() {
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat("yyyyMMdd");
+        }
+    };
     public static String getNowYYYYMMDD(){
         return sdf1.get().format(new Date());
     }
@@ -41,5 +47,15 @@ public class DateUtils {
 
     public static String getString(Date date){
         return sdf3.get().format(date);
+    }
+
+    public static Date getFewDate(int i){
+        Date date = new Date();
+        if (i == 0) return date;
+        return new Date(date.getTime() + (24*60*60*1000*i));
+    }
+    public static String getFewDay(int i){
+        Date fewDate = getFewDate(i);
+        return sdf4.get().format(fewDate);
     }
 }

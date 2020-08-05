@@ -4,7 +4,9 @@ import com.zte.clonedata.model.TaskParam;
 import com.zte.clonedata.model.TaskParamExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface TaskParamMapper {
     long countByExample(TaskParamExample example);
 

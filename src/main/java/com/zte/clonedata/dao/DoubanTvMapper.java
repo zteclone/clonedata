@@ -3,6 +3,9 @@ package com.zte.clonedata.dao;
 import com.zte.clonedata.model.DoubanTv;
 import com.zte.clonedata.model.DoubanTvExample;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -29,4 +32,7 @@ public interface DoubanTvMapper {
     int updateByPrimaryKeySelective(DoubanTv record);
 
     int updateByPrimaryKey(DoubanTv record);
+
+    @MapKey("d")
+    Map<String, Map<String,Object>> getTvSevenCnt();
 }

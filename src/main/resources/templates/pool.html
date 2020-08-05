@@ -14,9 +14,6 @@
     <br />
     <p>http线程池</p>
     <blockquote class="layui-elem-quote layui-quote-nm" id="pool2"></blockquote>
-    <br />
-    <p>数据</p>
-    <blockquote class="layui-elem-quote layui-quote-nm" id="pool3"></blockquote>
 </div>
 
 
@@ -58,20 +55,6 @@
                 }
             });
 
-            $.ajax({
-                url: "../page/dataCount"
-                , type: "get"
-                , success: function (res) {
-                    if (res.code == 0){
-                        var html = '';
-                        var map =  res.data;
-                        for (var x in map){
-                            html += x + ':' + map[x] + '&nbsp;&nbsp;&nbsp;&nbsp;';
-                        }
-                        $("#pool3").html(html);
-                    }
-                }
-            });
         }
 
         window.setInterval(function() {

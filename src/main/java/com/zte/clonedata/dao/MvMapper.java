@@ -4,13 +4,17 @@ import com.zte.clonedata.model.Mv;
 import com.zte.clonedata.model.MvExample;
 
 import java.util.List;
+import java.util.Map;
 
 import com.zte.clonedata.web.dto.MvDTO;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 /**
  * 电影表
  */
+@Repository
 public interface MvMapper {
     long countByExample(MvExample example);
 
@@ -41,4 +45,6 @@ public interface MvMapper {
     void updateRatingByPrimarKey(@Param("ratingnum") String ratingnum,
                                  @Param("movieid") String movieid,
                                  @Param("mvTypeid")String mvTypeid);
+    @MapKey("d")
+    Map<String, Map<String,Object>> getMvSevenCnt();
 }

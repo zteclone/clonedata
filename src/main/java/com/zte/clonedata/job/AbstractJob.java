@@ -69,7 +69,8 @@ public abstract class AbstractJob {
     @PostConstruct
     public void init() {
         String[] paths = {runningContanst.BASEURL.concat(JobContanst.TYPE_DOUBAN)
-                , runningContanst.BASEURL.concat(JobContanst.TYPE_MAOYAN)};
+                , runningContanst.BASEURL.concat(JobContanst.TYPE_MAOYAN)
+        };
         for (String path : paths) {
             FileUtils.existsMkdir(path);
         }

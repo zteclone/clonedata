@@ -461,4 +461,14 @@
     where movieid = #{movieid,jdbcType=VARCHAR}
     and mv_typeid = #{mvTypeid,jdbcType=VARCHAR}
   </update>
+
+  <select id="getMvSevenCnt" resultType="java.util.Map">
+    select
+           left(c.p_date,8) as d,count(*) as c
+    from
+         clone_mv_detail c
+    group by d
+    order by d desc
+    limit 7
+  </select>
 </mapper>

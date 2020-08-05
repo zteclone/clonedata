@@ -4,10 +4,12 @@ import com.zte.clonedata.model.DataType;
 import com.zte.clonedata.model.DataTypeExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 /**
  * 爬取类别
  */
+@Repository
 public interface DataTypeMapper {
     long countByExample(DataTypeExample example);
 

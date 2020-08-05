@@ -168,4 +168,41 @@ public class PageWeb {
             }
         }
     }
+
+    @GetMapping("/getDataCntSevenDay")
+    public ResponseUtils  getDataCntSevenDay(){
+        Map<String,int[]> result = Maps.newHashMap();
+        String few0 = DateUtils.getFewDay(0);
+        String few1 = DateUtils.getFewDay(-1);
+        String few2 = DateUtils.getFewDay(-2);
+        String few3 = DateUtils.getFewDay(-3);
+        String few4 = DateUtils.getFewDay(-4);
+        String few5 = DateUtils.getFewDay(-5);
+        String few6 = DateUtils.getFewDay(-6);
+        Map<String, Map<String,Object>> mvSevenCnt = mvMapper.getMvSevenCnt();
+        int[] mvCnt = {
+                getIntValue(mvSevenCnt,few6), getIntValue(mvSevenCnt,few5)
+                , getIntValue(mvSevenCnt,few4), getIntValue(mvSevenCnt,few3)
+                , getIntValue(mvSevenCnt,few2), getIntValue(mvSevenCnt,few1)
+                , getIntValue(mvSevenCnt,few0)
+        };
+
+        Map<String, Map<String,Object>> tvSevenCnt = doubanTvMapper.getTvSevenCnt();
+        int[] tvCnt = {
+                getIntValue(tvSevenCnt,few6), getIntValue(tvSevenCnt,few5)
+                , getIntValue(tvSevenCnt,few4), getIntValue(tvSevenCnt,few3)
+                , getIntValue(tvSevenCnt,few2), getIntValue(tvSevenCnt,few1)
+                , getIntValue(tvSevenCnt,few0)
+        };
+        result.put("mvCnt",mvCnt);
+        result.put("tvCnt",tvCnt);
+        return ResponseUtils.successData(result);
+    }
+    
+    private int getIntValue(Map<String, Map<String,Object>> map,String d){
+        Map<String, Object> stringStringMap = map.get(d);
+        if (stringStringMap == null) return 0;
+        long c = (long) stringStringMap.get("c");
+        return (int) c;
+    }
 }
